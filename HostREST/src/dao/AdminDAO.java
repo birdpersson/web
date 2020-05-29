@@ -3,18 +3,13 @@ package dao;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import beans.Admin;
-import beans.Apartment;
-import beans.Host;
-import beans.Test;
 
 public class AdminDAO {
-
 	private HashMap<String, Admin> admins = new HashMap<String, Admin>(); 
 	
 	public AdminDAO() {
@@ -22,10 +17,25 @@ public class AdminDAO {
 	}
 	
 	/***
-	 * @param contextPath Putanja do aplikacije u Tomcatu. Može se pristupiti samo iz servleta.
+	 * @param contextPath Putanja do aplikacije u Tomcatu. Moï¿½e se pristupiti samo iz servleta.
 	 */
 	public AdminDAO(String contextPath) {
 		loadAdmins(contextPath);
+	}
+	
+	/**
+	 * Vraca korisnika za prosledjeno korisnicko ime i sifru. Vraca null ako korisnik ne postoji
+	 * @param username
+	 * @param password
+	 * @return
+	 */
+	public Admin find(String username, String password) {
+		if (!admins.containsKey(username))
+			return null;
+		Admin admin = admins.get(username);
+		if (!admin.getPassword().contentEquals(password))
+			return null;
+		return admin;
 	}
 	
 	/***
@@ -133,9 +143,9 @@ public class AdminDAO {
 				try {
 					in.close();
 				}
-				catch (Exception e) { }
+				catch (Exception e) {
+				}
 			}
 		}
 	}
-	
 }
