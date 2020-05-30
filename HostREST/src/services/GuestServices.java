@@ -27,7 +27,7 @@ public class GuestServices {
 	@PostConstruct
 	// ctx polje je null u konstruktoru, mora se pozvati nakon konstruktora (@PostConstruct anotacija)
 	public void init() {
-		// Ovaj objekat se instancira više puta u toku rada aplikacije
+		// Ovaj objekat se instancira viï¿½e puta u toku rada aplikacije
 		// Inicijalizacija treba da se obavi samo jednom
 		if(ctx.getAttribute("guestDAO")==null) {
 			String contextPath = ctx.getRealPath("");
@@ -62,9 +62,9 @@ public class GuestServices {
 		Collection<Guest> retGuests = daoGuest.findAll();
 		
 		for(Guest g : retGuests) {
-			g.setReviews((ArrayList<Review>) daoReview.findAllByGuestId(g.getId()));
-			g.setReservations((ArrayList<Reservation>) daoReser.findAllByGuestId(g.getId()));
-			g.setApartments((ArrayList<Apartment>) daoApart.findAllApartByGuestId(g.getId()));
+			g.setReviews((ArrayList<Review>) daoReview.findAllByGuestId(g.getUsername()));
+			g.setReservations((ArrayList<Reservation>) daoReser.findAllByGuestId(g.getUsername()));
+			g.setApartments((ArrayList<Apartment>) daoApart.findAllApartByGuestId(g.getUsername()));
 		}
 		return retGuests;
 
@@ -80,14 +80,14 @@ public class GuestServices {
 	
 	
 	//serverska metoda za dodavanje 1 produkta
-	@POST
-	@Path("/")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Guest setGuest(Guest host) {
-		GuestDAO dao = (GuestDAO) ctx.getAttribute("guestDAO");
-		return dao.save(host);
-	}
+//	@POST
+//	@Path("/")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Guest setGuest(Guest host) {
+//		GuestDAO dao = (GuestDAO) ctx.getAttribute("guestDAO");
+//		return dao.save(host);
+//	}
 	
 	@PUT
 	@Path("/{id}")

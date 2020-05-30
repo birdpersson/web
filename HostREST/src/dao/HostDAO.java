@@ -25,7 +25,6 @@ public class HostDAO {
 
 	/**
 	 * Vraca korisnika za prosledjeno korisnicko ime i sifru. Vraca null ako korisnik ne postoji
-	 * 
 	 * @param username
 	 * @param password
 	 * @return
@@ -41,7 +40,6 @@ public class HostDAO {
 
 	/***
 	 * Vraca sve domacine.
-	 * 
 	 * @return
 	 */
 	public Collection<Host> findAll() {
@@ -50,36 +48,33 @@ public class HostDAO {
 
 	/***
 	 * Vraca domacina na osnovu njegovog id-a.
-	 * 
 	 * @return Domacin sa id-em ako postoji, u suprotnom null
 	 */
 	public Host findOne(String id) {
 		return hosts.containsKey(id) ? hosts.get(id) : null;
 	}
 
-	/***
-	 * Dodaje domacina u mapu proizvoda. Id novog domacina ce biti postavljen na maxPostojeciId + 1.
-	 * 
-	 * @param domacin
-	 * @return Novi domacin
-	 */
-	public Host save(Host host) {
-		Integer maxId = -1;
-		for (String id : hosts.keySet()) {
-			int idNum = Integer.parseInt(id);
-			if (idNum > maxId) {
-				maxId = idNum;
-			}
-		}
-		maxId++;
-		host.setId(maxId.toString());
-		hosts.put(host.getId(), host);
-		return host;
-	}
+//	/***
+//	 * Dodaje domacina u mapu proizvoda. Id novog domacina ce biti postavljen na maxPostojeciId + 1.
+//	 * @param domacin
+//	 * @return Novi domacin
+//	 */
+//	public Host save(Host host) {
+//		Integer maxId = -1;
+//		for (String id : hosts.keySet()) {
+//			int idNum = Integer.parseInt(id);
+//			if (idNum > maxId) {
+//				maxId = idNum;
+//			}
+//		}
+//		maxId++;
+//		host.setId(maxId.toString());
+//		hosts.put(host.getId(), host);
+//		return host;
+//	}
 
 	/***
 	 * Vrsi izmenu atributa domacina u mapi domacina. Id izmenjenog domacina ce imati istu vrednost kao i stari domacin.
-	 * 
 	 * @param Id domacina koji se zeli izmeniti, novi domacin sa izmenjenim atributima
 	 * @return Izmenjeni domacin
 	 */
@@ -91,7 +86,7 @@ public class HostDAO {
 		// if there is not host with such id we save that product as new one.
 		if (oldHost == null) {
 			System.out.println("Usao u save host u okviru update");
-			return save(updatedHost);
+			return null;
 		} else {
 			System.out.println("usao u update product u okviru update");
 			// We don't change id of existing host just username, password, firstname and
@@ -103,7 +98,7 @@ public class HostDAO {
 //			oldHost.setLastname(updatedHost.getApartments()); ?? Not here... In apartment class we change id of host.
 
 			// We save old product which is now updated.
-			return hosts.put(oldHost.getId(), oldHost);
+			return hosts.put(oldHost.getUsername(), oldHost);
 		}
 
 	}
@@ -131,12 +126,7 @@ public class HostDAO {
 			File file = new File(contextPath + "/hosts.txt");
 			System.out.println(file.getCanonicalPath());
 			in = new BufferedReader(new FileReader(file));
-			String line, id = "";
-			String username = "";
-			String password = "";
-			String firstname = "";
-			String lastname = "";
-			String gender = "";
+			String line;
 			StringTokenizer st;
 			while ((line = in.readLine()) != null) {
 				line = line.trim();
@@ -144,15 +134,14 @@ public class HostDAO {
 					continue;
 				st = new StringTokenizer(line, ";");
 				while (st.hasMoreTokens()) {
-					id = st.nextToken().trim();
-					username = st.nextToken().trim();
-					password = st.nextToken().trim();
-					firstname = st.nextToken().trim();
-					lastname = st.nextToken().trim();
-					gender = st.nextToken().trim();
-
+					String username = st.nextToken().trim();
+					String password = st.nextToken().trim();
+					String firstname = st.nextToken().trim();
+					String lastname = st.nextToken().trim();
+					String gender = st.nextToken().trim();
+					hosts.put(username, new Host(username, password, firstname, lastname, gender));
 				}
-				hosts.put(id, new Host(id, username, password, firstname, lastname, gender));
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -161,8 +150,10 @@ public class HostDAO {
 				try {
 					in.close();
 				} catch (Exception e) {
+					
 				}
 			}
 		}
 	}
+
 }
