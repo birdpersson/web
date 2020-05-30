@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Host {
 
-	private String id;
 	private String username;
 	private String password;
 	private String firstname;
@@ -12,14 +11,13 @@ public class Host {
 	private String gender;
 
 	private ArrayList<Apartment> apartments;
-	
+
 	public Host() {
-		 apartments = new ArrayList<Apartment>();
+		apartments = new ArrayList<Apartment>();
 	}
 
-	public Host(String id, String username, String password, String firstname, String lastname, String gender) {
+	public Host(String username, String password, String firstname, String lastname, String gender) {
 		this();
-		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.firstname = firstname;
@@ -27,14 +25,6 @@ public class Host {
 		this.gender = gender;
 	}
 
-	public void setId(String i) {
-		id = i;
-	}
-
-	public String getId() {
-		return id;
-	}
-	
 	public String getUsername() {
 		return username;
 	}

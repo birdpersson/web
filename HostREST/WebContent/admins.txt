@@ -1,2 +1,2 @@
-1;Max;liz123;Marko;Markovic;Muski;
-2;Zax;liz456;Zarko;Zarkovic;Muski;
+admin1;123;Marko;Markovic;Muski;
+admin2;456;Zarko;Zarkovic;Muski;

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Guest {
 
-	private String id;
 	private String username;
 	private String password;
 	private String firstname;
@@ -13,10 +12,10 @@ public class Guest {
 
 	private ArrayList<Apartment> apartments;
 	private ArrayList<Reservation> reservations;
-	
-	//Dodao listu preview koje je korisnik ostavio:
+
+	// Dodao listu preview koje je korisnik ostavio:
 	private ArrayList<Review> reviews;
-	
+
 	public Guest() {
 		super();
 		apartments = new ArrayList<Apartment>();
@@ -24,9 +23,8 @@ public class Guest {
 		reviews = new ArrayList<Review>();
 	}
 
-	public Guest(String id, String username, String password, String firstname, String lastname, String gender) {
+	public Guest(String username, String password, String firstname, String lastname, String gender) {
 		super();
-		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.firstname = firstname;
@@ -35,14 +33,6 @@ public class Guest {
 
 	}
 
-	public void setId(String i) {
-		id = i;
-	}
-
-	public String getId() {
-		return id;
-	}
-	
 	public String getUsername() {
 		return username;
 	}
@@ -94,12 +84,12 @@ public class Guest {
 	public ArrayList<Reservation> getReservations() {
 		return reservations;
 	}
-	
+
 	public void setReservations(ArrayList<Reservation> reservations) {
 		this.reservations = reservations;
 	}
 
-	//dodao:
+	// dodao:
 	public ArrayList<Review> getReviews() {
 		return reviews;
 	}
@@ -107,7 +97,5 @@ public class Guest {
 	public void setReviews(ArrayList<Review> reviews) {
 		this.reviews = reviews;
 	}
-	
-	
 
 }

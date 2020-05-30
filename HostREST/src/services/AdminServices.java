@@ -25,7 +25,7 @@ public class AdminServices {
 	@PostConstruct
 	// ctx polje je null u konstruktoru, mora se pozvati nakon konstruktora (@PostConstruct anotacija)
 	public void init() {
-		// Ovaj objekat se instancira više puta u toku rada aplikacije
+		// Ovaj objekat se instancira viï¿½e puta u toku rada aplikacije
 		// Inicijalizacija treba da se obavi samo jednom
 		if(ctx.getAttribute("adminDAO") == null) {
 			String contextPath = ctx.getRealPath("");
@@ -47,7 +47,7 @@ public class AdminServices {
 		Collection<Admin> retAdm = daoAdmin.findAll();
 		
 		for(Admin a : retAdm) {
-			a.setTests((List<Test>) daoTest.findAllByAdminsId(a.getId()));
+			a.setTests((List<Test>) daoTest.findAllByAdminsId(a.getUsername()));
 		}
 		return retAdm;
 	}
@@ -64,14 +64,14 @@ public class AdminServices {
 	}
 	
 	//serverska metoda za dodavanje 1 produkta
-	@POST
-	@Path("/")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Admin setAdmin(Admin admin) {
-		AdminDAO dao = (AdminDAO) ctx.getAttribute("adminDAO");
-		return dao.save(admin);
-	}
+//	@POST
+//	@Path("/")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Admin setAdmin(Admin admin) {
+//		AdminDAO dao = (AdminDAO) ctx.getAttribute("adminDAO");
+//		return dao.save(admin);
+//	}
 	
 	@PUT
 	@Path("/{id}")

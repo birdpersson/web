@@ -24,7 +24,7 @@ public class HostServices {
 	@PostConstruct
 	// ctx polje je null u konstruktoru, mora se pozvati nakon konstruktora (@PostConstruct anotacija)
 	public void init() {
-		// Ovaj objekat se instancira više puta u toku rada aplikacije
+		// Ovaj objekat se instancira viï¿½e puta u toku rada aplikacije
 		// Inicijalizacija treba da se obavi samo jednom
 		if (ctx.getAttribute("hostDAO") == null) {
 	    	String contextPath = ctx.getRealPath("");
@@ -46,7 +46,7 @@ public class HostServices {
 		Collection<Host> retHosts = daoHost.findAll();
 		
 		for(Host h : retHosts) {
-			h.setApartments((ArrayList<Apartment>) daoApart.findAllApartByHostId(h.getId()));
+			h.setApartments((ArrayList<Apartment>) daoApart.findAllApartByHostId(h.getUsername()));
 		}
 		
 		return retHosts;
@@ -62,14 +62,14 @@ public class HostServices {
 	
 	
 	//serverska metoda za dodavanje 1 produkta
-	@POST
-	@Path("/")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Host setHost(Host host) {
-		HostDAO dao = (HostDAO) ctx.getAttribute("hostDAO");
-		return dao.save(host);
-	}
+//	@POST
+//	@Path("/")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Host setHost(Host host) {
+//		HostDAO dao = (HostDAO) ctx.getAttribute("hostDAO");
+//		return dao.save(host);
+//	}
 	
 	
 	@PUT

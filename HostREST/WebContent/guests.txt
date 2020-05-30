@@ -1,3 +1,3 @@
-1;Max;loz123;Marko;Markovic;Muski;
-2;Zax;loz456;Zarko;Zarkovic;Muski;
-3;AnnaX;loz789;Ana;Anic;Zenski;
+guest1;123;Marko;Markovic;Muski;
+guest2;456;Zarko;Zarkovic;Muski;
+guest3;789;Ana;Anic;Zenski;
