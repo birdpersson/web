@@ -64,20 +64,32 @@ public class LoginService {
 
 		if (loggedAdmin != null) {
 			request.getSession().setAttribute("admin", loggedAdmin);
-			return Response.status(200).build();
+			return Response
+					.status(Response.Status.OK)
+					.entity(loggedAdmin)
+					.build();
 		}
 
 		if (loggedGuest != null) {
 			request.getSession().setAttribute("guest", loggedGuest);
-			return Response.status(200).build();
+			return Response
+					.status(Response.Status.OK)
+					.entity(loggedGuest)
+					.build();
 		}
 
 		if (loggedHost != null) {
 			request.getSession().setAttribute("host", loggedHost);
-			return Response.status(200).build();
+			return Response
+					.status(Response.Status.OK)
+					.entity(loggedHost)
+					.build();
 		}
 
-		return Response.status(400).entity("Invalid username and/or password").build();
+		return Response
+				.status(Response.Status.BAD_REQUEST)
+				.entity("Invalid username and/or password")
+				.build();
 	}
 
 	@POST
