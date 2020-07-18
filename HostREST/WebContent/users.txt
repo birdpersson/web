@@ -1,0 +1,3 @@
+admin;admin;Admin;Admin;Male;ADMIN
+guest;guest;Guest;Guest;Male;GUEST
+host;host;Host;Host;Male;HOST

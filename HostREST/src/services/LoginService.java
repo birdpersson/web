@@ -11,13 +11,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import beans.Admin;
-import beans.Guest;
-import beans.Host;
 import beans.User;
-import dao.AdminDAO;
-import dao.GuestDAO;
-import dao.HostDAO;
+import dao.UserDAO;
 
 @Path("")
 public class LoginService {
@@ -32,21 +27,10 @@ public class LoginService {
 	@PostConstruct
 	public void init() {
 
-		if (ctx.getAttribute("adminDAO") == null) {
+		if (ctx.getAttribute("userDAO") == null) {
 			String contextPath = ctx.getRealPath("");
-			ctx.setAttribute("adminDAO", new AdminDAO(contextPath));
+			ctx.setAttribute("userDAO", new UserDAO(contextPath));
 		}
-
-		if (ctx.getAttribute("guestDAO") == null) {
-			String contextPath = ctx.getRealPath("");
-			ctx.setAttribute("guestDAO", new GuestDAO(contextPath));
-		}
-
-		if (ctx.getAttribute("hostDAO") == null) {
-			String contextPath = ctx.getRealPath("");
-			ctx.setAttribute("hostDAO", new HostDAO(contextPath));
-		}
-
 	}
 
 	@POST
@@ -54,35 +38,14 @@ public class LoginService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response login(User user, @Context HttpServletRequest request) {
-		AdminDAO adminDao = (AdminDAO) ctx.getAttribute("adminDAO");
-		GuestDAO guestDao = (GuestDAO) ctx.getAttribute("guestDAO");
-		HostDAO hostDao = (HostDAO) ctx.getAttribute("hostDAO");
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+		User loggedUser = userDao.find(user.getUsername(), user.getPassword());
 
-		Admin loggedAdmin = adminDao.find(user.getUsername(), user.getPassword());
-		Guest loggedGuest = guestDao.find(user.getUsername(), user.getPassword());
-		Host loggedHost = hostDao.find(user.getUsername(), user.getPassword());
-
-		if (loggedAdmin != null) {
-			request.getSession().setAttribute("admin", loggedAdmin);
+		if (loggedUser != null) {
+			request.getSession().setAttribute("user", loggedUser);
 			return Response
 					.status(Response.Status.OK)
-					.entity(loggedAdmin)
-					.build();
-		}
-
-		if (loggedGuest != null) {
-			request.getSession().setAttribute("guest", loggedGuest);
-			return Response
-					.status(Response.Status.OK)
-					.entity(loggedGuest)
-					.build();
-		}
-
-		if (loggedHost != null) {
-			request.getSession().setAttribute("host", loggedHost);
-			return Response
-					.status(Response.Status.OK)
-					.entity(loggedHost)
+					.entity(loggedUser)
 					.build();
 		}
 
