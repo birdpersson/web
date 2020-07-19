@@ -12,6 +12,7 @@ public class User {
 	private String lastname;
 	private String gender;
 	private Role role;
+	private String jwt;
 
 	public User() {
 		super();
@@ -73,6 +74,14 @@ public class User {
 
 	public void setRole(Role role) {
 		this.role = role;
+	}
+
+	public String getJwt() {
+		return jwt;
+	}
+
+	public void setJwt(String jwt) {
+		this.jwt = jwt;
 	}
 
 }

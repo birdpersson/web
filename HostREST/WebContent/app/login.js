@@ -8,7 +8,7 @@ Vue.component("login", {
 		}
 	},
 	template: `
-<div id="Login">
+<div id="login">
 	<div class="container-fluid">
 	<div class="row no-gutter">
 
@@ -21,16 +21,16 @@ Vue.component("login", {
 
 				<form>
 					<div class="form-label-group">
-						<input v-model="username" id="inputUsername" class="form-control" placeholder="username" required>
+						<input v-model="user.username" class="form-control" placeholder="username" required>
 						<label for="inputUsername"></label>
 					</div>
 
 					<div class="form-label-group">
-						<input v-model="password" type="password" id="inputPassword" class="form-control" placeholder="password" required>
+						<input v-model="user.password" type="password" class="form-control" placeholder="password" required>
 						<label for="inputPassword"></label>
 					</div>
 
-					<button type="button" class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" v-on:click='submit()'>Sign in</button>
+					<button type="button" class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" v-on:click='login(user)'>Sign in</button>
 					<router-link to='/registration' class="small" exact>Not Registered?</router-link>
 				</form>
 				</div>
@@ -45,14 +45,22 @@ Vue.component("login", {
 `
 	,
 	methods: {
-		submit: function (user) {
+		checkLoggedIn: function (data) {
+			if (!data.jwt) {
+				this.$router.push('/error')
+			}
+
+			localStorage.setItem('jwt', data.jwt);
+			localStorage.setItem('role', data.role);
+			localStorage.setItem('user', data.username);
+
+			this.$router.push('/');
+		},
+
+		login: function (user) {
 			axios
 				.post('rest/login', { username: user.username, password: user.password })
-				.then(Response => {
-					if (Response.status === 200) {
-						this.$router.push('/');
-					}
-				})
+				.then(response => this.checkLoggedIn(response.data));
 		}
 	}
 })

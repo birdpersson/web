@@ -1,5 +1,8 @@
 package services;
 
+import java.security.Key;
+import java.util.Date;
+
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +16,9 @@ import javax.ws.rs.core.Response;
 
 import beans.User;
 import dao.UserDAO;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 @Path("")
 public class LoginService {
@@ -33,16 +39,19 @@ public class LoginService {
 		}
 	}
 
+	static Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
 	@POST
 	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response login(User user, @Context HttpServletRequest request) {
+	public Response login(User user) {
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
 		User loggedUser = userDao.find(user.getUsername(), user.getPassword());
 
 		if (loggedUser != null) {
-			request.getSession().setAttribute("user", loggedUser);
+			String jws = Jwts.builder().setSubject(loggedUser.getUsername()).setExpiration(new Date(new Date().getTime() + 1000*10L)).setIssuedAt(new Date()).signWith(key).compact();
+			loggedUser.setJwt(jws);
 			return Response
 					.status(Response.Status.OK)
 					.entity(loggedUser)
