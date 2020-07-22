@@ -5,9 +5,9 @@ Vue.component('homepage',{
                 <h1> App Title </h1>
                 <nav>
                     <ul>
-                        <li><a href="#">Apartments</a></li>                  
-                        <li v-if='!isGuest'><a href="#">Users</a></li>
-                        <li v-if='isGuest'><a href="#">Reservations</a></li>
+                        <li><router-link to="/apartments">Apartments</router-link></li>                      
+                        <li v-if='!isGuest'><router-link to="/users">Users</router-link></li>
+                        <li><router-link to="/reservations">Reservations</router-link></li>
                         <li><router-link to="/profile">Profile</router-link></li>
                     </ul>
                 </nav>

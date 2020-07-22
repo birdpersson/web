@@ -1,33 +1,31 @@
-Vue.component('profile',{
+Vue.component('users',{
     template:`
-        <div id="user-profile">
+        <div id="user-list">
             <header id='main-header'>
                 <h1> App Title </h1>
                 <nav>
                     <ul>
                         <li><router-link to="/homepage">Home</router-link></li>
                         <li><router-link to="/apartments">Apartments</router-link></li>                  
-                        <li v-if='!isGuest'><router-link to="/users">Users</router-link></li>
                         <li><router-link to="/reservations">Reservations</router-link></li>
+                        <li><router-link to="/profile">Profile</router-link></li>
                     </ul>
                 </nav>
             </header>
             <div> 
-                <h1>Hello from Profile Page {{user.username}}!</h1>
+                <h1>Hello from Users Page {{user.username}}!</h1>
                 <h3>You are {{user.role}}</h3>
-                <p>
-                Izmena ličnih podataka<br>
-                    ● Kao ulogovani korisnik bilo kog tipa:<br>
-                    ○ Imam uvid u svoje lične podatke<br>
-                    ○ Mogu da menjam svoje lične podatke, kao i lozinku (osim korisničkog imena)<br>
-                    ■ Sve izmene moraju biti validne - ako neko polje nije popunjeno ili lozinke<br>
-                    nisu odgovarajuće (stara nije dobra ili nova i kontrolna nisu iste), pored<br>
-                    odgovarajućeg polja se ispisuje poruka o grešci<br>
-                    ■ Pritiskom na dugme za slanje se šalje zahtev za izmenu na server<br>
-                    ■ U slučaju uspešne izmene podata korisnik se obaveštava o tome<br>
-                    ■ U slučaju neuspešne izmene podata korisniku se ispisuje greška<br>
-                </p>
             </div>
+            <p v-if='isAdmin'>
+                Pregled svih korisnika
+                Kao Administrator:
+                Imam pregled svih postojećih korisnika u sistemu, a mogu vršiti i pretragu
+            </p> 
+            <p v-if='isHost'>
+                Kao Domaćin:
+                Imam pregled svih korisnika koji su napravili rezervaciju za moje apartmane i
+                mogu vršiti pretragu među njima
+            </p>
             <footer >
                 <p>Copyrights &copy; Web Programiranje 2020</p>
             </footer>
