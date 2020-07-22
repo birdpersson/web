@@ -54,7 +54,7 @@ Vue.component("login", {
 			localStorage.setItem('role', data.role);
 			localStorage.setItem('user', data.username);
 
-			this.$router.push('/');
+			this.$router.push('/homepage');
 		},
 
 		login: function (user) {

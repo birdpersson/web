@@ -1,0 +1,31 @@
+header{
+    background-color: #333;
+    color:#fff;
+    text-align: center;
+    padding:10px ;
+}
+html body div#app div#home header#main-header nav ul{
+    list-style: none;
+}
+html body div#app div#home header#main-header nav ul li{
+    display: inline;
+}
+html body div#app div#home header#main-header nav ul li a{
+    text-decoration: none;
+    color:#fff;
+}
+html body div#app div#home header#main-header nav ul li a:hover{
+    font-size: 16px;
+    color:#333;
+    background: #fff;
+    border-radius: 15px;
+    padding:5px;
+}
+footer {
+    margin-top:200px;
+    background-color: #333;
+    color:#fff;
+    text-align: center;
+    font-size: 14px;
+    padding:10px;
+}
