@@ -28,9 +28,7 @@ Vue.component('profile',{
                     ■ U slučaju neuspešne izmene podata korisniku se ispisuje greška<br>
                 </p>
             </div>
-            <footer >
-                <p>Copyrights &copy; Web Programiranje 2020</p>
-            </footer>
+
         </div>
     `,
     data:function(){

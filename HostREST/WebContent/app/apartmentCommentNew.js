@@ -1,10 +1,11 @@
-Vue.component('homepage',{
+Vue.component('new-comment',{
     template:`
-        <div id="home">
+        <div id="aparm-new-comment">
             <header id='main-header'>
                 <h1> App Title </h1>
                 <nav>
                     <ul>
+                        <li><router-link to="/homepage">Home</router-link></li>
                         <li><router-link to="/apartments">Apartments</router-link></li>                      
                         <li v-if='!isGuest'><router-link to="/users">Users</router-link></li>
                         <li><router-link to="/reservations">Reservations</router-link></li>
@@ -13,14 +14,33 @@ Vue.component('homepage',{
                 </nav>
             </header>
             <div> 
-                <h1>Hello from Homepage {{user.username}}!</h1>
+                <h1>Hello from apartment comments overview {{user.username}}!</h1>
                 <h3>You are {{user.role}}</h3>
-            
-                <p v-if='isAdmin'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, similique fuga consequuntur maiores consequatur error reiciendis obcaecati cumque saepe fugit! Cum, animi. Reiciendis laudantium saepe nostrum quos. Quibusdam, blanditiis itaque!
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, similique fuga consequuntur maiores consequatur error reiciendis obcaecati cumque saepe fugit! Cum, animi. Reiciendis laudantium saepe nostrum quos. Quibusdam, blanditiis itaque!
+
+                <p v-if='isGuest'>
+                    Kao Gost:<br>
+                    ○ Mogu da ostavim komentar na apartman za koji imam rezervaciju sa statusom<br>
+                    ODBIJENA ili ZAVRŠENA:<br>
+                    <br>
+                    ■ Unosim komentar u polje<br>
+                    ■ Dodeljujem ocenu apartmanu<br>
+                    ■ Klikom na dugme se komentar šalje na server<br>
+                    ■ U slučaju uspešnog slanja komentara korisnik se o tome obaveštava<br>
+                    ■ U slučaju neuspešnog slanja komentara korisniku se ispisuje greška<br>
+                    <br>
+                    <br>
+                    <button> Potvrdi komentar </button>
+                </p>
+
+                <p v-if='isAdmin'>
+                   Samo gost ostavlja komentar.
+                  
+                </p>
+
+                <p v-if='isHost'>
+                    Samo gost ostavlja komentar.
                 </p>
             </div>
-      
         </div>
     `,
     data:function(){
@@ -50,4 +70,3 @@ Vue.component('homepage',{
     },
 
 });
-

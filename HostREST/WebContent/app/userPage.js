@@ -26,9 +26,7 @@ Vue.component('users',{
                 Imam pregled svih korisnika koji su napravili rezervaciju za moje apartmane i
                 mogu vršiti pretragu među njima
             </p>
-            <footer >
-                <p>Copyrights &copy; Web Programiranje 2020</p>
-            </footer>
+
         </div>
     `,
     data:function(){

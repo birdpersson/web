@@ -36,10 +36,42 @@ Vue.component('reservations',{
                 ○ Želim da imam pregled svih svojih rezervacija:<br>
                 ■ Imam i mogućnost odustanka od rezervacija, ali samo onih sa statusom<br>
                 KREIRANA ili PRIHVAĆENA, pri čemu novi status postaje ODUSTANAK<br>
+                <br>
+                <br>
+                <table border="1px;">
+                <thead>
+                    <tr >
+                        <th colspan="4">
+                            Pregled svih guests rezervacija
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Atribut1</th>
+                        <th>Atribut2</th>
+                        <th>Odustani</th>
+                        <th>Ostavi komentar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>atribut1</td>
+                        <td>atribut2</td>
+                        <td><button v-on:click='message'> Odustani</button></td>
+                        <td><router-link to="/newComment"><button> + Komentar </button></router-link></td>
+                        
+                    </tr>
+                    <tr>
+                        <td>atribut3</td>
+                        <td>atribut4</td>
+                        <td><button v-on:click='message'> Odustani</button></td>
+                        <td><router-link to="/newComment"><button> + Komentar </button></router-link></td>
+                    </tr>
+                </tbody>
+            </table>
+
+
             </p> 
-            <footer >
-                <p>Copyrights &copy; Web Programiranje 2020</p>
-            </footer>
+   
         </div>
     `,
     data:function(){
@@ -54,7 +86,9 @@ Vue.component('reservations',{
         }
     },
     methods:{
-
+        message:function(){
+            alert('Ako je aktivna rezervacija ovim bi se ona otkazala!');
+        }
     },
     created(){
         this.user.username = localStorage.getItem('user');
