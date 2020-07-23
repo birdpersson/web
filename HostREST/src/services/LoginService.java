@@ -50,7 +50,7 @@ public class LoginService {
 		User loggedUser = userDao.find(user.getUsername(), user.getPassword());
 
 		if (loggedUser != null) {
-			String jws = Jwts.builder().setSubject(loggedUser.getUsername()).setExpiration(new Date(new Date().getTime() + 1000*10L)).setIssuedAt(new Date()).signWith(key).compact();
+			String jws = Jwts.builder().setSubject(loggedUser.getUsername()).setExpiration(new Date(new Date().getTime() + 1000*9000L)).setIssuedAt(new Date()).signWith(key).compact();
 			loggedUser.setJwt(jws);
 			return Response
 					.status(Response.Status.OK)
