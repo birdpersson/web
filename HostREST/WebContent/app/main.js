@@ -7,6 +7,10 @@ const Apartments = {template: '<apartments></apartments>'}
 const ApartmentsComments = {template: '<apartment-comments></apartment-comments>'}
 const NewReservation  = {template: '<new-reservation></new-reservation>'}
 const NewComment  = {template: '<new-comment></new-comment>'}
+const AmenitiesOverview = {template: '<amenities-overview></amenities-overview>'}
+const NewAmenities = {template: '<new-amenities></new-amenities>'}
+const ApartInactiveOverview = {template: '<inactive-overview></inactive-overview>'}
+const NewApartment = {template: '<new-apartment></new-apartment>'}
 
 const routes = [
 	// { path: '/', component: FrontHomepage }, //stranica pre logina
@@ -19,6 +23,11 @@ const routes = [
 	{ path: '/apartmentComments', component:ApartmentsComments }, //vrv treba /apartmentComments:idApartmana
 	{ path: '/newReservation', component:NewReservation }, //vrv treba /apartmentComments:idApartmana
 	{ path: '/newComment', component:NewComment },
+
+	{ path: '/amenitiesOverview', component:AmenitiesOverview },
+	{ path: '/amenitiesNew', component:NewAmenities },
+	{ path: '/apartInactiveOverview', component:ApartInactiveOverview },
+	{ path: '/apartmentNew', component:NewApartment },
 ]
 
 const router = new VueRouter({

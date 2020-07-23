@@ -19,6 +19,30 @@ Vue.component('reservations',{
             <p v-if='isAdmin'>
                 Kao Administratoru:<br>
                 ○ Omogućen mi je pregled svih rezervacija u sistemu<br>
+                <table border="1px;">
+                <thead>
+                    <tr>
+                        <th colspan="4">
+                            Pregled svih rezervacija
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Atribut1</th>
+                        <th>Atribut2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>atribut1</td>
+                        <td>atribut2</td>
+
+                    </tr>
+                    <tr>
+                        <td>atribut3</td>
+                        <td>atribut4</td>
+                    </tr>
+                </tbody>
+            </table>
             </p> 
             <p v-if='isHost'>
                 Kao Domaćin:<br>
@@ -29,6 +53,41 @@ Vue.component('reservations',{
                 PRIHVAĆENA, pri čemu rezervacija menja status u ODBIJENA<br>
                 ■ Nakon završnog datuma noćenja, mogu da postavim rezervaciju na<br>
                 status ZAVRŠENA<br>
+                <br>
+                <br>
+                <table border="1px;">
+                <thead>
+                    <tr>
+                        <th colspan="4">
+                            Pregled svih rezervacija stanova tog hosta
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>Atribut1</th>
+                        <th>Atribut2</th>
+                        <th>Status</th>
+                        <th>Status</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>atribut1</td>
+                        <td>atribut2</td>
+                        <td><button v-on:click='messageHost'> prihvacen </button></td>
+                        <td><button v-on:click='messageHost'> odbijen </button></td>
+                        <td><button v-on:click='messageHost'> zavrsen </button></td>
+                    </tr>
+                    <tr>
+                        <td>atribut3</td>
+                        <td>atribut4</td>
+                        <td><button v-on:click='messageHost'> prihvacen </button></td>
+                        <td><button v-on:click='messageHost'> odbijen </button></td>
+                        <td><button v-on:click='messageHost'> zavrsen </button></td>
+                    </tr>
+                </tbody>
+            </table>
+
             </p>
             <p v-if='isGuest'>
                 Pregled rezervacija<br>
@@ -68,8 +127,6 @@ Vue.component('reservations',{
                     </tr>
                 </tbody>
             </table>
-
-
             </p> 
    
         </div>
@@ -88,6 +145,9 @@ Vue.component('reservations',{
     methods:{
         message:function(){
             alert('Ako je aktivna rezervacija ovim bi se ona otkazala!');
+        },
+        messageHost:function(){
+            alert('Menja se status rezervacije!');
         }
     },
     created(){
