@@ -3,7 +3,7 @@ Vue.component('inactive-overview',{
         <div id="home">
             <header id='main-header'>
                 <h1> App Title </h1>
-                <nav>
+                <nav class="nav navbar-nav">
                     <ul>
                         <li><router-link to="/homepage">Home</router-link></li>
                         <li><router-link to="/apartments">Apartments</router-link></li>                      

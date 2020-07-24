@@ -1,6 +1,7 @@
 const Login = { template: '<login></login>' }
 const Homepage = {template: '<homepage></homepage>'}
 const Profile = {template: '<profile></profile>'}
+const ProfileUpdate = {template: '<profile-update></profile-update>'}
 const Users = {template: '<users></users>'} 
 const Reservations = {template: '<reservations></reservations>'}
 const Apartments = {template: '<apartments></apartments>'}
@@ -12,11 +13,15 @@ const NewAmenities = {template: '<new-amenities></new-amenities>'}
 const ApartInactiveOverview = {template: '<inactive-overview></inactive-overview>'}
 const NewApartment = {template: '<new-apartment></new-apartment>'}
 
+const Test = {template: '<navigation></navigation>'}
+
+
 const routes = [
 	// { path: '/', component: FrontHomepage }, //stranica pre logina
 	{ path: '/login', component: Login },
 	{ path: '/homepage', component:Homepage },
 	{ path: '/profile', component:Profile },
+	{ path: '/patient/update', component:ProfileUpdate },
 	{ path: '/users', component:Users },
 	{ path: '/reservations', component:Reservations },
 	{ path: '/apartments', component:Apartments },
@@ -28,6 +33,7 @@ const routes = [
 	{ path: '/amenitiesNew', component:NewAmenities },
 	{ path: '/apartInactiveOverview', component:ApartInactiveOverview },
 	{ path: '/apartmentNew', component:NewApartment },
+	{ path: '/test', component:Test },
 ]
 
 const router = new VueRouter({

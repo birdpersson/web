@@ -3,13 +3,15 @@ Vue.component('profile',{
         <div id="user-profile">
             <header id='main-header'>
                 <h1> App Title </h1>
-                <nav>
+                <nav class="nav navbar-nav">
                     <ul>
                         <li><router-link to="/homepage">Home</router-link></li>
                         <li><router-link to="/apartments">Apartments</router-link></li>                  
                         <li v-if='!isGuest'><router-link to="/users">Users</router-link></li>
                         <li><router-link to="/reservations">Reservations</router-link></li>
                     </ul>
+                 
+                </ul>
                 </nav>
             </header>
             <div> 
@@ -27,8 +29,45 @@ Vue.component('profile',{
                     ■ U slučaju uspešne izmene podata korisnik se obaveštava o tome<br>
                     ■ U slučaju neuspešne izmene podata korisniku se ispisuje greška<br>
                 </p>
+                <br>
+                <hr>
+                <br>
+                <h2 class="title">User Profile</h2>   
+                <hr style='background:#e8491d;'>
+                <div class="container">
+                    <form>
+                        <ul id="services" class="list-group">
+                        <li class="list-group-item">
+                                <h4>Korisnicko ime</h4>
+                                <p>{{profile.username}}</p>
+                            </li>
+                            <li class="list-group-item">
+                                <h4>Ime</h4>
+                                <p>{{profile.firstname}}</p>
+                            </li>
+                            
+                            <li class="list-group-item">
+                                <h4>Prezime</h4>
+                                <p>{{profile.lastname}}</p>    
+                            </li>
+                
+                            <li class="list-group-item">
+                                <h4>Pol</h4>
+                                <p>{{profile.gender}}</p>
+                            </li>
+                
+                            <li class="list-group-item">
+                                <h4>Uloga</h4>
+                                <p>{{profile.role}}</p>
+                            </li>
+                        </ul>
+                
+                        <div id='buttonUpdate'>
+                        <router-link to='/patient/update'><button type='button' class="btn btn-lg btn-success "> Update </button> </router-link> 
+                        </div>
+                    </form>
+                </div>
             </div>
-
         </div>
     `,
     data:function(){
@@ -36,6 +75,14 @@ Vue.component('profile',{
             user:{
                 username:'',
                 role:''
+            },
+            profile:{
+                username:'tttesttt',
+                password:'test12345',
+                firstname:'Test',
+                lastname:'Testovic',
+                gender:'M',
+                role:'admin',
             },
             isAdmin:false,
             isHost:false,
