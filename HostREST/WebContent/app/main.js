@@ -13,6 +13,9 @@ const NewAmenities = {template: '<new-amenities></new-amenities>'}
 const ApartInactiveOverview = {template: '<inactive-overview></inactive-overview>'}
 const NewApartment = {template: '<new-apartment></new-apartment>'}
 
+const Test = {template: '<navigation></navigation>'}
+
+
 const routes = [
 	// { path: '/', component: FrontHomepage }, //stranica pre logina
 	{ path: '/login', component: Login },
@@ -30,6 +33,7 @@ const routes = [
 	{ path: '/amenitiesNew', component:NewAmenities },
 	{ path: '/apartInactiveOverview', component:ApartInactiveOverview },
 	{ path: '/apartmentNew', component:NewApartment },
+	{ path: '/test', component:Test },
 ]
 
 const router = new VueRouter({
