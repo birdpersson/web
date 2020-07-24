@@ -1,6 +1,7 @@
 const Login = { template: '<login></login>' }
 const Homepage = {template: '<homepage></homepage>'}
 const Profile = {template: '<profile></profile>'}
+const ProfileUpdate = {template: '<profile-update></profile-update>'}
 const Users = {template: '<users></users>'} 
 const Reservations = {template: '<reservations></reservations>'}
 const Apartments = {template: '<apartments></apartments>'}
@@ -17,6 +18,7 @@ const routes = [
 	{ path: '/login', component: Login },
 	{ path: '/homepage', component:Homepage },
 	{ path: '/profile', component:Profile },
+	{ path: '/patient/update', component:ProfileUpdate },
 	{ path: '/users', component:Users },
 	{ path: '/reservations', component:Reservations },
 	{ path: '/apartments', component:Apartments },

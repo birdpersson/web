@@ -3,7 +3,7 @@ Vue.component('new-reservation',{
         <div id="new-Reservation">
             <header id='main-header'>
                 <h1> App Title </h1>
-                <nav>
+                <nav class="nav navbar-nav">
                     <ul>
                         <li><router-link to="/homepage">Home</router-link></li>
                         <li><router-link to="/apartments">Apartments</router-link></li>                      

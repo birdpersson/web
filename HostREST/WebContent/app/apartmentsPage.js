@@ -3,7 +3,7 @@ Vue.component('apartments',{
         <div id="apartments-overview">
             <header id='main-header'>
                 <h1> App Title </h1>
-                <nav>
+                <nav class="nav navbar-nav">
                     <ul>
                         <li><router-link to="/homepage">Home</router-link></li> 
                         <li v-if='!isGuest'><router-link to="/users">Users</router-link></li>
