@@ -41,7 +41,7 @@ Vue.component('reservations',{
                 </nav> 
             </div>
             <div> 
-                <h1>Hello from Overview Reservation Page {{user.username}}!</h1>
+                <h1>Reservation Page {{user.username}}!</h1>
                 <h3>You are {{user.role}}</h3>
             </div>
             <p v-if='isAdmin'>

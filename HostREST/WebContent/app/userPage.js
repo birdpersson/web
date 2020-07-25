@@ -40,64 +40,72 @@ Vue.component('users',{
                     </div>
                 </nav> 
             </div>
-            <div id='main'> 
-                <h1>List of users</h1>
+            <div id='main'>
+                <div class="container">
+                    <h1 style="margin-top:10px;color:#35424a;" >List Of <span id='titleEffect'>Users</span></h1>
                     <div v-if='isAdmin'>
-                        <h3>As an administrator on this page you can see list of all users in the system.</h3>
-                        <div class="container" > 
-                            <div id='filter'>
-                                <nav class="navbar navbar-light bg-light justify-content-between">
-                                    <a class="navbar-brand">Pretraga</a>
-                                    <form class="form-inline">
-                                    <input class="form-control mr-sm-2" v-model='searchedUser.username' type="text" placeholder="username" aria-label="Search">
-                                    <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="searchedUser.role">
-                                        <option disabled value="">Role</option>
-                                        <option>admin</option>
-                                        <option>host</option>
-                                        <option>guest</option>
-                                    </select>
-                                    <select style="padding:7px; margin-right: 10px" id='listOfGenders' v-model="searchedUser.gender">
-                                        <option disabled value="">Gender</option>
-                                        <option>male</option>
-                                        <option>female</option>
-                                        <option>other</option>
-                                    </select>
-                                    <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click='searchUser()'>Search</button>
-                                    </form>
-                                </nav>
-                            </div> 
-
-                            <div class="container" >
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th>Username</th>
-                                        <th>Firstname</th>
-                                        <th>Lastname</th>
-                                        <th>Gender</th>
-                                        <th>Role</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr v-bind:key='users.username' v-for='user in users'>
-                                        <td>{{user.username}}</td>
-                                        <td>{{user.firstname}}</td>
-                                        <td>{{user.lastname}}</td>
-                                        <td>{{user.gender}}</td>
-                                        <td>{{user.role}}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>     
-                        <br>
-                        <br>
-                        Pregled svih korisnika
-                        Kao Administrator:
-                        Imam pregled svih postojećih korisnika u sistemu, a mogu vršiti i pretragu
+                        <h3 style="color:#35424a;" >As an administrator on this page you can see list of all users in the system.</h3>
                     </div>
+                    <div style="color:#35424a;" v-if='isHost'>
+                        <h3>As a host on this page you can see list of all users that have reservation on your's apartment.</h3>
+                    </div>
+                    <hr style='background:#e8491d;height:1px;'>  
+                </div>
+                <div class="container">
+                
+                    <div class="container" > 
+                        <div id='filter'>
+                            <nav class="navbar navbar-light bg-light justify-content-between">
+                                <a class="navbar-brand">Pretraga</a>
+                                <form class="form-inline">
+                                <input class="form-control mr-sm-2" v-model='searchedUser.username' type="text" placeholder="username" aria-label="Search">
+                                <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="searchedUser.role">
+                                    <option disabled value="">Role</option>
+                                    <option>admin</option>
+                                    <option>host</option>
+                                    <option>guest</option>
+                                </select>
+                                <select style="padding:7px; margin-right: 10px" id='listOfGenders' v-model="searchedUser.gender">
+                                    <option disabled value="">Gender</option>
+                                    <option>male</option>
+                                    <option>female</option>
+                                    <option>other</option>
+                                </select>
+                                <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click='searchUser()'>Search</button>
+                                </form>
+                            </nav>
+                        </div> 
 
-                    <div v-if='isHost'>
+                        <div class="container" >
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Firstname</th>
+                                    <th>Lastname</th>
+                                    <th>Gender</th>
+                                    <th>Role</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-bind:key='users.username' v-for='user in users'>
+                                    <td>{{user.username}}</td>
+                                    <td>{{user.firstname}}</td>
+                                    <td>{{user.lastname}}</td>
+                                    <td>{{user.gender}}</td>
+                                    <td>{{user.role}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>     
+                    <!--    <br>
+                    <br>
+                    Pregled svih korisnika
+                    Kao Administrator:
+                    Imam pregled svih postojećih korisnika u sistemu, a mogu vršiti i pretragu
+
+                    <!--<div v-if='isHost'>
                         <h3>As a host on this page you can see list of all users that have reservation on your's apartment.</h3>
                             Kao Domaćin:
                             Imam pregled svih korisnika koji su napravili rezervaciju za moje apartmane i
@@ -105,7 +113,8 @@ Vue.component('users',{
 
                             Mozda i da ne budu 2 odvojena pogleda veca jedan isit tj.jedna ista tabela koju popunjavamo drugacije u
                             zavisnosti od role korisnika.
-                    </div>
+                    </div>-->
+                </div>
             </div>
         </div>
     `,

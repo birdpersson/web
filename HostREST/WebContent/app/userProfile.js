@@ -40,9 +40,11 @@ Vue.component('profile',{
                     </div>
                 </nav> 
             </div>
-            <div> 
-                <h2 class="title">User Profile</h2>   
-                <hr style='background:#e8491d;'>
+            <div>
+                <div class="container">
+                    <h1 style="margin-top:10px;color:#35424a;" >User <span id='titleEffect'>Profile</span></h1>
+                    <hr style='background:#e8491d;height:1px;'>  
+                </div>
                 <div class="container">
                     <form>
                         <ul id="services" class="list-group">

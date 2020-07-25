@@ -40,10 +40,11 @@ Vue.component('profile-update',{
                     </div>
                 </nav> 
             </div>
-            <div>
-
-                <h2 class="title">User Profile Update</h2>   
-                <hr style='background:#e8491d;'>
+            <div id='main'>
+                <div class="container">
+                    <h1 style="margin-top:10px;color:#35424a;" >User Profile<span id='titleEffect'> Update</span></h1>
+                    <hr style='background:#e8491d;height:1px;'>  
+                </div>
                 <div class="container">          
 
                     <fieldset class="form-group">
