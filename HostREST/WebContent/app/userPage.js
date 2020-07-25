@@ -6,7 +6,7 @@ Vue.component('users',{
                     <div class="container">
                         <h1><span id='titleEffect'>Apartment</span>Finder</h1>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon">TEST</span>
+                        <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarResponsive">
                         <ul class="navbar-nav ml-auto">
@@ -47,7 +47,7 @@ Vue.component('users',{
                         <div class="container" > 
                             <div id='filter'>
                                 <nav class="navbar navbar-light bg-light justify-content-between">
-                                    <a class="navbar-brand">Filtriranje</a>
+                                    <a class="navbar-brand">Pretraga</a>
                                     <form class="form-inline">
                                     <input class="form-control mr-sm-2" v-model='searchedUser.username' type="text" placeholder="username" aria-label="Search">
                                     <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="searchedUser.role">

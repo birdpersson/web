@@ -6,7 +6,7 @@ Vue.component('homepage',{
                     <div class="container">
                         <h1><span id='titleEffect'>Apartment</span>Finder</h1>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon">TEST</span>
+                        <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarResponsive">
                         <ul class="navbar-nav ml-auto">
@@ -32,21 +32,82 @@ Vue.component('homepage',{
                             <li class="nav-item">
                                 <router-link class="nav-link" to="/profile" exact>Profile</router-link>
                             </li> 
+                            <!--<li class="nav-item">
+                                <router-link  to='#' class="nav-link" exact> <button class="btn" id='btnLogin'>Log In</button> </router-link>
+                            </li>
+                            <li class="nav-item">
+                                <button  class="btn"  id='btnLogout' >Log Out</button> 
+                            </li>-->
                         </ul>
-                                    
-                        <router-link  to='#' class="nav-link" exact> <button class="btn" id='btnLogin'>Log In</button> </router-link>
-                        <button  class="btn"  id='btnLogout' >Log Out</button> 
+                            <router-link  to='#' class="nav-link" exact> <button class="btn" id='btnLogin'>Log In</button> </router-link>
+                            <button  class="btn"  id='btnLogout' >Log Out</button> 
                         </div>
                     </div>
                 </nav> 
             </div>
-            <div> 
-                <h1>Hello from Homepage {{user.username}}!</h1>
-                <h3>You are {{user.role}}</h3>
-            
-                <p v-if='isAdmin'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, similique fuga consequuntur maiores consequatur error reiciendis obcaecati cumque saepe fugit! Cum, animi. Reiciendis laudantium saepe nostrum quos. Quibusdam, blanditiis itaque!
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, similique fuga consequuntur maiores consequatur error reiciendis obcaecati cumque saepe fugit! Cum, animi. Reiciendis laudantium saepe nostrum quos. Quibusdam, blanditiis itaque!
-                </p>
+            <div id='main'> 
+                <div class="container">
+                    <h1 style="margin-top:10px;color:#35424a;" >Welcome <span id='titleEffect'>{{user.username}}</span>!</h1>
+                    <hr style='background:#e8491d;height:1px;'>  
+                </div>
+                <div v-if='isAdmin'>
+                    <!-- Page Content -->
+                    <div class="container">
+                        <div class="row">
+                            <!-- Apartments -->
+                                <div class="col-xl-3 col-md-6 mb-4">
+                                    <div class="card border-0 shadow">
+                                    <router-link style='text-decoration: none;color:#35424a;' to="/apartments"  class="nav-link" exact> 
+                                        <img src="img/apartment2.1.jpg" class="card-img-top" alt="...">
+                                        <div class="card-body text-center">
+                                        <h5 class="card-title mb-0">Apartments</h5>
+                                        <div class="card-text text-black-50">See list of all apartments</div>
+                                        </div>
+                                    </router-link>
+                                </div>
+                            </div>
+                            
+                            <!-- Users -->
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-0 shadow">
+                                    <router-link style='text-decoration: none;color:#35424a;' to="/users"  class="nav-link" exact> 
+                                        <img src="img/users1.2.jpg" class="card-img-top" alt="...">
+                                        <div class="card-body text-center">
+                                        <h5 class="card-title mb-0">Users</h5>
+                                        <div class="card-text text-black-50">See list of all users</div>
+                                        </div>
+                                    </router-link>
+                                </div>
+                            </div>
+                            <!-- Reservations -->
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-0 shadow">
+                                    <router-link style='text-decoration: none;color:#35424a;' to="/reservations"  class="nav-link" exact>
+                                        <img src="img/reservation1.1.jpg" class="card-img-top" alt="...">
+                                        <div class="card-body text-center">
+                                        <h5 class="card-title mb-0">Reservations</h5>
+                                        <div class="card-text text-black-50">See list of all reservations</div>
+                                        </div>
+                                    </router-link>
+                                </div>
+                            </div>
+                            <!-- Profile-->
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-0 shadow">
+                                    <router-link style='text-decoration: none;color:#35424a;' to="/profile"  class="nav-link" exact>
+                                        <img src="img/profile3.1.jpg" class="card-img-top" alt="...">
+                                        <div class="card-body text-center">
+                                        <h5 class="card-title mb-0">Profile</h5>
+                                        <div class="card-text text-black-50">See or edit your profile</div>
+                                    </router-link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.row -->
+                    
+                    </div>
+                </div>
             </div>
       
         </div>

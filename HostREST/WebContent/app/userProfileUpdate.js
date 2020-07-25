@@ -6,7 +6,7 @@ Vue.component('profile-update',{
                     <div class="container">
                         <h1><span id='titleEffect'>Apartment</span>Finder</h1>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon">TEST</span>
+                        <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarResponsive">
                         <ul class="navbar-nav ml-auto">

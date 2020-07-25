@@ -1,4 +1,4 @@
-#main-header{
+/* #main-header{
     background-color: #333;
     color:#fff;
     text-align: center;
@@ -24,11 +24,11 @@ html body div#app div header#main-header nav ul li a{
 }
 html body div#app div header#main-header nav ul li a:hover{
     /* font-size: 18px; */
-    color:#333;
+    /* color:#333;
     background: #fff;
     border-radius: 15px;
     padding:5px;
-}
+} */ 
 #main-footer {
     /* margin-top:200px;
     background-color: #333;
