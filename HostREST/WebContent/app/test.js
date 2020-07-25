@@ -28,15 +28,16 @@ Vue.component("test", {
                 <tbody>
                     <tr v-for="row in rows" :key="row.username">
                     <td v-for="col in cols" :key="col">{{ row[col] }}</td>
-                <!--<td> <button type='button' v-on:click=' goToPatientKartonDetails(row.id)' class="btn btn-outline-warning">Detaljnije</button></td>-->
+                <td> <button type='button' v-on:click=' goToPatientKartonDetails(row.id)' class="btn btn-outline-warning">Detaljnije</button></td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div> -->
-    <div class="col-sm-8 text-center">
+
+    <!-- <div class="col-sm-8 text-center">-->
     <!--SEARCH RESTAURANT FORM-->
-        <h1>Search restaurants</h1>
+    <!--<h1>Search restaurants</h1>
         <form id="searchRestaurants">
             <table style="width: 100%; text-align: center">
                 <tr>
@@ -69,10 +70,10 @@ Vue.component("test", {
                 </tr>
             </table>
         </form>
-        <hr>
+        <hr>-->
     
         <!--RESTAURANTS TABLE-->
-        <div class="row">
+        <!--<div class="row">
             <table id="restaurantsTable" class="table table-striped" style="text-align: left">
                 <thead>
                     <tr>
@@ -85,10 +86,53 @@ Vue.component("test", {
                 </tbody>
             </table>
         </div>
-        <!--/row-->
     </div>
-</div>
+</div>-->
 
+
+<div id='test'>
+    <div class="container" > 
+        <div id='filter'>
+            <nav class="navbar navbar-light bg-light justify-content-between">
+                <a class="navbar-brand">Filtriranje</a>
+                <form class="form-inline">
+                <input class="form-control mr-sm-2" v-model='searchedUser.username' type="text" placeholder="username" aria-label="Search">
+                <input class="form-control mr-sm-2" v-model='searchedUser.role' type="text" placeholder="role" aria-label="Search">
+                <select style="padding:7px; margin-right: 10px" id='listOfGenders' v-model="searchedUser.gender">
+                    <option disabled value="">Gender</option>
+                    <option>male</option>
+                    <option>female</option>
+                    <option>other</option>
+                </select>
+                <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click='searchUser()'>Search</button>
+                </form>
+            </nav>
+
+        </div> 
+        <div class="container" >
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Gender</th>
+                    <th>Role</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-bind:key='users.username' v-for='user in users'>
+                    <td>{{user.username}}</td>
+                    <td>{{user.firstname}}</td>
+                    <td>{{user.lastname}}</td>
+                    <td>{{user.gender}}</td>
+                    <td>{{user.role}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div> 
+</div> 
         `,
     data: function () {
 		return {
@@ -138,9 +182,20 @@ Vue.component("test", {
                     role:'guest',
                 },
             ],
+            searchedUser: {
+				username: '',
+                gender: '',
+                role:'',
+            },
 		}
 	},
 	methods: {
+        searchUser(){
+            alert(`Trazite usera ${this.searchedUser.username}
+            ${this.searchedUser.gender}
+            ${this.searchedUser.role}
+            `);
+        }
     },
     computed: {
         cols () {
