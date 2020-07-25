@@ -50,7 +50,12 @@ Vue.component('users',{
                                     <a class="navbar-brand">Filtriranje</a>
                                     <form class="form-inline">
                                     <input class="form-control mr-sm-2" v-model='searchedUser.username' type="text" placeholder="username" aria-label="Search">
-                                    <input class="form-control mr-sm-2" v-model='searchedUser.role' type="text" placeholder="role" aria-label="Search">
+                                    <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="searchedUser.role">
+                                        <option disabled value="">Role</option>
+                                        <option>admin</option>
+                                        <option>host</option>
+                                        <option>guest</option>
+                                    </select>
                                     <select style="padding:7px; margin-right: 10px" id='listOfGenders' v-model="searchedUser.gender">
                                         <option disabled value="">Gender</option>
                                         <option>male</option>
