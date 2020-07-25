@@ -1,6 +1,6 @@
-Vue.component('users',{
+Vue.component('navbar',{
     template:`
-        <div id="user-list">
+        <div id="navbar">
             <div id="navigation">
                 <nav class="navbar navbar-expand-lg navbar-dark static-top">
                     <div class="container">
@@ -40,27 +40,6 @@ Vue.component('users',{
                     </div>
                 </nav> 
             </div>
-            <div> 
-                <h1>User list {{user.username}}!</h1>
-            </div>
-            <p v-if='isAdmin'>
-            <h3>As an administrator on this page you can see list of all users in the system.</h3>
-                    
-            
-
-                <br>
-                <br>
-                Pregled svih korisnika
-                Kao Administrator:
-                Imam pregled svih postojećih korisnika u sistemu, a mogu vršiti i pretragu
-            </p> 
-            <p v-if='isHost'>
-            <h3>As a host on this page you can see list of all users that have reservation on your's apartment.</h3>
-                Kao Domaćin:
-                Imam pregled svih korisnika koji su napravili rezervaciju za moje apartmane i
-                mogu vršiti pretragu među njima
-            </p>
-
         </div>
     `,
     data:function(){
@@ -69,48 +48,6 @@ Vue.component('users',{
                 username:'',
                 role:''
             },
-            users:[
-                {
-                    username:'username1',
-                    password:'password1',
-                    firstname:'Test',
-                    lastname:'Testovic',
-                    gender:'M',
-                    role:'admin',
-                },
-                {
-                    username:'username2',
-                    password:'password2',
-                    firstname:'Test1',
-                    lastname:'Testovic1',
-                    gender:'M',
-                    role:'host',
-                },
-                {
-                    username:'username3',
-                    password:'password3',
-                    firstname:'Test2',
-                    lastname:'Testovic',
-                    gender:'M',
-                    role:'host',
-                },
-                {
-                    username:'username4',
-                    password:'password4',
-                    firstname:'Test3',
-                    lastname:'Testovic',
-                    gender:'M',
-                    role:'guest',
-                },
-                {
-                    username:'username5',
-                    password:'password5',
-                    firstname:'Testa',
-                    lastname:'Testovic',
-                    gender:'Z',
-                    role:'guest',
-                },
-            ],
             isAdmin:false,
             isHost:false,
             isGuest:false

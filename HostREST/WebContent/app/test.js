@@ -1,69 +1,163 @@
-Vue.component("navigation", {
+Vue.component("test", {
 	
-	template: `
-    <div id="navigation">
-    <nav class="navbar navbar-expand-lg navbar-dark static-top">
-        <div class="container">
-            <h1><span id='titleEffect'>Apartment</span>Finder</h1>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon">TEST</span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <router-link to="/apartments"  class="nav-link" exact>Apartments
-                        <span class="sr-only">current)</span>     
-                    </router-link>
-                </li>
-
-                <li class="nav-item" v-if='!isGuest'>
-                        <router-link class="nav-link" to="/users" exact>Users</router-link>
-                </li>
-
-                <li class="nav-item">
-                    <router-link class="nav-link" to="/reservations" exact>Reservations</router-link>
-                </li>
-
-                <li class="nav-item">
-                    <router-link class="nav-link" to="/profile" exact>Profile</router-link>
-                </li>
-
-            </ul>
-                           
-            <router-link  to='#' class="nav-link" exact> <button class="btn" id='btnLogin'>Log In</button> </router-link>
-            <button  class="btn"  id='btnLogout' >Log Out</button> 
-            </div>
+    template: `
+    <!--<div>
+        <h3>Izvestaj o pregledu</h3>
+        <div id='izvestajOPregledu' class="container" >
+            <div id='filter'>
+                <nav class="navbar navbar-light bg-light justify-content-between">
+                    <a class="navbar-brand">Filtriranje</a>
+                    <form class="form-inline" >
+                    <select v-model="column" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <option v-bind:value="null">No Column Filter</option>
+                        <option v-for="col in cols" v-bind:key="col">{{ col }}</option>
+                        </select>
+                        <input type="text" v-model="search" placeholder="Search">
+                    </form>
+                </nav>
+            </div> 
+            
+            <table class="table">
+                <thead>
+                <tr>
+                    <th v-for="col in cols" :key="col"> {{ col }} </th>  
+                    <th>Details</th>
+                </tr>
+            
+                </thead>
+                <tbody>
+                    <tr v-for="row in rows" :key="row.username">
+                    <td v-for="col in cols" :key="col">{{ row[col] }}</td>
+                <!--<td> <button type='button' v-on:click=' goToPatientKartonDetails(row.id)' class="btn btn-outline-warning">Detaljnije</button></td>-->
+                    </tr>
+                </tbody>
+            </table>
         </div>
-    </nav> 
+    </div> -->
+    <div class="col-sm-8 text-center">
+    <!--SEARCH RESTAURANT FORM-->
+        <h1>Search restaurants</h1>
+        <form id="searchRestaurants">
+            <table style="width: 100%; text-align: center">
+                <tr>
+                    <td> Name:
+                        <br/>
+                        <input type="text" name="name" placeholder="Restaurant name" style="width: 90%;" />
+                    </td>
+                    <td> Address:
+                        <br/>
+                        <input type="text" name="address" placeholder="Address 21, City" style="width: 90%;" />
+                    </td>
+                    <td> Category:
+                        <br/>
+                        <select name="category" style="width: 90%; height: 25px">
+                            <option value="" selected="selected">Choose category </option>
+                            <option value="HOMESTYLE_FOOD">Homestyle food </option>
+                            <option value="GRILLED_FOOD">Grilled food </option>
+                            <option value="CHINESE_FOOD">Chinese food </option>
+                            <option value="INDIAN_FOOD">Indian food </option>
+                            <option value="PASTRY_SHOP">Pastry shop</option>
+                            <option value="PIZZERIA">Pizzeria</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center" colspan="3">
+                        <button type="button" id="searchRestaurantsBtn" class="btn btn-default" style="margin-top: 10px; margin-bottom: 10px" onclick="searchRestaurants()">Search</button>
+                        <button type="button" class="btn btn-default" style="margin-top: 10px; margin-bottom: 10px" onclick="resetSearchRestaurantsForm()">Clear search</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <hr>
+    
+        <!--RESTAURANTS TABLE-->
+        <div class="row">
+            <table id="restaurantsTable" class="table table-striped" style="text-align: left">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Category</th>
+                    </tr>
+                </thead>
+                <tbody id="restaurantsTableBody">
+                </tbody>
+            </table>
+        </div>
+        <!--/row-->
+    </div>
 </div>
-`
-    ,
+
+        `,
     data: function () {
 		return {
 			user: {
 				username: '',
 				password: ''	
-			}
+            },
+            users:[
+                {
+                    username:'username1',
+                    password:'password1',
+                    firstname:'Test',
+                    lastname:'Testovic',
+                    gender:'M',
+                    role:'admin',
+                },
+                {
+                    username:'username2',
+                    password:'password2',
+                    firstname:'Test1',
+                    lastname:'Testovic1',
+                    gender:'M',
+                    role:'host',
+                },
+                {
+                    username:'username3',
+                    password:'password3',
+                    firstname:'Test2',
+                    lastname:'Testovic',
+                    gender:'M',
+                    role:'host',
+                },
+                {
+                    username:'username4',
+                    password:'password4',
+                    firstname:'Test3',
+                    lastname:'Testovic',
+                    gender:'M',
+                    role:'guest',
+                },
+                {
+                    username:'username5',
+                    password:'password5',
+                    firstname:'Testa',
+                    lastname:'Testovic',
+                    gender:'Z',
+                    role:'guest',
+                },
+            ],
 		}
 	},
 	methods: {
-		checkLoggedIn: function (data) {
-			if (!data.jwt) {
-				this.$router.push('/error')
-			}
-
-			localStorage.setItem('jwt', data.jwt);
-			localStorage.setItem('role', data.role);
-			localStorage.setItem('user', data.username);
-
-			this.$router.push('/homepage');
-		},
-
-		login: function (user) {
-			axios
-				.post('rest/login', { username: user.username, password: user.password })
-				.then(response => this.checkLoggedIn(response.data));
-		}
-	}
+    },
+    computed: {
+        cols () {
+        return this.users.length >= 1 ? Object.keys(this.users[0]) : []
+         },
+        rows () {
+            if (!this.users.length) {
+                return []
+            }
+        
+            return this.users.filter(user => {
+                let props = (this.search && this.column) ? [user[this.column]] : Object.values(user)
+            
+            
+                return props.some(prop => !this.search || ((typeof prop === 'string') ? prop.includes(this.search) : prop.toString(10).includes(this.search)))
+            })
+        }
+    },
 })
 

@@ -13,7 +13,7 @@ const NewAmenities = {template: '<new-amenities></new-amenities>'}
 const ApartInactiveOverview = {template: '<inactive-overview></inactive-overview>'}
 const NewApartment = {template: '<new-apartment></new-apartment>'}
 
-const Test = {template: '<navigation></navigation>'}
+const Test = {template: '<test></test>'}
 
 
 const routes = [

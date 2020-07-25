@@ -191,7 +191,7 @@ color: transparent;
   font-weight: bold;
 }
 /* html body div#app div#navigation nav.navbar.navbar-expand-lg.navbar-dark.static-top div.container div#navbarResponsive.collapse.navbar-collapse ul.navbar-nav.ml-auto li.nav-item.active */
-/* .router-link-active{
+.router-link-active{
   border-bottom: #fff solid 1px;
   font-weight: bold;
-} */
+}
