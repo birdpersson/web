@@ -62,6 +62,7 @@ Vue.component("login", {
 			localStorage.setItem('role', data.role);
 			localStorage.setItem('user', data.username);
 
+			window.location.reload(); //refresh Authorization Bearer with new token
 			this.error = false;
 			this.$router.push('/homepage');
 		},

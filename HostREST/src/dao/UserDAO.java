@@ -33,6 +33,10 @@ public class UserDAO {
 		return user;
 	}
 
+	public User findOne(String id) {
+		return users.containsKey(id) ? users.get(id) : null;
+	}
+
 	public Collection<User> findAll() {
 		return users.values();
 	}
