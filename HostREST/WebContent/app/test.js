@@ -1,42 +1,34 @@
 Vue.component("test", {
 	
     template: `
-    <!--<div>
-        <h3>Izvestaj o pregledu</h3>
-        <div id='izvestajOPregledu' class="container" >
-            <div id='filter'>
-                <nav class="navbar navbar-light bg-light justify-content-between">
-                    <a class="navbar-brand">Filtriranje</a>
-                    <form class="form-inline" >
-                    <select v-model="column" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <option v-bind:value="null">No Column Filter</option>
-                        <option v-for="col in cols" v-bind:key="col">{{ col }}</option>
-                        </select>
-                        <input type="text" v-model="search" placeholder="Search">
-                    </form>
-                </nav>
-            </div> 
-            
-            <table class="table">
-                <thead>
-                <tr>
-                    <th v-for="col in cols" :key="col"> {{ col }} </th>  
-                    <th>Details</th>
-                </tr>
-            
-                </thead>
-                <tbody>
-                    <tr v-for="row in rows" :key="row.username">
-                    <td v-for="col in cols" :key="col">{{ row[col] }}</td>
-                <td> <button type='button' v-on:click=' goToPatientKartonDetails(row.id)' class="btn btn-outline-warning">Detaljnije</button></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div> -->
+
 
 <div id="test">
-  
+    <!-- <input type="text" placeholder="Search something..." v-model="searchQuery"> -->
+    <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="searchQuery">
+        <option disabled value="">Status</option>
+        <option v-for='breed in breeds'>{{breed}}</option>
+    </select>
+    <table class="table">
+        <thead>
+            <tr>
+            <th @click="sort('name')">Name <img v-if='currentSortDir == "asc"' src='img/up-arrow1.1.png'><img v-if='currentSortDir == "desc"' src='img/down-arrow1.1.png'></th>
+            <th @click="sort('age')">Age</th>
+            <th @click="sort('breed')">Breed</th>
+            <th @click="sort('gender')">Gender</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(items, index) in filteredData">
+            <td v-for="item in items">
+                {{ item }}
+            </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+
     <table class="table">
         <thead>
         <tr>
@@ -63,57 +55,6 @@ Vue.component("test", {
         `,
     data: function () {
 		return {
-			user: {
-				username: '',
-				password: ''	
-            },
-            users:[
-                {
-                    username:'username1',
-                    password:'password1',
-                    firstname:'Test',
-                    lastname:'Testovic',
-                    gender:'M',
-                    role:'admin',
-                },
-                {
-                    username:'username2',
-                    password:'password2',
-                    firstname:'Test1',
-                    lastname:'Testovic1',
-                    gender:'M',
-                    role:'host',
-                },
-                {
-                    username:'username3',
-                    password:'password3',
-                    firstname:'Test2',
-                    lastname:'Testovic',
-                    gender:'M',
-                    role:'host',
-                },
-                {
-                    username:'username4',
-                    password:'password4',
-                    firstname:'Test3',
-                    lastname:'Testovic',
-                    gender:'M',
-                    role:'guest',
-                },
-                {
-                    username:'username5',
-                    password:'password5',
-                    firstname:'Testa',
-                    lastname:'Testovic',
-                    gender:'Z',
-                    role:'guest',
-                },
-            ],
-            searchedUser: {
-				username: '',
-                gender: '',
-                role:'',
-            },
             //sort data
             cats:[
                 {
@@ -135,17 +76,15 @@ Vue.component("test", {
                 },
             ],
             currentSort:'name',
-            currentSortDir:'asc'
+            currentSortDir:'asc',
+
+            searchQuery:'',
+            statuses:['Kreiran','Odbijen','Odustanak','Prihvacen','Zavrsen'],
+            breeds:['Abreed','Bbreed'],
+
 		}
 	},
 	methods: {
-        searchUser(){
-            alert(`Trazite usera ${this.searchedUser.username}
-            ${this.searchedUser.gender}
-            ${this.searchedUser.role}
-            `);
-        },
-
         sort:function(s) {
             //if s == current sort, reverse
             if(s === this.currentSort) {
@@ -155,22 +94,6 @@ Vue.component("test", {
           }
     },
     computed: {
-        cols () {
-        return this.users.length >= 1 ? Object.keys(this.users[0]) : []
-         },
-        rows () {
-            if (!this.users.length) {
-                return []
-            }
-        
-            return this.users.filter(user => {
-                let props = (this.search && this.column) ? [user[this.column]] : Object.values(user)
-            
-            
-                return props.some(prop => !this.search || ((typeof prop === 'string') ? prop.includes(this.search) : prop.toString(10).includes(this.search)))
-            })
-        },
-
         sortedCats:function() {
             return this.cats.sort((a,b) => {
               let modifier = 1;
@@ -179,12 +102,124 @@ Vue.component("test", {
               if(a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
               return 0;
             });
-          }
+          },
+
+        //filtriranje #2
+        filteredData: function() {
+            return this.sortedCats.filter((items) => {
+            for (var item in items) {
+                if(String(items[item]).indexOf(this.searchQuery) !== -1) {
+                return true
+                }
+            }
+            return false
+            })
+        }
     },
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* <div>
+    <h3>Izvestaj o pregledu</h3>
+    <div id='izvestajOPregledu' class="container" >
+    <div id='filter'>
+        <nav class="navbar navbar-light bg-light justify-content-between">
+            <a class="navbar-brand">Filtriranje</a>
+            <form class="form-inline" >
+            <select v-model="column" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <option v-bind:value="null">No Column Filter</option>
+                <option v-for="col in cols" v-bind:key="col">{{ col }}</option>
+                </select>
+                <input type="text" v-model="search" placeholder="Search">
+            </form>
+        </nav>
+    </div>  */
+
+// computed:
+//     cols () {
+//         return this.users.length >= 1 ? Object.keys(this.users[0]) : []
+//          },
+//         rows () {
+//             if (!this.users.length) {
+//                 return []
+//             }
+        
+//             return this.users.filter(user => {
+//                 let props = (this.search && this.column) ? [user[this.column]] : Object.values(user)
+            
+            
+//                 return props.some(prop => !this.search || ((typeof prop === 'string') ? prop.includes(this.search) : prop.toString(10).includes(this.search)))
+//             })
+//         },
+
+
+    // user: {
+    //     username: '',
+    //     password: ''	
+    // },
+    // users:[
+    //     {
+    //         username:'username1',
+    //         password:'password1',
+    //         firstname:'Test',
+    //         lastname:'Testovic',
+    //         gender:'M',
+    //         role:'admin',
+    //     },
+    //     {
+    //         username:'username2',
+    //         password:'password2',
+    //         firstname:'Test1',
+    //         lastname:'Testovic1',
+    //         gender:'M',
+    //         role:'host',
+    //     },
+    //     {
+    //         username:'username3',
+    //         password:'password3',
+    //         firstname:'Test2',
+    //         lastname:'Testovic',
+    //         gender:'M',
+    //         role:'host',
+    //     },
+    //     {
+    //         username:'username4',
+    //         password:'password4',
+    //         firstname:'Test3',
+    //         lastname:'Testovic',
+    //         gender:'M',
+    //         role:'guest',
+    //     },
+    //     {
+    //         username:'username5',
+    //         password:'password5',
+    //         firstname:'Testa',
+    //         lastname:'Testovic',
+    //         gender:'Z',
+    //         role:'guest',
+    //     },
+    // ],
+    // searchedUser: {
+    //     username: '',
+    //     gender: '',
+    //     role:'',
+    // },
+    
     
 
-    
-})
 
 
 

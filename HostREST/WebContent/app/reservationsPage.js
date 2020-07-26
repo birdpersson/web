@@ -48,21 +48,76 @@ Vue.component('reservations',{
 
         <div class="container" id='main'>
 
-            <div v-if='isGuest'>
+            <div v-if='!isGuest'>    
+                ● Kao Domaćin/Administrator:<br>
+                ○ Želim da pretražim rezervacije po korisničkom imenu gosta koji je kreirao
+                rezervaciju,<br>
+                ○ Želim da sortiram rezervacije po ceni:<br>
+                ■ Rastuće<br>
+                ■ Opadajuće<br>
+                ○ Želim da filtriram rezervacije po statusu
+                <br>
+                <br>
+
+                <div id='filter'>
+                    <nav class="navbar navbar-light bg-light justify-content-between">
+                        <a class="navbar-brand">Flitriranje</a>
+                        <form class="form-inline">
+                            <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="searchQuery">
+                                <option disabled value="">Status</option>
+                                <option v-for='status in statuses'>{{status}}</option>
+                            </select>
+                        </form>
+                    </nav>
+                </div> 
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Apartment type</th>
+                            <th>Apartment location</th>
+                            <th>Date</th>
+                            <th>Night</th>
+                            <th @click="sort('price')">Price  <img v-if='currentSortDir == "asc"' src='img/up-arrow1.1.png'><img v-if='currentSortDir == "desc"' src='img/down-arrow1.1.png'></th>
+                            <th>Confirmation</th>
+                            <th>Status</th>
+                            <th v-if='isHost'>Status</th>
+                            <th v-if='isHost'>Status</th>
+                            <th v-if='isHost'>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-bind:key='apartments.id' v-for="apartment in filteredApartments">
+                            <td>{{apartment.apartmentType}}</td>
+                            <td>{{apartment.apartmentLocation}}</td>
+                            <td>{{apartment.date}}</td>
+                            <td>{{apartment.night}}</td>
+                            <td>{{apartment.price}}</td>
+                            <td>{{apartment.confirmation}}</td>
+                            <td>{{apartment.status}}</td>
+                            <td v-if='isHost'><button v-on:click='messageHost'> prihvacen </button></td>
+                            <td v-if='isHost'><button v-on:click='messageHost'> odbijen </button></td>
+                            <td v-if='isHost'><button v-on:click='messageHost'> zavrsen </button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>  <!--!isGeust-->
+            
+            <div v-if='isGuest'>     
                 Pregled rezervacija<br>
                 ● Kao Gost:<br>
                 ○ Želim da imam pregled svih svojih rezervacija:<br>
                 ■ Imam i mogućnost odustanka od rezervacija, ali samo onih sa statusom<br>
                 KREIRANA ili PRIHVAĆENA, pri čemu novi status postaje ODUSTANAK<br>
                 <br>
+                Kao Gost:<br>
+                ○ Želim da sortiram svoje rezervacije po ceni:<br>
+                ■ Rastuće<br>
+                ■ Opadajuće<br>
                 <br>
+
                 <table class="table">
                     <thead>
-                        <tr>
-                            <th colspan="9">
-                                Pregled svih guests rezervacija
-                            </th>
-                        </tr>
                         <tr>
                             <th>Apartment type</th>
                             <th>Apartment location</th>
@@ -76,7 +131,7 @@ Vue.component('reservations',{
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-bind:key='apartments.id' v-for="apartment in sortedApartments">
+                        <tr v-bind:key='apartments.id' v-for="apartment in filteredApartments">
                             <td>{{apartment.apartmentType}}</td>
                             <td>{{apartment.apartmentLocation}}</td>
                             <td>{{apartment.date}}</td>
@@ -89,10 +144,9 @@ Vue.component('reservations',{
                         </tr>
                     </tbody>
                 </table>
-
             </div>  <!--isGeust-->
-        </div> <!--id='main'-->
 
+        </div> <!--id='main'-->
     </div> <!-- reservation-list-->` ,
     data:function(){
         return{
@@ -115,7 +169,7 @@ Vue.component('reservations',{
                     night:'10',
                     price:250,
                     confirmation: true,
-                    status:'confirmed'
+                    status:'Kreiran'
                 },
                 {
                     id:'2',
@@ -125,7 +179,7 @@ Vue.component('reservations',{
                     night:'15',
                     price:100,
                     confirmation: true,
-                    status:'confirmed'
+                    status:'Kreiran'
                 },
                 {
                     id:'3',
@@ -135,7 +189,7 @@ Vue.component('reservations',{
                     night:'15',
                     price:50,
                     confirmation: false,
-                    status:'waiting'
+                    status:'Odustanak'
                 },
                 {
                     id:'4',
@@ -145,12 +199,58 @@ Vue.component('reservations',{
                     night:'20',
                     price:150,
                     confirmation: true,
-                    status:'waiting'
+                    status:'Odbijen'
+                },
+                {
+                    id:'5',
+                    apartmentType:'panthhouse',
+                    apartmentLocation:'Main Boulevard 4',
+                    date:'01.01.2020',
+                    night:'20',
+                    price:550,
+                    confirmation: true,
+                    status:'Prihvacen'
+                },
+                {
+                    id:'6',
+                    apartmentType:'panthhouse',
+                    apartmentLocation:'Main Boulevard 5',
+                    date:'01.01.2020',
+                    night:'20',
+                    price:450,
+                    confirmation: true,
+                    status:'Prihvacen'
+                },
+                {
+                    id:'7',
+                    apartmentType:'panthhouse',
+                    apartmentLocation:'Main Boulevard 6',
+                    date:'01.01.2020',
+                    night:'20',
+                    price:1000,
+                    confirmation: true,
+                    status:'Zavrsen'
+                },
+                {
+                    id:'8',
+                    apartmentType:'panthhouse',
+                    apartmentLocation:'Main Boulevard 7',
+                    date:'01.01.2020',
+                    night:'20',
+                    price:1000,
+                    confirmation: true,
+                    status:'Zavrsen'
                 },
 
             ],
+
+            //sortiranje:
             currentSort:'name',
-            currentSortDir:'asc'
+            currentSortDir:'asc',
+
+            //filtriranje:
+            statuses:['Kreiran','Odbijen','Odustanak','Prihvacen','Zavrsen'],
+            searchQuery:'',
         }
     },
     methods:{
@@ -178,6 +278,17 @@ Vue.component('reservations',{
             if(a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
             return 0;
           });
+        },
+           //filtriranje #2
+        filteredApartments:function() {
+            return this.sortedApartments.filter((items) => {
+            for (var item in items) {
+                if(String(items[item]).indexOf(this.searchQuery) !== -1) {
+                return true
+                }
+            }
+            return false
+            })
         }
     },
     created(){

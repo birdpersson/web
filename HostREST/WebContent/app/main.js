@@ -21,7 +21,7 @@ const routes = [
 	{ path: '/login', component: Login },
 	{ path: '/homepage', component:Homepage },
 	{ path: '/profile', component:Profile },
-	{ path: '/patient/update', component:ProfileUpdate },
+	{ path: '/patient/update', component:ProfileUpdate }, 
 	{ path: '/users', component:Users },
 	{ path: '/reservations', component:Reservations },
 	{ path: '/apartments', component:Apartments },
