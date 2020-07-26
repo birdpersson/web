@@ -35,104 +35,31 @@ Vue.component("test", {
         </div>
     </div> -->
 
-    <!-- <div class="col-sm-8 text-center">-->
-    <!--SEARCH RESTAURANT FORM-->
-    <!--<h1>Search restaurants</h1>
-        <form id="searchRestaurants">
-            <table style="width: 100%; text-align: center">
-                <tr>
-                    <td> Name:
-                        <br/>
-                        <input type="text" name="name" placeholder="Restaurant name" style="width: 90%;" />
-                    </td>
-                    <td> Address:
-                        <br/>
-                        <input type="text" name="address" placeholder="Address 21, City" style="width: 90%;" />
-                    </td>
-                    <td> Category:
-                        <br/>
-                        <select name="category" style="width: 90%; height: 25px">
-                            <option value="" selected="selected">Choose category </option>
-                            <option value="HOMESTYLE_FOOD">Homestyle food </option>
-                            <option value="GRILLED_FOOD">Grilled food </option>
-                            <option value="CHINESE_FOOD">Chinese food </option>
-                            <option value="INDIAN_FOOD">Indian food </option>
-                            <option value="PASTRY_SHOP">Pastry shop</option>
-                            <option value="PIZZERIA">Pizzeria</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="text-align: center" colspan="3">
-                        <button type="button" id="searchRestaurantsBtn" class="btn btn-default" style="margin-top: 10px; margin-bottom: 10px" onclick="searchRestaurants()">Search</button>
-                        <button type="button" class="btn btn-default" style="margin-top: 10px; margin-bottom: 10px" onclick="resetSearchRestaurantsForm()">Clear search</button>
-                    </td>
-                </tr>
-            </table>
-        </form>
-        <hr>-->
+<div id="test">
+  
+    <table class="table">
+        <thead>
+        <tr>
+            <th @click="sort('name')">Name <img v-if='currentSortDir == "asc"' src='img/up-arrow1.1.png'><img v-if='currentSortDir == "desc"' src='img/down-arrow1.1.png'></th>
+            <th @click="sort('age')">Age</th>
+            <th @click="sort('breed')">Breed</th>
+            <th @click="sort('gender')">Gender</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="cat in sortedCats">
+            <td>{{cat.name}}</td>
+            <td>{{cat.age}}</td>
+            <td>{{cat.breed}}</td>
+            <td>{{cat.gender}}</td>
+        </tr>
+        </tbody>
+    </table>
     
-        <!--RESTAURANTS TABLE-->
-        <!--<div class="row">
-            <table id="restaurantsTable" class="table table-striped" style="text-align: left">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Address</th>
-                        <th>Category</th>
-                    </tr>
-                </thead>
-                <tbody id="restaurantsTableBody">
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>-->
+    debug: sort={{currentSort}}, dir={{currentSortDir}}
+</div>
 
 
-<div id='test'>
-    <div class="container" > 
-        <div id='filter'>
-            <nav class="navbar navbar-light bg-light justify-content-between">
-                <a class="navbar-brand">Filtriranje</a>
-                <form class="form-inline">
-                <input class="form-control mr-sm-2" v-model='searchedUser.username' type="text" placeholder="username" aria-label="Search">
-                <input class="form-control mr-sm-2" v-model='searchedUser.role' type="text" placeholder="role" aria-label="Search">
-                <select style="padding:7px; margin-right: 10px" id='listOfGenders' v-model="searchedUser.gender">
-                    <option disabled value="">Gender</option>
-                    <option>male</option>
-                    <option>female</option>
-                    <option>other</option>
-                </select>
-                <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click='searchUser()'>Search</button>
-                </form>
-            </nav>
-
-        </div> 
-        <div class="container" >
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Firstname</th>
-                    <th>Lastname</th>
-                    <th>Gender</th>
-                    <th>Role</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-bind:key='users.username' v-for='user in users'>
-                    <td>{{user.username}}</td>
-                    <td>{{user.firstname}}</td>
-                    <td>{{user.lastname}}</td>
-                    <td>{{user.gender}}</td>
-                    <td>{{user.role}}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div> 
-</div> 
         `,
     data: function () {
 		return {
@@ -187,6 +114,28 @@ Vue.component("test", {
                 gender: '',
                 role:'',
             },
+            //sort data
+            cats:[
+                {
+                    name:'Acat',
+                    age:1,
+                    breed:'Abreed',
+                    gender:'M'
+                },
+                {                    
+                    name:'Bat',
+                    age:10,
+                    breed:'Bbreed',
+                    gender:'M'},
+                {
+                    name:'Ccat',
+                    age:5,
+                    breed:'Abreed',
+                    gender:'F'
+                },
+            ],
+            currentSort:'name',
+            currentSortDir:'asc'
 		}
 	},
 	methods: {
@@ -195,7 +144,15 @@ Vue.component("test", {
             ${this.searchedUser.gender}
             ${this.searchedUser.role}
             `);
-        }
+        },
+
+        sort:function(s) {
+            //if s == current sort, reverse
+            if(s === this.currentSort) {
+              this.currentSortDir = this.currentSortDir==='asc'?'desc':'asc';
+            }
+            this.currentSort = s;
+          }
     },
     computed: {
         cols () {
@@ -212,7 +169,95 @@ Vue.component("test", {
             
                 return props.some(prop => !this.search || ((typeof prop === 'string') ? prop.includes(this.search) : prop.toString(10).includes(this.search)))
             })
-        }
+        },
+
+        sortedCats:function() {
+            return this.cats.sort((a,b) => {
+              let modifier = 1;
+              if(this.currentSortDir === 'desc') modifier = -1;
+              if(a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+              if(a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+              return 0;
+            });
+          }
     },
+    
+
+    
 })
 
+
+
+// <!--<div v-if='isAdmin'>
+// Kao Administratoru:<br>
+// ○ Omogućen mi je pregled svih rezervacija u sistemu<br>
+// <table border="1px;">
+//     <thead>
+//         <tr>
+//             <th colspan="4">
+//                 Pregled svih rezervacija
+//             </th>
+//         </tr>
+//         <tr>
+//             <th>Atribut1</th>
+//             <th>Atribut2</th>
+//         </tr>
+//     </thead>
+//     <tbody>
+//         <tr>
+//             <td>atribut1</td>
+//             <td>atribut2</td>
+
+//         </tr>
+//         <tr>
+//             <td>atribut3</td>
+//             <td>atribut4</td>
+//         </tr>
+//     </tbody>
+// </table>
+// </div> <!-- isAdmin -->
+
+// <div v-if='isHost'>
+// Kao Domaćin:<br>
+// ○ Imam pregled rezervacija nad svim mojim apartmanima (bez obzira na status):<br>
+// ■ Mogu da prihvatim rezervaciju koja se nalazi u statusu KREIRANA, pri<br>
+// čemu rezervacija menja status u PRIHVAĆENA<br>
+// ■ Mogu da odbijem rezervaciju ako se nalazi u statusu KREIRANA ili<br>
+// PRIHVAĆENA, pri čemu rezervacija menja status u ODBIJENA<br>
+// ■ Nakon završnog datuma noćenja, mogu da postavim rezervaciju na<br>
+// status ZAVRŠENA<br>
+// <br>
+// <br>
+// <table class="table">
+//     <thead>
+//         <tr>
+//             <th colspan="4">
+//                 Pregled svih rezervacija stanova tog hosta
+//             </th>
+//         </tr>
+//         <tr>
+//             <th>Atribut1</th>
+//             <th>Atribut2</th>
+//             <th>Status</th>
+//             <th>Status</th>
+//             <th>Status</th>
+//         </tr>
+//     </thead>
+//     <tbody>
+//         <tr>
+//             <td>atribut1</td>
+//             <td>atribut2</td>
+//             <td><button v-on:click='messageHost'> prihvacen </button></td>
+//             <td><button v-on:click='messageHost'> odbijen </button></td>
+//             <td><button v-on:click='messageHost'> zavrsen </button></td>
+//         </tr>
+//         <tr>
+//             <td>atribut3</td>
+//             <td>atribut4</td>
+//             <td><button v-on:click='messageHost'> prihvacen </button></td>
+//             <td><button v-on:click='messageHost'> odbijen </button></td>
+//             <td><button v-on:click='messageHost'> zavrsen </button></td>
+//         </tr>
+//     </tbody>
+// </table>
+// </div>--> <!-- isHost -->

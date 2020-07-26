@@ -53,7 +53,7 @@ Vue.component('users',{
                 </div>
                 <div class="container">
                 
-                    <div class="container" > 
+                    <div class="container" id='page-title'> 
                         <div id='filter'>
                             <nav class="navbar navbar-light bg-light justify-content-between">
                                 <a class="navbar-brand">Pretraga</a>

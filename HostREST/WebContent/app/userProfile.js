@@ -41,7 +41,7 @@ Vue.component('profile',{
                 </nav> 
             </div>
             <div>
-                <div class="container">
+                <div class="container" id='page-title'>
                     <h1 style="margin-top:10px;color:#35424a;" >User <span id='titleEffect'>Profile</span></h1>
                     <hr style='background:#e8491d;height:1px;'>  
                 </div>

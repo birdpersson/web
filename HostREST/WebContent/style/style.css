@@ -195,3 +195,18 @@ color: transparent;
   border-bottom: #fff solid 1px;
   font-weight: bold;
 }
+
+
+
+/* RESERVATIONS PAGE*/
+#reservation-list th:hover{
+  color:#35424a;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#test th:hover{
+  color:#35424a;
+  font-weight: bold;
+  cursor: pointer;
+}
