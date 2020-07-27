@@ -1,153 +1,164 @@
 Vue.component('reservations',{
-    template:`
-    <div id='reservation-list'>
-        <div id="navigation">
-            <nav class="navbar navbar-expand-lg navbar-dark static-top">
-                <div class="container">
-                    <h1><span id='titleEffect'>Apartment</span>Finder</h1>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+    template:`<div id='reservation-list'>
+    <div id="navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark static-top">
+            <div class="container">
+                <h1><span id='titleEffect'>Apartment</span>Finder</h1>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarResponsive">
-                        <ul class="navbar-nav ml-auto">
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto">
 
-                            <li class="nav-item active">
-                                <router-link to="/homepage" class="nav-link" exact>Home</router-link>
-                            </li>
+                        <li class="nav-item active">
+                            <router-link to="/homepage" class="nav-link" exact>Home</router-link>
+                        </li>
 
-                            <li class="nav-item active">
-                                <router-link to="/apartments"  class="nav-link" exact>Apartments
-                                    <span class="sr-only">current)</span>     
-                                </router-link>
-                            </li>
-            
-                            <li class="nav-item" v-if='!isGuest'>
-                                    <router-link class="nav-link" to="/users" exact>Users</router-link>
-                            </li>
-            
-                            <li class="nav-item">
-                                <router-link class="nav-link" to="/reservations" exact>Reservations</router-link>
-                            </li><!--Zakomentarisati za navbar-->
-            
-                            <li class="nav-item">
-                                <router-link class="nav-link" to="/profile" exact>Profile</router-link>
-                            </li> 
-                        </ul>
-                                    
-                        <router-link  to='#' class="nav-link" exact> <button class="btn" id='btnLogin'>Log In</button> </router-link>
-                        <button  class="btn"  id='btnLogout' >Log Out</button> 
-                    </div>
+                        <li class="nav-item active">
+                            <router-link to="/apartments" class="nav-link" exact>Apartments
+                                <span class="sr-only">current)</span>
+                            </router-link>
+                        </li>
+
+                        <li class="nav-item" v-if='!isGuest'>
+                            <router-link class="nav-link" to="/users" exact>Users</router-link>
+                        </li>
+
+                        <li class="nav-item">
+                            <router-link class="nav-link" to="/reservations" exact>Reservations</router-link>
+                        </li>
+                        <!--Zakomentarisati za navbar-->
+
+                        <li class="nav-item">
+                            <router-link class="nav-link" to="/profile" exact>Profile</router-link>
+                        </li>
+                    </ul>
+
+                    <router-link to='#' class="nav-link" exact> <button class="btn" id='btnLogin'>Log In</button>
+                    </router-link>
+                    <button class="btn" id='btnLogout'>Log Out</button>
                 </div>
-            </nav>
-        </div> <!--navigation-->
+            </div>
+        </nav>
+    </div>
+    <!--navigation-->
 
-        <div class="container" id='page-title'>
-            <h1 style="margin-top:10px;color:#35424a;" >List of <span id='titleEffect'>Reservations</span></h1>
-            <hr style='background:#e8491d;height:1px;'>  
+    <div class="container" id='page-title'>
+        <h1 style="margin-top:10px;color:#35424a;">List of <span id='titleEffect'>Reservations</span></h1>
+        <hr style='background:#e8491d;height:1px;'>
+    </div>
+
+    <div class="container" id='main'>
+
+        <div v-if='!isGuest'>
+            ● Kao Domaćin/Administrator:<br>
+            ○ Želim da pretražim rezervacije po korisničkom imenu gosta koji je kreirao
+            rezervaciju,<br>
+            ○ Želim da sortiram rezervacije po ceni:<br>
+            ■ Rastuće<br>
+            ■ Opadajuće<br>
+            ○ Želim da filtriram rezervacije po statusu
+            <br>
+            <br>
+
+            <div id='filter'>
+                <nav class="navbar navbar-light bg-light justify-content-between">
+                    <a class="navbar-brand">Flitriranje</a>
+                    <form class="form-inline">
+                        <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="searchQuery">
+                            <option disabled value="">Status</option>
+                            <option v-for='status in statuses'>{{status}}</option>
+                        </select>
+                    </form>
+                </nav>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Apartment type</th>
+                        <th>Apartment location</th>
+                        <th>Date</th>
+                        <th>Night</th>
+                        <th @click="sort('price')">Price <img v-if='currentSortDir == "asc"'
+                                src='img/up-arrow1.1.png'><img v-if='currentSortDir == "desc"'
+                                src='img/down-arrow1.1.png'></th>
+                        <th>Confirmation</th>
+                        <th>Status</th>
+                        <th v-if='isHost'>Status</th>
+                        <th v-if='isHost'>Status</th>
+                        <th v-if='isHost'>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-bind:key='apartments.id' v-for="apartment in filteredApartments">
+                        <td>{{apartment.apartmentType}}</td>
+                        <td>{{apartment.apartmentLocation}}</td>
+                        <td>{{apartment.date}}</td>
+                        <td>{{apartment.night}}</td>
+                        <td>{{apartment.price}}</td>
+                        <td>{{apartment.confirmation}}</td>
+                        <td>{{apartment.status}}</td>
+                        <td v-if='isHost'><button v-on:click='messageHost'> prihvacen </button></td>
+                        <td v-if='isHost'><button v-on:click='messageHost'> odbijen </button></td>
+                        <td v-if='isHost'><button v-on:click='messageHost'> zavrsen </button></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+        <!--!isGeust-->
 
-        <div class="container" id='main'>
+        <div v-if='isGuest'>
+            Pregled rezervacija<br>
+            ● Kao Gost:<br>
+            ○ Želim da imam pregled svih svojih rezervacija:<br>
+            ■ Imam i mogućnost odustanka od rezervacija, ali samo onih sa statusom<br>
+            KREIRANA ili PRIHVAĆENA, pri čemu novi status postaje ODUSTANAK<br>
+            <br>
+            Kao Gost:<br>
+            ○ Želim da sortiram svoje rezervacije po ceni:<br>
+            ■ Rastuće<br>
+            ■ Opadajuće<br>
+            <br>
 
-            <div v-if='!isGuest'>    
-                ● Kao Domaćin/Administrator:<br>
-                ○ Želim da pretražim rezervacije po korisničkom imenu gosta koji je kreirao
-                rezervaciju,<br>
-                ○ Želim da sortiram rezervacije po ceni:<br>
-                ■ Rastuće<br>
-                ■ Opadajuće<br>
-                ○ Želim da filtriram rezervacije po statusu
-                <br>
-                <br>
-
-                <div id='filter'>
-                    <nav class="navbar navbar-light bg-light justify-content-between">
-                        <a class="navbar-brand">Flitriranje</a>
-                        <form class="form-inline">
-                            <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="searchQuery">
-                                <option disabled value="">Status</option>
-                                <option v-for='status in statuses'>{{status}}</option>
-                            </select>
-                        </form>
-                    </nav>
-                </div> 
-
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Apartment type</th>
-                            <th>Apartment location</th>
-                            <th>Date</th>
-                            <th>Night</th>
-                            <th @click="sort('price')">Price  <img v-if='currentSortDir == "asc"' src='img/up-arrow1.1.png'><img v-if='currentSortDir == "desc"' src='img/down-arrow1.1.png'></th>
-                            <th>Confirmation</th>
-                            <th>Status</th>
-                            <th v-if='isHost'>Status</th>
-                            <th v-if='isHost'>Status</th>
-                            <th v-if='isHost'>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-bind:key='apartments.id' v-for="apartment in filteredApartments">
-                            <td>{{apartment.apartmentType}}</td>
-                            <td>{{apartment.apartmentLocation}}</td>
-                            <td>{{apartment.date}}</td>
-                            <td>{{apartment.night}}</td>
-                            <td>{{apartment.price}}</td>
-                            <td>{{apartment.confirmation}}</td>
-                            <td>{{apartment.status}}</td>
-                            <td v-if='isHost'><button v-on:click='messageHost'> prihvacen </button></td>
-                            <td v-if='isHost'><button v-on:click='messageHost'> odbijen </button></td>
-                            <td v-if='isHost'><button v-on:click='messageHost'> zavrsen </button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>  <!--!isGeust-->
-            
-            <div v-if='isGuest'>     
-                Pregled rezervacija<br>
-                ● Kao Gost:<br>
-                ○ Želim da imam pregled svih svojih rezervacija:<br>
-                ■ Imam i mogućnost odustanka od rezervacija, ali samo onih sa statusom<br>
-                KREIRANA ili PRIHVAĆENA, pri čemu novi status postaje ODUSTANAK<br>
-                <br>
-                Kao Gost:<br>
-                ○ Želim da sortiram svoje rezervacije po ceni:<br>
-                ■ Rastuće<br>
-                ■ Opadajuće<br>
-                <br>
-
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Apartment type</th>
-                            <th>Apartment location</th>
-                            <th>Date</th>
-                            <th>Night</th>
-                            <th @click="sort('price')">Price  <img v-if='currentSortDir == "asc"' src='img/up-arrow1.1.png'><img v-if='currentSortDir == "desc"' src='img/down-arrow1.1.png'></th>
-                            <th>Confirmation</th>
-                            <th>Status</th>
-                            <th>Cancel reserv.</th>
-                            <th>Leave comment</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-bind:key='apartments.id' v-for="apartment in filteredApartments">
-                            <td>{{apartment.apartmentType}}</td>
-                            <td>{{apartment.apartmentLocation}}</td>
-                            <td>{{apartment.date}}</td>
-                            <td>{{apartment.night}}</td>
-                            <td>{{apartment.price}}</td>
-                            <td>{{apartment.confirmation}}</td>
-                            <td>{{apartment.status}}</td>
-                            <td><button v-on:click='message'> Odustani</button></td>
-                            <td><router-link to="/newComment"><button> + Komentar </button></router-link></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>  <!--isGeust-->
-
-        </div> <!--id='main'-->
-    </div> <!-- reservation-list-->` ,
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Apartment type</th>
+                        <th>Apartment location</th>
+                        <th>Date</th>
+                        <th>Night</th>
+                        <th @click="sort('price')">Price <img v-if='currentSortDir == "asc"'
+                                src='img/up-arrow1.1.png'><img v-if='currentSortDir == "desc"'
+                                src='img/down-arrow1.1.png'></th>
+                        <th>Confirmation</th>
+                        <th>Status</th>
+                        <th>Cancel reserv.</th>
+                        <th>Leave comment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-bind:key='apartments.id' v-for="apartment in filteredApartments">
+                        <td>{{apartment.apartmentType}}</td>
+                        <td>{{apartment.apartmentLocation}}</td>
+                        <td>{{apartment.date}}</td>
+                        <td>{{apartment.night}}</td>
+                        <td>{{apartment.price}}</td>
+                        <td>{{apartment.confirmation}}</td>
+                        <td>{{apartment.status}}</td>
+                        <td><button v-on:click='message'> Odustani</button></td>
+                        <td>
+                            <router-link to="/newComment"><button> + Komentar </button></router-link>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--isGeust-->
+    </div>
+    <!--id='main'-->
+</div> <!-- reservation-list-->` ,
     data:function(){
         return{
             user:{
