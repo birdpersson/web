@@ -1,8 +1,5 @@
 Vue.component("test", {
-	
     template: `
-
-
 <div id="test">
     <!-- <input type="text" placeholder="Search something..." v-model="searchQuery"> -->
     <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="searchQuery">
@@ -12,17 +9,18 @@ Vue.component("test", {
     <table class="table">
         <thead>
             <tr>
-            <th @click="sort('name')">Name <img v-if='currentSortDir == "asc"' src='img/up-arrow1.1.png'><img v-if='currentSortDir == "desc"' src='img/down-arrow1.1.png'></th>
-            <th @click="sort('age')">Age</th>
-            <th @click="sort('breed')">Breed</th>
-            <th @click="sort('gender')">Gender</th>
-        </tr>
+                <th @click="sort('name')">Name <img v-if='currentSortDir == "asc"' src='img/up-arrow1.1.png'><img
+                        v-if='currentSortDir == "desc"' src='img/down-arrow1.1.png'></th>
+                <th @click="sort('age')">Age</th>
+                <th @click="sort('breed')">Breed</th>
+                <th @click="sort('gender')">Gender</th>
+            </tr>
         </thead>
         <tbody>
             <tr v-for="(items, index) in filteredData">
-            <td v-for="item in items">
-                {{ item }}
-            </td>
+                <td v-for="item in items">
+                    {{ item }}
+                </td>
             </tr>
         </tbody>
     </table>
@@ -31,88 +29,87 @@ Vue.component("test", {
 
     <table class="table">
         <thead>
-        <tr>
-            <th @click="sort('name')">Name <img v-if='currentSortDir == "asc"' src='img/up-arrow1.1.png'><img v-if='currentSortDir == "desc"' src='img/down-arrow1.1.png'></th>
-            <th @click="sort('age')">Age</th>
-            <th @click="sort('breed')">Breed</th>
-            <th @click="sort('gender')">Gender</th>
-        </tr>
+            <tr>
+                <th @click="sort('name')">Name <img v-if='currentSortDir == "asc"' src='img/up-arrow1.1.png'><img
+                        v-if='currentSortDir == "desc"' src='img/down-arrow1.1.png'></th>
+                <th @click="sort('age')">Age</th>
+                <th @click="sort('breed')">Breed</th>
+                <th @click="sort('gender')">Gender</th>
+            </tr>
         </thead>
         <tbody>
-        <tr v-for="cat in sortedCats">
-            <td>{{cat.name}}</td>
-            <td>{{cat.age}}</td>
-            <td>{{cat.breed}}</td>
-            <td>{{cat.gender}}</td>
-        </tr>
+            <tr v-for="cat in sortedCats">
+                <td>{{cat.name}}</td>
+                <td>{{cat.age}}</td>
+                <td>{{cat.breed}}</td>
+                <td>{{cat.gender}}</td>
+            </tr>
         </tbody>
     </table>
-    
+
     debug: sort={{currentSort}}, dir={{currentSortDir}}
-</div>
-
-
-        `,
+</div>`,
     data: function () {
-		return {
+        return {
             //sort data
-            cats:[
+            cats: [
                 {
-                    name:'Acat',
-                    age:1,
-                    breed:'Abreed',
-                    gender:'M'
+                    name: 'Acat',
+                    age: 1,
+                    breed: 'Abreed',
+                    gender: 'M'
                 },
-                {                    
-                    name:'Bat',
-                    age:10,
-                    breed:'Bbreed',
-                    gender:'M'},
                 {
-                    name:'Ccat',
-                    age:5,
-                    breed:'Abreed',
-                    gender:'F'
+                    name: 'Bat',
+                    age: 10,
+                    breed: 'Bbreed',
+                    gender: 'M'
+                },
+                {
+                    name: 'Ccat',
+                    age: 5,
+                    breed: 'Abreed',
+                    gender: 'F'
                 },
             ],
-            currentSort:'name',
-            currentSortDir:'asc',
+            currentSort: 'name',
+            currentSortDir: 'asc',
 
-            searchQuery:'',
-            statuses:['Kreiran','Odbijen','Odustanak','Prihvacen','Zavrsen'],
-            breeds:['Abreed','Bbreed'],
+            searchQuery: '',
+            statuses: ['Kreiran', 'Odbijen', 'Odustanak', 'Prihvacen', 'Zavrsen'],
+            breeds: ['Abreed', 'Bbreed'],
 
-		}
-	},
-	methods: {
-        sort:function(s) {
+        }
+    },
+    methods: {
+        sort: function (s) {
             //if s == current sort, reverse
-            if(s === this.currentSort) {
-              this.currentSortDir = this.currentSortDir==='asc'?'desc':'asc';
+            if (s === this.currentSort) {
+                this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc';
             }
             this.currentSort = s;
-          }
+        }
     },
     computed: {
-        sortedCats:function() {
-            return this.cats.sort((a,b) => {
-              let modifier = 1;
-              if(this.currentSortDir === 'desc') modifier = -1;
-              if(a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
-              if(a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
-              return 0;
+        sortedCats: function () {
+            return this.cats.sort((a, b) => {
+                let modifier = 1;
+                if (this.currentSortDir === 'desc') modifier = -1;
+                if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+                if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+                return 0;
             });
-          },
+        },
 
         //filtriranje #2
-        filteredData: function() {
+        filteredData: function () {
             return this.sortedCats.filter((items) => {
-            for (var item in items) {
-                if(String(items[item]).indexOf(this.searchQuery) !== -1) {
-                return true
+                for (var item in items) {
+                    if (String(items[item]).indexOf(this.searchQuery) !== -1) {
+                        return true
+                    }
                 }
-            }
-            return false
+                return false
             })
         }
     },
@@ -156,11 +153,11 @@ Vue.component("test", {
 //             if (!this.users.length) {
 //                 return []
 //             }
-        
+
 //             return this.users.filter(user => {
 //                 let props = (this.search && this.column) ? [user[this.column]] : Object.values(user)
-            
-            
+
+
 //                 return props.some(prop => !this.search || ((typeof prop === 'string') ? prop.includes(this.search) : prop.toString(10).includes(this.search)))
 //             })
 //         },
@@ -217,8 +214,8 @@ Vue.component("test", {
     //     gender: '',
     //     role:'',
     // },
-    
-    
+
+
 
 
 

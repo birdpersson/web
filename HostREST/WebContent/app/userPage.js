@@ -1,105 +1,68 @@
-Vue.component('users',{
-    template:`
-        <div id="user-list">
-            <div id="navigation">
-                <nav class="navbar navbar-expand-lg navbar-dark static-top">
-                    <div class="container">
-                        <h1><span id='titleEffect'>Apartment</span>Finder</h1>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarResponsive">
-                        <ul class="navbar-nav ml-auto">
+Vue.component('users', {
+    template: `<div id="user-list">
+    <div class="container">
+        <h1 style="margin-top:10px;color:#35424a;">List Of <span id='titleEffect'>Users</span></h1>
+        <div v-if='isAdmin'>
+            <h3 style="color:#35424a;">As an administrator on this page you can see list of all users in the system.
+            </h3>
+        </div>
+        <div style="color:#35424a;" v-if='isHost'>
+            <h3>As a host on this page you can see list of all users that have reservation on your's apartment.</h3>
+        </div>
+        <hr style='background:#e8491d;height:1px;'>
+    </div>
+    <div class="container">
 
-                            <li class="nav-item active">
-                                <router-link to="/homepage" class="nav-link" exact>Home</router-link>
-                            </li>
-
-                            <li class="nav-item active">
-                                <router-link to="/apartments"  class="nav-link" exact>Apartments
-                                    <span class="sr-only">current)</span>     
-                                </router-link>
-                            </li>
-            
-                            <li class="nav-item" v-if='!isGuest'>
-                                    <router-link class="nav-link" to="/users" exact>Users</router-link>
-                            </li>
-            
-                            <li class="nav-item">
-                                <router-link class="nav-link" to="/reservations" exact>Reservations</router-link>
-                            </li>
-            
-                            <li class="nav-item">
-                                <router-link class="nav-link" to="/profile" exact>Profile</router-link>
-                            </li> <!--Zakomentarisati za navbar-->
-                        </ul>
-                                    
-                        <router-link  to='#' class="nav-link" exact> <button class="btn" id='btnLogin'>Log In</button> </router-link>
-                        <button  class="btn"  id='btnLogout' >Log Out</button> 
-                        </div>
-                    </div>
-                </nav> 
+        <div class="container" id='page-title'>
+            <div id='filter'>
+                <nav class="navbar navbar-light bg-light justify-content-between">
+                    <a class="navbar-brand">Pretraga</a>
+                    <form class="form-inline">
+                        <input class="form-control mr-sm-2" v-model='searchedUser.username' type="text"
+                            placeholder="username" aria-label="Search">
+                        <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="searchedUser.role">
+                            <option disabled value="">Role</option>
+                            <option>admin</option>
+                            <option>host</option>
+                            <option>guest</option>
+                        </select>
+                        <select style="padding:7px; margin-right: 10px" id='listOfGenders'
+                            v-model="searchedUser.gender">
+                            <option disabled value="">Gender</option>
+                            <option>male</option>
+                            <option>female</option>
+                            <option>other</option>
+                        </select>
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="button"
+                            v-on:click='searchUser()'>Search</button>
+                    </form>
+                </nav>
             </div>
-            <div id='main'>
-                <div class="container">
-                    <h1 style="margin-top:10px;color:#35424a;" >List Of <span id='titleEffect'>Users</span></h1>
-                    <div v-if='isAdmin'>
-                        <h3 style="color:#35424a;" >As an administrator on this page you can see list of all users in the system.</h3>
-                    </div>
-                    <div style="color:#35424a;" v-if='isHost'>
-                        <h3>As a host on this page you can see list of all users that have reservation on your's apartment.</h3>
-                    </div>
-                    <hr style='background:#e8491d;height:1px;'>  
-                </div>
-                <div class="container">
-                
-                    <div class="container" id='page-title'> 
-                        <div id='filter'>
-                            <nav class="navbar navbar-light bg-light justify-content-between">
-                                <a class="navbar-brand">Pretraga</a>
-                                <form class="form-inline">
-                                    <input class="form-control mr-sm-2" v-model='searchedUser.username' type="text" placeholder="username" aria-label="Search">
-                                    <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="searchedUser.role">
-                                        <option disabled value="">Role</option>
-                                        <option>admin</option>
-                                        <option>host</option>
-                                        <option>guest</option>
-                                    </select>
-                                    <select style="padding:7px; margin-right: 10px" id='listOfGenders' v-model="searchedUser.gender">
-                                        <option disabled value="">Gender</option>
-                                        <option>male</option>
-                                        <option>female</option>
-                                        <option>other</option>
-                                    </select>
-                                    <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click='searchUser()'>Search</button>
-                                </form>
-                            </nav>
-                        </div> 
 
-                        <div class="container" >
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>Username</th>
-                                    <th>Firstname</th>
-                                    <th>Lastname</th>
-                                    <th>Gender</th>
-                                    <th>Role</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-bind:key='users.username' v-for='user in users'>
-                                    <td>{{user.username}}</td>
-                                    <td>{{user.firstname}}</td>
-                                    <td>{{user.lastname}}</td>
-                                    <td>{{user.gender}}</td>
-                                    <td>{{user.role}}</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>     
-                    <!--    <br>
+            <div class="container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Firstname</th>
+                            <th>Lastname</th>
+                            <th>Gender</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-bind:key='users.username' v-for='user in users'>
+                            <td>{{user.username}}</td>
+                            <td>{{user.firstname}}</td>
+                            <td>{{user.lastname}}</td>
+                            <td>{{user.gender}}</td>
+                            <td>{{user.role}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--    <br>
                     <br>
                     Pregled svih korisnika
                     Kao Administrator:
@@ -114,89 +77,87 @@ Vue.component('users',{
                             Mozda i da ne budu 2 odvojena pogleda veca jedan isit tj.jedna ista tabela koju popunjavamo drugacije u
                             zavisnosti od role korisnika.
                     </div>-->
-                </div>
-            </div>
-        </div>
-    `,
-    data:function(){
-        return{
-            user:{
-                username:'',
-                role:''
+    </div>
+</div>`,
+    data: function () {
+        return {
+            user: {
+                username: '',
+                role: ''
             },
-            users:[
+            users: [
                 {
-                    username:'username1',
-                    password:'password1',
-                    firstname:'Test',
-                    lastname:'Testovic',
-                    gender:'M',
-                    role:'admin',
+                    username: 'username1',
+                    password: 'password1',
+                    firstname: 'Test',
+                    lastname: 'Testovic',
+                    gender: 'M',
+                    role: 'admin',
                 },
                 {
-                    username:'username2',
-                    password:'password2',
-                    firstname:'Test1',
-                    lastname:'Testovic1',
-                    gender:'M',
-                    role:'host',
+                    username: 'username2',
+                    password: 'password2',
+                    firstname: 'Test1',
+                    lastname: 'Testovic1',
+                    gender: 'M',
+                    role: 'host',
                 },
                 {
-                    username:'username3',
-                    password:'password3',
-                    firstname:'Test2',
-                    lastname:'Testovic',
-                    gender:'M',
-                    role:'host',
+                    username: 'username3',
+                    password: 'password3',
+                    firstname: 'Test2',
+                    lastname: 'Testovic',
+                    gender: 'M',
+                    role: 'host',
                 },
                 {
-                    username:'username4',
-                    password:'password4',
-                    firstname:'Test3',
-                    lastname:'Testovic',
-                    gender:'M',
-                    role:'guest',
+                    username: 'username4',
+                    password: 'password4',
+                    firstname: 'Test3',
+                    lastname: 'Testovic',
+                    gender: 'M',
+                    role: 'guest',
                 },
                 {
-                    username:'username5',
-                    password:'password5',
-                    firstname:'Testa',
-                    lastname:'Testovic',
-                    gender:'Z',
-                    role:'guest',
+                    username: 'username5',
+                    password: 'password5',
+                    firstname: 'Testa',
+                    lastname: 'Testovic',
+                    gender: 'Z',
+                    role: 'guest',
                 },
             ],
             //User objekat koji sadrzi atribute po kojima pretrazujemo i
             // kojeg saljemo na bek.
             searchedUser: {
-				username: '',
+                username: '',
                 gender: '',
-                role:'',
+                role: '',
             },
-            isAdmin:false,
-            isHost:false,
-            isGuest:false
+            isAdmin: false,
+            isHost: false,
+            isGuest: false
         }
     },
-    methods:{
-        searchUser(){
+    methods: {
+        searchUser() {
             alert(`Trazite usera ${this.searchedUser.username}
             ${this.searchedUser.gender}
             ${this.searchedUser.role}
             `);
         }
     },
-    created(){
+    created() {
         this.user.username = localStorage.getItem('user');
         this.user.role = localStorage.getItem('role');
-        if(this.user.role == "ADMIN"){
+        if (this.user.role == "ADMIN") {
             this.isAdmin = true;
             //get metoda koja vraca sve usere.
-        }else if(this.user.role == "HOST"){
+        } else if (this.user.role == "HOST") {
             this.isHost = true;
             //get metoda koja vraca sve usere tipa guest koji imaju rezervaciju kod tog hosta
-        }else{
-            this.isGuest= true;
+        } else {
+            this.isGuest = true;
         }
     },
 });

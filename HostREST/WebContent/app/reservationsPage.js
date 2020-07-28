@@ -1,49 +1,6 @@
-Vue.component('reservations',{
-    template:`<div id='reservation-list'>
-    <div id="navigation">
-        <nav class="navbar navbar-expand-lg navbar-dark static-top">
-            <div class="container">
-                <h1><span id='titleEffect'>Apartment</span>Finder</h1>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ml-auto">
-
-                        <li class="nav-item active">
-                            <router-link to="/homepage" class="nav-link" exact>Home</router-link>
-                        </li>
-
-                        <li class="nav-item active">
-                            <router-link to="/apartments" class="nav-link" exact>Apartments
-                                <span class="sr-only">current)</span>
-                            </router-link>
-                        </li>
-
-                        <li class="nav-item" v-if='!isGuest'>
-                            <router-link class="nav-link" to="/users" exact>Users</router-link>
-                        </li>
-
-                        <li class="nav-item">
-                            <router-link class="nav-link" to="/reservations" exact>Reservations</router-link>
-                        </li>
-                        <!--Zakomentarisati za navbar-->
-
-                        <li class="nav-item">
-                            <router-link class="nav-link" to="/profile" exact>Profile</router-link>
-                        </li>
-                    </ul>
-
-                    <router-link to='#' class="nav-link" exact> <button class="btn" id='btnLogin'>Log In</button>
-                    </router-link>
-                    <button class="btn" id='btnLogout'>Log Out</button>
-                </div>
-            </div>
-        </nav>
-    </div>
-    <!--navigation-->
-
+Vue.component('reservations', {
+    template: `
+<div id='reservation-list'>
     <div class="container" id='page-title'>
         <h1 style="margin-top:10px;color:#35424a;">List of <span id='titleEffect'>Reservations</span></h1>
         <hr style='background:#e8491d;height:1px;'>
@@ -67,16 +24,16 @@ Vue.component('reservations',{
                     <a class="navbar-brand">Filter&Search</a>
                     <form class="form-inline">
                         <div>
-                                <img src='img/filterIcon1.1.png' style="display:inline;">                       
+                            <img src='img/filterIcon1.1.png' style="display:inline;">
                             <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="filterQuery">
                                 <option disabled value="">Status</option>
                                 <option v-for='status in statuses'>{{status}}</option>
                             </select>
                         </div>
                         <div>
-                            <img src='img/searchIcon1.1.png' style="display:inline;">       
+                            <img src='img/searchIcon1.1.png' style="display:inline;">
                             <input class="form-control mr-sm-2" type="text" placeholder="username" aria-label="Search">
-                        </div>      
+                        </div>
                         <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click=''>Search</button>
                     </form>
                 </nav>
@@ -114,7 +71,8 @@ Vue.component('reservations',{
                     </tr>
                 </tbody>
             </table>
-        </div> <!--!isGeust-->
+        </div>
+        <!--!isGeust-->
 
         <div v-if='isGuest'>
             Pregled rezervacija<br>
@@ -161,162 +119,163 @@ Vue.component('reservations',{
                     </tr>
                 </tbody>
             </table>
-        </div><!--isGeust-->
+        </div>
+        <!--isGeust-->
     </div>
     <!--id='main'-->
 </div> <!-- reservation-list-->` ,
-    data:function(){
-        return{
-            user:{
-                username:'',
-                role:''
+    data: function () {
+        return {
+            user: {
+                username: '',
+                role: ''
             },
-            
-            isAdmin:false,
-            isHost:false,
-            isGuest:false,
+
+            isAdmin: false,
+            isHost: false,
+            isGuest: false,
 
             //sort data
-            apartments:[
+            apartments: [
                 {
-                    id:'1',
-                    apartmentType:'apar',
-                    apartmentLocation:'Fiftieth street',
-                    date:'01.01.2020',
-                    night:'10',
-                    price:250,
+                    id: '1',
+                    apartmentType: 'apar',
+                    apartmentLocation: 'Fiftieth street',
+                    date: '01.01.2020',
+                    night: '10',
+                    price: 250,
                     confirmation: true,
-                    status:'Kreiran'
+                    status: 'Kreiran'
                 },
                 {
-                    id:'2',
-                    apartmentType:'panthhouse',
-                    apartmentLocation:'Main Boulevard 1',
-                    date:'01.01.2020',
-                    night:'15',
-                    price:100,
+                    id: '2',
+                    apartmentType: 'panthhouse',
+                    apartmentLocation: 'Main Boulevard 1',
+                    date: '01.01.2020',
+                    night: '15',
+                    price: 100,
                     confirmation: true,
-                    status:'Kreiran'
+                    status: 'Kreiran'
                 },
                 {
-                    id:'3',
-                    apartmentType:'panthhouse',
-                    apartmentLocation:'Main Boulevard 2',
-                    date:'01.01.2020',
-                    night:'15',
-                    price:50,
+                    id: '3',
+                    apartmentType: 'panthhouse',
+                    apartmentLocation: 'Main Boulevard 2',
+                    date: '01.01.2020',
+                    night: '15',
+                    price: 50,
                     confirmation: false,
-                    status:'Odustanak'
+                    status: 'Odustanak'
                 },
                 {
-                    id:'4',
-                    apartmentType:'panthhouse',
-                    apartmentLocation:'Main Boulevard 3',
-                    date:'01.01.2020',
-                    night:'20',
-                    price:150,
+                    id: '4',
+                    apartmentType: 'panthhouse',
+                    apartmentLocation: 'Main Boulevard 3',
+                    date: '01.01.2020',
+                    night: '20',
+                    price: 150,
                     confirmation: true,
-                    status:'Odbijen'
+                    status: 'Odbijen'
                 },
                 {
-                    id:'5',
-                    apartmentType:'panthhouse',
-                    apartmentLocation:'Main Boulevard 4',
-                    date:'01.01.2020',
-                    night:'20',
-                    price:550,
+                    id: '5',
+                    apartmentType: 'panthhouse',
+                    apartmentLocation: 'Main Boulevard 4',
+                    date: '01.01.2020',
+                    night: '20',
+                    price: 550,
                     confirmation: true,
-                    status:'Prihvacen'
+                    status: 'Prihvacen'
                 },
                 {
-                    id:'6',
-                    apartmentType:'panthhouse',
-                    apartmentLocation:'Main Boulevard 5',
-                    date:'01.01.2020',
-                    night:'20',
-                    price:450,
+                    id: '6',
+                    apartmentType: 'panthhouse',
+                    apartmentLocation: 'Main Boulevard 5',
+                    date: '01.01.2020',
+                    night: '20',
+                    price: 450,
                     confirmation: true,
-                    status:'Prihvacen'
+                    status: 'Prihvacen'
                 },
                 {
-                    id:'7',
-                    apartmentType:'panthhouse',
-                    apartmentLocation:'Main Boulevard 6',
-                    date:'01.01.2020',
-                    night:'20',
-                    price:1000,
+                    id: '7',
+                    apartmentType: 'panthhouse',
+                    apartmentLocation: 'Main Boulevard 6',
+                    date: '01.01.2020',
+                    night: '20',
+                    price: 1000,
                     confirmation: true,
-                    status:'Zavrsen'
+                    status: 'Zavrsen'
                 },
                 {
-                    id:'8',
-                    apartmentType:'panthhouse',
-                    apartmentLocation:'Main Boulevard 7',
-                    date:'01.01.2020',
-                    night:'20',
-                    price:1000,
+                    id: '8',
+                    apartmentType: 'panthhouse',
+                    apartmentLocation: 'Main Boulevard 7',
+                    date: '01.01.2020',
+                    night: '20',
+                    price: 1000,
                     confirmation: true,
-                    status:'Zavrsen'
+                    status: 'Zavrsen'
                 },
 
             ],
 
             //sortiranje:
-            currentSort:'name',
-            currentSortDir:'asc',
+            currentSort: 'name',
+            currentSortDir: 'asc',
 
             //filtriranje:
-            statuses:['Kreiran','Odbijen','Odustanak','Prihvacen','Zavrsen'],
-            filterQuery:'',
+            statuses: ['Kreiran', 'Odbijen', 'Odustanak', 'Prihvacen', 'Zavrsen'],
+            filterQuery: '',
         }
     },
-    methods:{
-        message:function(){
+    methods: {
+        message: function () {
             alert('Ako je aktivna rezervacija ovim bi se ona otkazala!');
         },
-        messageHost:function(){
+        messageHost: function () {
             alert('Menja se status rezervacije!');
         },
 
-        sort:function(s) {
+        sort: function (s) {
             //if s == current sort, reverse
-            if(s === this.currentSort) {
-              this.currentSortDir = this.currentSortDir==='asc'?'desc':'asc';
+            if (s === this.currentSort) {
+                this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc';
             }
             this.currentSort = s;
-          }
+        }
     },
-    computed:{
-        sortedApartments:function() {
-          return this.apartments.sort((a,b) => {
-            let modifier = 1;
-            if(this.currentSortDir === 'desc') modifier = -1;
-            if(a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
-            if(a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
-            return 0;
-          });
+    computed: {
+        sortedApartments: function () {
+            return this.apartments.sort((a, b) => {
+                let modifier = 1;
+                if (this.currentSortDir === 'desc') modifier = -1;
+                if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+                if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+                return 0;
+            });
         },
-           //filtriranje #2
-        filteredApartments:function() {
+        //filtriranje #2
+        filteredApartments: function () {
             return this.sortedApartments.filter((items) => {
-            for (var item in items) {
-                if(String(items[item]).indexOf(this.filterQuery) !== -1) {
-                return true
+                for (var item in items) {
+                    if (String(items[item]).indexOf(this.filterQuery) !== -1) {
+                        return true
+                    }
                 }
-            }
-            return false
+                return false
             })
         }
     },
-    created(){
+    created() {
         this.user.username = localStorage.getItem('user');
         this.user.role = localStorage.getItem('role');
-        if(this.user.role == "ADMIN"){
+        if (this.user.role == "ADMIN") {
             this.isAdmin = true;
-        }else if(this.user.role == "HOST"){
+        } else if (this.user.role == "HOST") {
             this.isHost = true;
-        }else{
-            this.isGuest= true;
+        } else {
+            this.isGuest = true;
         }
     },
 });

@@ -1,48 +1,6 @@
 Vue.component('profile', {
     template: `
 <div id="user-profile">
-    <div id="navigation">
-        <nav class="navbar navbar-expand-lg navbar-dark static-top">
-            <div class="container">
-                <h1><span id='titleEffect'>Apartment</span>Finder</h1>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ml-auto">
-
-                        <li class="nav-item active">
-                            <router-link to="/homepage" class="nav-link" exact>Home</router-link>
-                        </li>
-
-                        <li class="nav-item active">
-                            <router-link to="/apartments" class="nav-link" exact>Apartments
-                                <span class="sr-only">current)</span>
-                            </router-link>
-                        </li>
-
-                        <li class="nav-item" v-if='!isGuest'>
-                            <router-link class="nav-link" to="/users" exact>Users</router-link>
-                        </li>
-
-                        <li class="nav-item">
-                            <router-link class="nav-link" to="/reservations" exact>Reservations</router-link>
-                        </li>
-
-                        <li class="nav-item">
-                            <router-link class="nav-link" to="/profile" exact>Profile</router-link>
-                        </li>
-                        <!--Zakomentarisati za navbar-->
-                    </ul>
-
-                    <router-link to='#' class="nav-link" exact> <button class="btn" id='btnLogin'>Log In</button>
-                    </router-link>
-                    <button class="btn" id='btnLogout'>Log Out</button>
-                </div>
-            </div>
-        </nav>
-    </div>
     <div>
         <div class="container" id='page-title'>
             <h1 style="margin-top:10px;color:#35424a;">User <span id='titleEffect'>Profile</span></h1>
