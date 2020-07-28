@@ -58,20 +58,20 @@ Vue.component('users',{
                             <nav class="navbar navbar-light bg-light justify-content-between">
                                 <a class="navbar-brand">Pretraga</a>
                                 <form class="form-inline">
-                                <input class="form-control mr-sm-2" v-model='searchedUser.username' type="text" placeholder="username" aria-label="Search">
-                                <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="searchedUser.role">
-                                    <option disabled value="">Role</option>
-                                    <option>admin</option>
-                                    <option>host</option>
-                                    <option>guest</option>
-                                </select>
-                                <select style="padding:7px; margin-right: 10px" id='listOfGenders' v-model="searchedUser.gender">
-                                    <option disabled value="">Gender</option>
-                                    <option>male</option>
-                                    <option>female</option>
-                                    <option>other</option>
-                                </select>
-                                <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click='searchUser()'>Search</button>
+                                    <input class="form-control mr-sm-2" v-model='searchedUser.username' type="text" placeholder="username" aria-label="Search">
+                                    <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="searchedUser.role">
+                                        <option disabled value="">Role</option>
+                                        <option>admin</option>
+                                        <option>host</option>
+                                        <option>guest</option>
+                                    </select>
+                                    <select style="padding:7px; margin-right: 10px" id='listOfGenders' v-model="searchedUser.gender">
+                                        <option disabled value="">Gender</option>
+                                        <option>male</option>
+                                        <option>female</option>
+                                        <option>other</option>
+                                    </select>
+                                    <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click='searchUser()'>Search</button>
                                 </form>
                             </nav>
                         </div> 

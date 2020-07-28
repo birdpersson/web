@@ -64,12 +64,20 @@ Vue.component('reservations',{
 
             <div id='filter'>
                 <nav class="navbar navbar-light bg-light justify-content-between">
-                    <a class="navbar-brand">Flitriranje</a>
+                    <a class="navbar-brand">Filter&Search</a>
                     <form class="form-inline">
-                        <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="searchQuery">
-                            <option disabled value="">Status</option>
-                            <option v-for='status in statuses'>{{status}}</option>
-                        </select>
+                        <div>
+                                <img src='img/filterIcon1.1.png' style="display:inline;">                       
+                            <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="filterQuery">
+                                <option disabled value="">Status</option>
+                                <option v-for='status in statuses'>{{status}}</option>
+                            </select>
+                        </div>
+                        <div>
+                            <img src='img/searchIcon1.1.png' style="display:inline;">       
+                            <input class="form-control mr-sm-2" type="text" placeholder="username" aria-label="Search">
+                        </div>      
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click=''>Search</button>
                     </form>
                 </nav>
             </div>
@@ -106,8 +114,7 @@ Vue.component('reservations',{
                     </tr>
                 </tbody>
             </table>
-        </div>
-        <!--!isGeust-->
+        </div> <!--!isGeust-->
 
         <div v-if='isGuest'>
             Pregled rezervacija<br>
@@ -154,8 +161,7 @@ Vue.component('reservations',{
                     </tr>
                 </tbody>
             </table>
-        </div>
-        <!--isGeust-->
+        </div><!--isGeust-->
     </div>
     <!--id='main'-->
 </div> <!-- reservation-list-->` ,
@@ -261,7 +267,7 @@ Vue.component('reservations',{
 
             //filtriranje:
             statuses:['Kreiran','Odbijen','Odustanak','Prihvacen','Zavrsen'],
-            searchQuery:'',
+            filterQuery:'',
         }
     },
     methods:{
@@ -294,7 +300,7 @@ Vue.component('reservations',{
         filteredApartments:function() {
             return this.sortedApartments.filter((items) => {
             for (var item in items) {
-                if(String(items[item]).indexOf(this.searchQuery) !== -1) {
+                if(String(items[item]).indexOf(this.filterQuery) !== -1) {
                 return true
                 }
             }
