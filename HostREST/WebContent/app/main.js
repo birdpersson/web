@@ -44,5 +44,5 @@ const router = new VueRouter({
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwt');
 
 const app = new Vue({
-	router
+	router,
 }).$mount('#app');

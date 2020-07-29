@@ -31,7 +31,6 @@ Vue.component('amenities-overview', {
                     <th>Atribut1</th>
                     <th>Atribut2</th>
                     <th>Izmeni naziv</th>
-
                 </tr>
             </thead>
             <tbody>
@@ -82,6 +81,5 @@ Vue.component('amenities-overview', {
             this.isGuest = true;
         }
     },
-
 });
 
