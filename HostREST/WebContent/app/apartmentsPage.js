@@ -21,7 +21,7 @@ Vue.component('apartments', {
                             <option disabled value="">Status</option>
                             <option v-for='type in types'>{{type}}</option>
                         </select>
-                        <select style="padding:7px; margin-right: 10px" id='listOfAmenities' v-model="filterQueryAmanity">
+                        <select v-if='!isGuest' style="padding:7px; margin-right: 10px" id='listOfAmenities' v-model="filterQueryAmanity">
                             <option disabled value="">Amenities</option>
                             <option v-for='amenity in amenities'>{{amenity}}</option>
                         </select>
@@ -31,7 +31,7 @@ Vue.component('apartments', {
             </form>
         </nav>
     </div>
-    <div class='container 'id='filter'>
+    <div class='container 'id='search'>
         <nav class="navbar navbar-light bg-light justify-content-between">
             <a class="navbar-brand">Search</a>
             <form class="form-inline">
@@ -44,13 +44,15 @@ Vue.component('apartments', {
                         <input class="form-control mr-sm-2" type="date">
                         <span>Price</span>
                         <input class="form-control mr-sm-2" type="text" placeholder="min price" aria-label="Search">
-                        <span style="padding-right:2px;"> - </span>
+                        <span style="padding-right:3px;"> - </span>
                         <input class="form-control mr-sm-2" type="text" placeholder="max price" aria-label="Search">
                         <div>
                             <span>Location</span>
                             <input class="form-control mr-sm-2" type="text" placeholder="location" aria-label="Search">
                             <span>Rooms</span>
-                            <input class="form-control mr-sm-2" type="text" placeholder="No. of rooms" aria-label="Search">
+                            <input class="form-control mr-sm-2" type="text" placeholder="min No. of rooms" aria-label="Search">
+                            <span style="padding-right:3px;"> - </span>
+                            <input class="form-control mr-sm-2" type="text" placeholder="max No. of rooms" aria-label="Search">
                             <span>Persons</span>
                             <input class="form-control mr-sm-2" type="text" placeholder="No. of people" aria-label="Search">
                             <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click=''>Search</button>
@@ -64,7 +66,35 @@ Vue.component('apartments', {
 
 
     <div class="container" id='main'>
-        <div v-if='isGuest'>                       
+            <div v-if='isGuest'>
+                    Kao Gost:<br>
+                    ○ Želim da sortiram apartmane i svoje rezervacije po ceni:<br>
+                    ■ Rastuće<br>
+                    ■ Opadajuće<br>
+                    ○ Želim da filtriram apartmane po tipu i po sadržaju apartmana<br>
+            </div> 
+            <div v-if='!isGuest'>
+                    Kao Domaćin:<br>
+                    ○ Pregleda, sortiranja i filtriranja po svim kriterijumima, ali isključivo svojih<br>
+                    apartmana sa statusom AKTIVAN<br>
+                    ○ Imam pregled svojih apartmana sa statusom NEAKTIVAN<br>
+                    ○ Mogu da menjam podatke o svom apartmanu:<br>
+                    ■ Sve izmene moraju biti validne - ako neko obavezno polje nije popunjeno,<br>
+                    pored odgovarajućeg polja se ispisuje poruka o grešci<br>
+                    ■ Pritiskom na dugme za slanje se šalje zahtev za izmenu na server<br>
+                    ■ U slučaju uspešne izmene podataka korisnik se obaveštava o tome<br>
+                    ■ U slučaju neuspešne izmene podataka korisniku se ispisuje greška<br>
+                    ○ Mogu da obrišem svoj apartman<br>
+                    <br>
+                    <br>
+                    Kao Administratoru:<br>
+                    ○ Vidim sve apartmane bez obzira na njihov status<br>
+                    ○ Modifikujem podatke o apartmanu (isti postupak izmene kao kod Domaćina)<br>
+                    ○ Brišem sve postojeće apartmane<br>
+        
+                </div>
+                <br>
+                <br>
             <table class="table">
                 <thead>
                     <tr>
@@ -78,8 +108,11 @@ Vue.component('apartments', {
                         <th>Availability</th>
                         <th>Status</th>
                         <th>Amenities</th>
-                        <th>Comments</th>
-                        <th>Reserv</th>
+                        <th v-if='isGuest'>Comments</th>
+                        <th v-if='isGuest'>Reserv</th>
+                        <!-- <th v-if='isGuest'>Add aparment</th> -->
+                        <th v-if='!isGuest'>Edit</th>
+                        <th v-if='!isGuest'>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -91,7 +124,7 @@ Vue.component('apartments', {
                         <td>{{apartment.price}}</td>
                         <td>{{apartment.availability}}</td>
                         <td>{{apartment.status}}</td>
-                        <td>
+                        <td >
                             <ul>
                                 <li style="list-style: none;display: inline;padding-right:2px;" v-for="amenity in apartment.amenities">{{amenity}}</li>
                             </ul>
@@ -102,81 +135,33 @@ Vue.component('apartments', {
                                   </div>
                             </div> -->
                         </td>
-                        <td>
+                        <td v-if='isGuest'>
                             <router-link to="/apartmentComments"><button> Comments </button></router-link>
                         </td>
-                        <td>
+                        <td v-if='isGuest'>
                             <router-link to="/newReservation"><button> Reserv </button></router-link>
                         </td>
-                    </tr>
-                </tbody>
-            </table>
 
-            <router-link to="/reservations"><button id='reservationButton' class="btn btn-lg btn-warning">List of reservations</button></router-link>
-        </div> <!--IsGuest-->
-
-        <div v-if='!isGuest'>
-            Kao Domaćin:<br>
-            ○ Pregleda, sortiranja i filtriranja po svim kriterijumima, ali isključivo svojih<br>
-            apartmana sa statusom AKTIVAN<br>
-            ○ Imam pregled svojih apartmana sa statusom NEAKTIVAN<br>
-            ○ Mogu da menjam podatke o svom apartmanu:<br>
-            ■ Sve izmene moraju biti validne - ako neko obavezno polje nije popunjeno,<br>
-            pored odgovarajućeg polja se ispisuje poruka o grešci<br>
-            ■ Pritiskom na dugme za slanje se šalje zahtev za izmenu na server<br>
-            ■ U slučaju uspešne izmene podataka korisnik se obaveštava o tome<br>
-            ■ U slučaju neuspešne izmene podataka korisniku se ispisuje greška<br>
-            ○ Mogu da obrišem svoj apartman<br>
-            <br>
-            <br>
-            Kao Administratoru:<br>
-            ○ Vidim sve apartmane bez obzira na njihov status<br>
-            ○ Modifikujem podatke o apartmanu (isti postupak izmene kao kod Domaćina)<br>
-            ○ Brišem sve postojeće apartmane<br>
-            <br>
-            <br>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Atribut1</th>
-                        <th>Atribut2</th>
-                        <th>Obrisi</th>
-                        <th>Izmeni</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>atribut1</td>
-                        <td>atribut2</td>
-                        <td><button v-on:click='showMessage'> delete </button></td>
-                        <td>
-                            <router-link to="/apartmentNew"><button> Edit </button></router-link>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>atribut3</td>
-                        <td>atribut4</td>
-                        <td><button v-on:click='showMessage'> delete </button></td>
-                        <td>
+                        <td v-if='!isGuest'><button v-on:click='showMessage'> delete </button></td>
+                        <td v-if='!isGuest'>
                             <router-link to="/apartmentNew"><button> Edit </button></router-link>
                         </td>
                     </tr>
                 </tbody>
             </table>
-        </div>
+
+            <router-link v-if='isGuest' to="/reservations"><button class='classButton' class="btn btn-warning">List of reservations</button></router-link>
+        <!-- </div> IsGuest -->
+
         <div id='options'>
             <!--Neaktivni stanovi i dodaj stan pripadaju hostu,
                     Komentari i rezervacije hostu i adminu,
                     dok sadrzaj apartmana samo adminu.-->
-            <router-link to="/apartmentComments"> <button v-if='!isGuest' style='padding-left: 5px;'>Komentari</button>
-            </router-link>
-            <router-link to="/apartInactiveOverview"> <button v-if='isHost' style='padding-left: 5px;'>Neaktivni
-                    stanovi</button> </router-link>
-            <router-link to="/apartmentNew"> <button v-if='isHost' style='padding-left: 5px;'>Dodaj stan</button>
-            </router-link>
-            <router-link to="/reservations"> <button v-if='!isGuest' style='padding-left: 5px;'>Rezervacije</button>
-            </router-link>
-            <router-link to="/amenitiesOverview"> <button v-if='isAdmin' style='padding-left: 5px;'>Sadrzaj apartmana</button> </router-link>
+            <router-link to="/apartmentComments"> <button class='classButton' v-if='!isGuest' >Komentari</button></router-link>
+            <router-link to="/apartInactiveOverview"> <button class='classButton' v-if='isHost'>Neaktivni stanovi</button></router-link>
+            <router-link to="/apartmentNew"> <button class='classButton' v-if='isHost'>Dodaj stan</button></router-link>
+            <router-link to="/reservations"> <button class='classButton' v-if='!isGuest'>Rezervacije</button></router-link>
+            <router-link to="/amenitiesOverview"> <button  class='classButton' v-if='isAdmin'>Sadrzaj apartmana</button></router-link>
         </div>
     </div>
 </div>`,

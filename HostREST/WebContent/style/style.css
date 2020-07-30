@@ -194,13 +194,17 @@ color: transparent;
   cursor: pointer;
 }
 
-#reservationButton{
+.classButton{
+  margin-left: 5px;
   color:#fff;
   background-color: #e8491d;
+  padding:10px;
 }
 
-#reservationButton:hover{
+.classButton:hover{
+  margin-left: 5px;
   color:#fff;
   background-color: #e8491d;
   font-weight: bold;
+  padding:10px;
 }
