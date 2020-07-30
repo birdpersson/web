@@ -113,10 +113,6 @@ color: transparent;
   border-radius: 10px;
 }
 #navigation a:hover{
-  /* color:#333;
-  background: #fff;
-  border-radius: 15px;
-  padding:5px; */
   border-bottom: #fff solid 1px;
   font-weight: bold;
 }
@@ -152,7 +148,7 @@ color: transparent;
   color:#e8491d;
   font-weight: bold;
 }
-/* html body div#app div#navigation nav.navbar.navbar-expand-lg.navbar-dark.static-top div.container div#navbarResponsive.collapse.navbar-collapse ul.navbar-nav.ml-auto li.nav-item.active */
+
 .router-link-active{
   border-bottom: #fff solid 1px;
   font-weight: bold;
@@ -160,12 +156,6 @@ color: transparent;
 
 /* RESERVATIONS PAGE*/
 #reservation-list th:hover{
-  color:#35424a;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-#test th:hover{
   color:#35424a;
   font-weight: bold;
   cursor: pointer;
@@ -193,3 +183,24 @@ color: transparent;
   margin-top:80px;
 }
 
+/* Apartments overview page*/
+#apartments-overview th:hover{
+  color:#35424a;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#apartments-overview img:hover{
+  cursor: pointer;
+}
+
+#reservationButton{
+  color:#fff;
+  background-color: #e8491d;
+}
+
+#reservationButton:hover{
+  color:#fff;
+  background-color: #e8491d;
+  font-weight: bold;
+}

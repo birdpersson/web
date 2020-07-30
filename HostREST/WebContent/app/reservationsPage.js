@@ -135,7 +135,7 @@ Vue.component('reservations', {
             isHost: false,
             isGuest: false,
 
-            //sort data
+            //sort data //promeniti u reservations
             apartments: [
                 {
                     id: '1',
@@ -227,6 +227,8 @@ Vue.component('reservations', {
             //filtriranje:
             statuses: ['Kreiran', 'Odbijen', 'Odustanak', 'Prihvacen', 'Zavrsen'],
             filterQuery: '',
+
+ 
         }
     },
     methods: {
