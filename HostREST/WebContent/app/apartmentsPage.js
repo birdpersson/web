@@ -27,7 +27,6 @@ Vue.component('apartments', {
                         </select>
                     </div>
                 </div>
-               
             </form>
         </nav>
     </div>
@@ -64,37 +63,7 @@ Vue.component('apartments', {
         </nav>
     </div>
 
-
     <div class="container" id='main'>
-            <div v-if='isGuest'>
-                    Kao Gost:<br>
-                    ○ Želim da sortiram apartmane i svoje rezervacije po ceni:<br>
-                    ■ Rastuće<br>
-                    ■ Opadajuće<br>
-                    ○ Želim da filtriram apartmane po tipu i po sadržaju apartmana<br>
-            </div> 
-            <div v-if='!isGuest'>
-                    Kao Domaćin:<br>
-                    ○ Pregleda, sortiranja i filtriranja po svim kriterijumima, ali isključivo svojih<br>
-                    apartmana sa statusom AKTIVAN<br>
-                    ○ Imam pregled svojih apartmana sa statusom NEAKTIVAN<br>
-                    ○ Mogu da menjam podatke o svom apartmanu:<br>
-                    ■ Sve izmene moraju biti validne - ako neko obavezno polje nije popunjeno,<br>
-                    pored odgovarajućeg polja se ispisuje poruka o grešci<br>
-                    ■ Pritiskom na dugme za slanje se šalje zahtev za izmenu na server<br>
-                    ■ U slučaju uspešne izmene podataka korisnik se obaveštava o tome<br>
-                    ■ U slučaju neuspešne izmene podataka korisniku se ispisuje greška<br>
-                    ○ Mogu da obrišem svoj apartman<br>
-                    <br>
-                    <br>
-                    Kao Administratoru:<br>
-                    ○ Vidim sve apartmane bez obzira na njihov status<br>
-                    ○ Modifikujem podatke o apartmanu (isti postupak izmene kao kod Domaćina)<br>
-                    ○ Brišem sve postojeće apartmane<br>
-        
-                </div>
-                <br>
-                <br>
             <table class="table">
                 <thead>
                     <tr>
@@ -164,6 +133,36 @@ Vue.component('apartments', {
             <router-link to="/amenitiesOverview"> <button  class='classButton' v-if='isAdmin'>Sadrzaj apartmana</button></router-link>
         </div>
     </div>
+
+    <div v-if='isGuest'>
+            Kao Gost:<br>
+            ○ Želim da sortiram apartmane i svoje rezervacije po ceni:<br>
+            ■ Rastuće<br>
+            ■ Opadajuće<br>
+            ○ Želim da filtriram apartmane po tipu i po sadržaju apartmana<br>
+    </div> 
+    <div v-if='!isGuest'>
+            Kao Domaćin:<br>
+            ○ Pregleda, sortiranja i filtriranja po svim kriterijumima, ali isključivo svojih<br>
+            apartmana sa statusom AKTIVAN<br>
+            ○ Imam pregled svojih apartmana sa statusom NEAKTIVAN<br>
+            ○ Mogu da menjam podatke o svom apartmanu:<br>
+            ■ Sve izmene moraju biti validne - ako neko obavezno polje nije popunjeno,<br>
+            pored odgovarajućeg polja se ispisuje poruka o grešci<br>
+            ■ Pritiskom na dugme za slanje se šalje zahtev za izmenu na server<br>
+            ■ U slučaju uspešne izmene podataka korisnik se obaveštava o tome<br>
+            ■ U slučaju neuspešne izmene podataka korisniku se ispisuje greška<br>
+            ○ Mogu da obrišem svoj apartman<br>
+            <br>
+            <br>
+            Kao Administratoru:<br>
+            ○ Vidim sve apartmane bez obzira na njihov status<br>
+            ○ Modifikujem podatke o apartmanu (isti postupak izmene kao kod Domaćina)<br>
+            ○ Brišem sve postojeće apartmane<br>
+
+        </div>
+        <br>
+        <br>
 </div>`,
     data: function () {
         return {

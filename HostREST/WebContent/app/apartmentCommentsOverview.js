@@ -172,7 +172,6 @@ Vue.component('apartment-comments', {
                 }
             ],
             apartmentId:''
-           
         }
     },
     methods: {
@@ -190,11 +189,10 @@ Vue.component('apartment-comments', {
         } else {
             this.isGuest = true;
         }
-
     },
     mounted(){
+        //simulira preuzimanje id-ja ustvari ce biti poslat zahtev za dovavljanje apartmana spram tog idja. 
+        //mozda cak i preuzimanje svih usera za username...
         this.apartmentId = this.comments[0].apartmentId;
     }
-    
-
 });

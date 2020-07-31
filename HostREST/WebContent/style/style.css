@@ -257,14 +257,14 @@ color: transparent;
 
 #apartment-comments .comments .single-comment #check-visibility{
   float: left;
-  width: 10%;
+  width: 5%;
 }
 
 #apartment-comments .comments .single-comment #visibility-message{
   background-color: #f4f4f4;
   color:#777;
   float: right;
-  width: 85%;
+  width: 90%;
   text-align: center;
 }
 /* html body div#app div#apartment-comments div#main.container div div.comments */
