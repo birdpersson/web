@@ -249,4 +249,24 @@ color: transparent;
   padding:15px;
 }
 
+
+#apartment-comments .comments .single-comment #comment-visibility{
+  background-color: #f4f4f4;
+  padding:15px;
+}
+
+#apartment-comments .comments .single-comment #check-visibility{
+  float: left;
+  width: 10%;
+}
+
+#apartment-comments .comments .single-comment #visibility-message{
+  background-color: #f4f4f4;
+  color:#777;
+  float: right;
+  width: 85%;
+  text-align: center;
+}
 /* html body div#app div#apartment-comments div#main.container div div.comments */
+
+/* style="" */

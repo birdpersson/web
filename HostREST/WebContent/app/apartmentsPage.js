@@ -150,7 +150,7 @@ Vue.component('apartments', {
                 </tbody>
             </table>
 
-            <router-link v-if='isGuest' to="/reservations"><button class='classButton' class="btn btn-warning">List of reservations</button></router-link>
+            <router-link v-if='isGuest' to="/reservations"><button class="classButton btn btn-warning">List of reservations</button></router-link>
         <!-- </div> IsGuest -->
 
         <div id='options'>
