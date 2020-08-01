@@ -1,11 +1,12 @@
 Vue.component('amenities-overview', {
     template: `
 <div id="home">
-    <div>
-        <h1>Hello from AmenitiesOverview {{user.username}} Only Admin!</h1>
-        <h3>You are {{user.role}}</h3>
-
-        <p v-if='isAdmin'>
+    <div class="container" id='page-title'>
+        <h1 style="margin-top:10px;color:#35424a;">List of <span id='titleEffect'>Amenities</span></h1>
+        <hr style='background:#e8491d;height:1px;'>
+    </div>
+    <div class="container" id='main'>
+        <div v-if='isAdmin'>
             Održavanje sadržaja apartmana<br>
             ● Kao administrator zadužen sam i za održavanje liste koja predstavlja sadržaj apartmana:<br>
             ○ Mogu da dodajem novi entitet u spisak sadržaja apartmana:<br>
@@ -20,39 +21,42 @@ Vue.component('amenities-overview', {
             sadržaj i kod svih apartmana koji ga poseduju)<br>
             <br>
             <br>
-        <table border="1px;">
-            <thead>
-                <tr>
-                    <th colspan="4">
-                        Pregled svih sadrzaja stana
-                    </th>
-                </tr>
-                <tr>
-                    <th>Atribut1</th>
-                    <th>Atribut2</th>
-                    <th>Izmeni naziv</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>atribut1</td>
-                    <td>atribut2</td>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>In apartment</th>
+                        <th>Change name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr v-for='amenity in amenities'>
+                    <td>{{amenity.name}}</td>
+                    <td>{{amenity.apartmentId}}</td>
                     <td><button v-on:click='message'> edit </button></td>
                 </tr>
-                <tr>
-                    <td>atribut3</td>
-                    <td>atribut4</td>
-                    <td><button v-on:click='message'> edit </button></td>
-                </tr>
-            </tbody>
-        </table>
-        </p>
-        </p>
+                </tbody>
+            </table>
+                <router-link to="/amenitiesNew"><button class="btn btn-lg btn-success" v-if='!isGuest' style='padding-left: 5px;'>Add amenity</button>
+                </router-link>
+                <button v-on:click='isAddNew=!isAddNew' class="btn btn-lg btn-dark" style='margin-top: 80px;'>New amenity</button> 
+            <hr>
+            <div v-if='isAddNew' id="new-amenity">
+                <div class="container" id='page-title'>
+                    <h1 style="margin-top:10px;color:#35424a;">New <span id='titleEffect'>Amenities</span></h1>
+                    <hr style='background:#e8491d;height:1px;'>
+                </div>
+                <div class="container">
+                    <div>       
+                        <label>Name of new amenity :</label>
+                        <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Enter name...">
+                        <button class="btn btn-success">Save</button>
+                    </div>
+                </div>
+            </div>,
+            <hr>
+        </div>
     </div>
-
-    <router-link to="/amenitiesNew"><button v-if='!isGuest' style='padding-left: 5px;'>Dodaj sadrzaj</button>
-    </router-link>
-
 </div>`,
     data: function () {
         return {
@@ -62,11 +66,60 @@ Vue.component('amenities-overview', {
             },
             isAdmin: false,
             isHost: false,
-            isGuest: false
+            isGuest: false,
+            amenities:[
+                {	
+                    id:'1',
+                    name:'parking',
+                    apartmentId:[1,2,3],
+                },
+                {	
+                    id:'2',
+                    name:'frizider',
+                    apartmentId:[1,2,3],
+                },
+                {	
+                    id:'3',
+                    name:'kuhinja',
+                    apartmentId:[1,2,3],
+                },
+                {	
+                    id:'4',
+                    name:'pegla',
+                    apartmentId:[1,2,3],
+                },
+                {	
+                    id:'5',
+                    name:'ves masina',
+                    apartmentId:[1,2,3],
+                },
+                {	
+                    id:'6',
+                    name:'djakuzi',
+                    apartmentId:[1,2,3],
+                },
+                {	
+                    id:'7',
+                    name:'parking',
+                    apartmentId:[1,2,3],
+                },
+                {	
+                    id:'8',
+                    name:'klima',
+                    apartmentId:[1,2,3],
+                },
+                {	
+                    id:'9',
+                    name:'TV',
+                    apartmentId:[1,2,3],
+                }
+            ],
+
+            isAddNew:false,
         }
     },
     methods: {
-        message: function () {
+        message: function() {
             alert('Menja se ime sadrzaja ili direktno u tabeli ili iz posebnog prozora');
         }
     },
