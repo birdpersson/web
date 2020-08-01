@@ -194,7 +194,8 @@ color: transparent;
   padding:10px;
 }
 /* apartmentCommentNew */                          /*apartmentAmenityNew */
-#aparm-new-comment label, #new-Reservation label,  #new-amenity label{
+#aparm-new-comment label, #new-Reservation label,
+#new-amenity label, #new-apartment label {
   display: block;
   margin: 20px 0 10px;
   font-size: 20px;
@@ -266,6 +267,23 @@ color: transparent;
   float: right;
   width: 90%;
   text-align: center;
+}
+
+#new-apartment select{
+  width:25%;
+  padding:10px;
+}
+
+#new-apartment .half-size{
+  width:49%;
+  padding:10px;
+  margin-bottom:25px
+}
+
+#new-apartment #address,#new-apartment #price{
+  width:100%;
+  padding:10px;
+  margin-bottom:25px
 }
 
 

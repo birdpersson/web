@@ -2,7 +2,7 @@ Vue.component('new-amenities', {
     template: `
 <div id="new-amenity">
    <div class="container" id='page-title'>
-        <h1 style="margin-top:10px;color:#35424a;">New <span id='titleEffect'>Amenities</span></h1>
+        <h1 style="margin-top:10px;color:#35424a;">New <span id='titleEffect'>Amenity</span></h1>
         <hr style='background:#e8491d;height:1px;'>
     </div>
     <div class="container">
