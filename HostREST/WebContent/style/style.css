@@ -161,21 +161,6 @@ color: transparent;
   cursor: pointer;
 }
 
-/* apartmentCommentNew */
-#aparm-new-comment label{
-  display: block;
-  margin: 20px 0 10px;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-#aparm-new-comment textarea{
-  display: block;
-  width: 100%;
-  height: 200px;
-  padding:8px;
-}
-
 /* #main.container div div.vue-star-rating{
   margin-bottom:50px;
 } */
@@ -208,8 +193,86 @@ color: transparent;
   font-weight: bold;
   padding:10px;
 }
+/* apartmentCommentNew */
+#aparm-new-comment label, #new-Reservation label{
+  display: block;
+  margin: 20px 0 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#aparm-new-comment textarea,  #new-Reservation textarea{
+  display: block;
+  width: 100%;
+  height: 200px;
+  padding:8px;
+}
+
 
 /* Comments Overview */
+#apartment-comments #apartmentInfo h3{
+  color:#35424a;
+  font-weight: bold;
+  font-size: 30px; 
+  padding: 30px 0 0 25px;
+}
+
+#apartment-comments .comments{
+  margin:auto;
+  width:70%;
+}
+
+#apartment-comments .comments .single-comment{
+  background-color: #f4f4f4;
+  padding:20px;
+  margin:20px 0;
+  border: 1px solid #777;
+  border-radius: 10px;
+  color:#35424a;
+}
+
+#apartment-comments .comments .single-comment #username{
+  font-weight: bold;
+  font-size:20px;
+  margin:5px 0 5px 5px;
+  border-bottom: 1px solid #777;
+}
+
+#apartment-comments .comments .single-comment #star-rating{
+  padding:5px 0 5px 5px;
+}
+
+#apartment-comments .comments .single-comment #comment{
+  /* font-weight: bold; */
+  font-size:15px;
+  margin:10px 0;
+  padding:10px;
+}
+
+
+#apartment-comments .comments .single-comment #comment-visibility{
+  background-color: #f4f4f4;
+  padding:15px;
+}
+
+#apartment-comments .comments .single-comment #check-visibility{
+  float: left;
+  width: 5%;
+}
+
+#apartment-comments .comments .single-comment #visibility-message{
+  background-color: #f4f4f4;
+  color:#777;
+  float: right;
+  width: 90%;
+  text-align: center;
+}
+/* html body div#app div#apartment-comments div#main.container div div.comments */
+
+/* style="" 
+
+
+
 #apartment-comments #apartmentInfo h3{
   color:#35424a;
   font-weight: bold;
@@ -243,7 +306,7 @@ color: transparent;
 }
 
 #apartment-comments .comments .single-comment #comment{
-  /* font-weight: bold; */
+
   font-size:20px;
   margin:10px 0;
   padding:15px;
@@ -266,7 +329,4 @@ color: transparent;
   float: right;
   width: 90%;
   text-align: center;
-}
-/* html body div#app div#apartment-comments div#main.container div div.comments */
-
-/* style="" */
+}*/

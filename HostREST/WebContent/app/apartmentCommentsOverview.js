@@ -15,7 +15,7 @@ Vue.component('apartment-comments', {
             pravi posebna stranica za prikaz stanova za admina i hosta, a da ova bude samo za guesta.<br>
             <br>
             <div id='apartmentInfo'>
-                <h3>Apartmetn id: {{apartmentId}}</h3>
+                <h3>Apartment id: {{apartmentId}}</h3>
             </div>
             <div class="comments" v-for='comment in comments'>
                 <div class="single-comment" v-if="comment.isVisible">
@@ -25,7 +25,7 @@ Vue.component('apartment-comments', {
                             inactive-color="#35424a"
                             active-color="#e8491d"
                             v-bind:read-only= "true"
-                            v-bind:star-size="25"
+                            v-bind:star-size="20"
                             v-bind:show-rating="false"
                             v-bind:rating="comment.star">
                         </star-rating>
