@@ -63,6 +63,26 @@ public class AuthService {
 		return Response.status(Response.Status.BAD_REQUEST).build();
 	}
 
+	@POST
+	@Path("/signup")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response signup(User user) {
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+		if (userDao.findOne(user.getUsername()) != null) {
+			return Response.status(Response.Status.BAD_REQUEST).build();
+		}
+
+		User loggedUser = userDao.save(ctx.getRealPath(""), user);
+		String jws = Jwts.builder()
+				.setSubject(loggedUser.getUsername())
+				.setExpiration(new Date(new Date().getTime() + 1000*9000L))
+				.setIssuedAt(new Date()).signWith(key).compact();
+		loggedUser.setJwt(jws);
+		return Response.status(Response.Status.CREATED).build();
+
+	}
+
 	public static String getUsername(HttpServletRequest request) {
 		String auth = request.getHeader("Authorization");
 		System.out.println("Authorization: " + auth);
