@@ -13,7 +13,6 @@ import javax.ws.rs.core.Response;
 
 import beans.User;
 import dao.UserDAO;
-import utils.Authentication;
 
 @Path("")
 public class UserService {
@@ -39,7 +38,7 @@ public class UserService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getProfile(@Context HttpServletRequest request,
 			@PathParam("username") String username) {
-		if (Authentication.getUsername(request).equals(username)) {
+		if (AuthService.getUsername(request).equals(username)) {
 			UserDAO userDAO = (UserDAO) ctx.getAttribute("userDAO");
 			User user = userDAO.findOne(username);
 			return Response.status(Response.Status.OK).entity(user).build();

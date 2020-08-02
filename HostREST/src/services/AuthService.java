@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -22,15 +21,14 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import utils.Authentication;
 
 @Path("")
-public class LoginService {
+public class AuthService {
 
 	@Context
 	ServletContext ctx;
 
-	public LoginService() {
+	public AuthService() {
 
 	}
 
@@ -43,7 +41,7 @@ public class LoginService {
 		}
 	}
 
-	static Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+	public static Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
 	@POST
 	@Path("/login")
@@ -57,7 +55,7 @@ public class LoginService {
 			String jws = Jwts.builder()
 					.setSubject(loggedUser.getUsername())
 					.setExpiration(new Date(new Date().getTime() + 1000*9000L))
-					.setIssuedAt(new Date()).signWith(Authentication.key).compact();
+					.setIssuedAt(new Date()).signWith(key).compact();
 			loggedUser.setJwt(jws);
 			return Response.status(Response.Status.OK).entity(loggedUser).build();
 		}
@@ -66,31 +64,38 @@ public class LoginService {
 	}
 
 	@POST
-	@Path("/logout")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/signup")
 	@Produces(MediaType.APPLICATION_JSON)
-	public void logout(@Context HttpServletRequest request) {
-		request.getSession().invalidate();
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response signup(User user) {
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+		if (userDao.findOne(user.getUsername()) != null) {
+			return Response.status(Response.Status.BAD_REQUEST).build();
+		}
+
+		User loggedUser = userDao.save(ctx.getRealPath(""), user);
+		String jws = Jwts.builder()
+				.setSubject(loggedUser.getUsername())
+				.setExpiration(new Date(new Date().getTime() + 1000*9000L))
+				.setIssuedAt(new Date()).signWith(key).compact();
+		loggedUser.setJwt(jws);
+		return Response.status(Response.Status.CREATED).build();
+
 	}
 
-	@GET
-	@Path("/currentUser")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public String login(@Context HttpServletRequest request) {
+	public static String getUsername(HttpServletRequest request) {
 		String auth = request.getHeader("Authorization");
 		System.out.println("Authorization: " + auth);
 		if ((auth != null) && (auth.contains("Bearer "))) {
 			String jwt = auth.substring(auth.indexOf("Bearer ") + 7);
 			try {
-			    Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt);
-				return "User " + claims.getBody().getSubject() + " logged in.";
+				Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt);
+				return claims.getBody().getSubject();
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
-
 		}
-		return "No user logged in.";
+		return null;
 	}
 
 }
