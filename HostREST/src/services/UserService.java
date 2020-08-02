@@ -1,5 +1,7 @@
 package services;
 
+import java.util.Collection;
+
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -45,4 +47,18 @@ public class UserService {
 		}
 		return Response.status(Response.Status.FORBIDDEN).build();
 	}
+
+	@GET
+	@Path("user/all")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUsers(@Context HttpServletRequest request) {
+		String username = AuthService.getUsername(request);
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+		if (userDao.findOne(username).getRole().toString().equals("ADMIN")) {
+			Collection<User> users = userDao.findAll();
+			return Response.status(Response.Status.OK).entity(users).build();
+		}
+		return Response.status(Response.Status.FORBIDDEN).build();
+	}
+
 }
