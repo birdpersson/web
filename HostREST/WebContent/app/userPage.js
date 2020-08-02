@@ -1,57 +1,163 @@
-Vue.component('users',{
-    template:`
-        <div id="user-list">
-            <header id='main-header'>
-                <h1> App Title </h1>
-                <nav class="nav navbar-nav">
-                    <ul>
-                        <li><router-link to="/homepage">Home</router-link></li>
-                        <li><router-link to="/apartments">Apartments</router-link></li>                  
-                        <li><router-link to="/reservations">Reservations</router-link></li>
-                        <li><router-link to="/profile">Profile</router-link></li>
-                    </ul>
-                </nav>
-            </header>
-            <div> 
-                <h1>Hello from Users Page {{user.username}}!</h1>
-                <h3>You are {{user.role}}</h3>
-            </div>
-            <p v-if='isAdmin'>
-                Pregled svih korisnika
-                Kao Administrator:
-                Imam pregled svih postojećih korisnika u sistemu, a mogu vršiti i pretragu
-            </p> 
-            <p v-if='isHost'>
-                Kao Domaćin:
-                Imam pregled svih korisnika koji su napravili rezervaciju za moje apartmane i
-                mogu vršiti pretragu među njima
-            </p>
-
+Vue.component('users', {
+    template: `<div id="user-list">
+    <div class="container">
+        <h1 style="margin-top:10px;color:#35424a;">List Of <span id='titleEffect'>Users</span></h1>
+        <div v-if='isAdmin'>
+            <h3 style="color:#35424a;">As an administrator on this page you can see list of all users in the system.
+            </h3>
         </div>
-    `,
-    data:function(){
-        return{
-            user:{
-                username:'',
-                role:''
+        <div style="color:#35424a;" v-if='isHost'>
+            <h3>As a host on this page you can see list of all users that have reservation on your's apartment.</h3>
+        </div>
+        <hr style='background:#e8491d;height:1px;'>
+    </div>
+    <div class="container">
+
+        <div class="container" id='page-title'>
+            <div id='filter'>
+                <nav class="navbar navbar-light bg-light justify-content-between">
+                    <a class="navbar-brand">Pretraga</a>
+                    <form class="form-inline">
+                        <input class="form-control mr-sm-2" v-model='searchedUser.username' type="text"
+                            placeholder="username" aria-label="Search">
+                        <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="searchedUser.role">
+                            <option disabled value="">Role</option>
+                            <option>admin</option>
+                            <option>host</option>
+                            <option>guest</option>
+                        </select>
+                        <select style="padding:7px; margin-right: 10px" id='listOfGenders'
+                            v-model="searchedUser.gender">
+                            <option disabled value="">Gender</option>
+                            <option>male</option>
+                            <option>female</option>
+                            <option>other</option>
+                        </select>
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="button"
+                            v-on:click='searchUser()'>Search</button>
+                    </form>
+                </nav>
+            </div>
+
+            <div class="container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Firstname</th>
+                            <th>Lastname</th>
+                            <th>Gender</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-bind:key='users.username' v-for='user in users'>
+                            <td>{{user.username}}</td>
+                            <td>{{user.firstname}}</td>
+                            <td>{{user.lastname}}</td>
+                            <td>{{user.gender}}</td>
+                            <td>{{user.role}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--    <br>
+                    <br>
+                    Pregled svih korisnika
+                    Kao Administrator:
+                    Imam pregled svih postojećih korisnika u sistemu, a mogu vršiti i pretragu
+
+                    <!--<div v-if='isHost'>
+                        <h3>As a host on this page you can see list of all users that have reservation on your's apartment.</h3>
+                            Kao Domaćin:
+                            Imam pregled svih korisnika koji su napravili rezervaciju za moje apartmane i
+                            mogu vršiti pretragu među njima
+
+                            Mozda i da ne budu 2 odvojena pogleda veca jedan isit tj.jedna ista tabela koju popunjavamo drugacije u
+                            zavisnosti od role korisnika.
+                    </div>-->
+    </div>
+</div>`,
+    data: function () {
+        return {
+            user: {
+                username: '',
+                role: ''
             },
-            isAdmin:false,
-            isHost:false,
-            isGuest:false
+            users: [
+                {
+                    username: 'username1',
+                    password: 'password1',
+                    firstname: 'Test',
+                    lastname: 'Testovic',
+                    gender: 'M',
+                    role: 'admin',
+                },
+                {
+                    username: 'username2',
+                    password: 'password2',
+                    firstname: 'Test1',
+                    lastname: 'Testovic1',
+                    gender: 'M',
+                    role: 'host',
+                },
+                {
+                    username: 'username3',
+                    password: 'password3',
+                    firstname: 'Test2',
+                    lastname: 'Testovic',
+                    gender: 'M',
+                    role: 'host',
+                },
+                {
+                    username: 'username4',
+                    password: 'password4',
+                    firstname: 'Test3',
+                    lastname: 'Testovic',
+                    gender: 'M',
+                    role: 'guest',
+                },
+                {
+                    username: 'username5',
+                    password: 'password5',
+                    firstname: 'Testa',
+                    lastname: 'Testovic',
+                    gender: 'Z',
+                    role: 'guest',
+                },
+            ],
+            //User objekat koji sadrzi atribute po kojima pretrazujemo i
+            // kojeg saljemo na bek.
+            searchedUser: {
+                username: '',
+                gender: '',
+                role: '',
+            },
+            isAdmin: false,
+            isHost: false,
+            isGuest: false
         }
     },
-    methods:{
-
+    methods: {
+        searchUser() {
+            alert(`Trazite usera ${this.searchedUser.username}
+            ${this.searchedUser.gender}
+            ${this.searchedUser.role}
+            `);
+        }
     },
-    created(){
+    created() {
         this.user.username = localStorage.getItem('user');
         this.user.role = localStorage.getItem('role');
-        if(this.user.role == "ADMIN"){
+        if (this.user.role == "ADMIN") {
             this.isAdmin = true;
-        }else if(this.user.role == "HOST"){
+            //get metoda koja vraca sve usere.
+        } else if (this.user.role == "HOST") {
             this.isHost = true;
-        }else{
-            this.isGuest= true;
+            //get metoda koja vraca sve usere tipa guest koji imaju rezervaciju kod tog hosta
+        } else {
+            this.isGuest = true;
         }
     },
 });
