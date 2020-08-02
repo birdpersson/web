@@ -18,7 +18,7 @@ public class AmenitieDAO {
 	}
 	
 	/***
-	 * @param contextPath Putanja do aplikacije u Tomcatu. Može se pristupiti samo iz servleta.
+	 * @param contextPath Putanja do aplikacije u Tomcatu. Moï¿½e se pristupiti samo iz servleta.
 	 */
 	public AmenitieDAO(String contextPath) {
 		loadAmenities(contextPath);
@@ -99,7 +99,8 @@ public class AmenitieDAO {
 			in = new BufferedReader(new FileReader(file));
 			String line, id = "";
 			ArrayList<String> apartmentsIds = new ArrayList<String>();
-			String name= "";
+			String name = "";
+			String type = "";
 			StringTokenizer st;
 			while ((line = in.readLine()) != null) {
 				line = line.trim();
@@ -107,12 +108,13 @@ public class AmenitieDAO {
 					continue;
 				st = new StringTokenizer(line, ";");
 				while (st.hasMoreTokens()) {
+					type = st.nextToken().trim();
 					id = st.nextToken().trim();
 					name = st.nextToken().trim();
 					apartmentsIds = getListOfApartIds(st.nextToken().trim());
 					
 				}
-				amenities.put(id, new Amenitie(id, apartmentsIds, name));
+				amenities.put(id, new Amenitie(Amenitie.Type.valueOf(type), id, name, apartmentsIds));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

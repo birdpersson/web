@@ -18,7 +18,7 @@ public class ReviewDAO {
 	public ReviewDAO() {}
 	
 	/***
-	 * @param contextPath Putanja do aplikacije u Tomcatu. Može se pristupiti samo iz servleta.
+	 * @param contextPath Putanja do aplikacije u Tomcatu. Moï¿½e se pristupiti samo iz servleta.
 	 */
 	//KlubManager(String fileName)
 	public ReviewDAO(String contextPath) {
@@ -94,6 +94,7 @@ public class ReviewDAO {
 			String apartmentId= "";
 			String text= "";
 			int star = -1;
+			boolean visible = false;
 
 			StringTokenizer st;
 		
@@ -111,10 +112,11 @@ public class ReviewDAO {
 					apartmentId = st.nextToken().trim();
 					text = st.nextToken().trim();
 					star = Integer.parseInt(st.nextToken().trim());
+					visible = Boolean.parseBoolean(st.nextToken().trim());
 					
 				}
 				
-				reviews.put(id, new Review(id, guestId, apartmentId, text, star));
+				reviews.put(id, new Review(id, guestId, apartmentId, text, star, visible));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

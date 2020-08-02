@@ -4,6 +4,10 @@ import java.util.Date;
 
 public class Reservation {
 
+	public enum Status {
+		Created, Rejected, Canceled, Accepted, Completed;
+	}
+
 	private String id;
 	private String apartmentId;
 	private String guestId;
@@ -11,18 +15,17 @@ public class Reservation {
 	private int night;
 	private int price; // apartment.price * night;
 	private String confirmation;
+	private String message;
 	private Status status;
 //	private Apartment apartment; //get ReservationByApartmentId()
 //	private Guest guest;
-	
-
 
 	public Reservation() {
 		super();
 	}
 
 	public Reservation(String id, String apartmentId, String guestId, Date date, int night, int price,
-			String confirmation, Status status) {
+			String confirmation, String message, Status status) {
 		super();
 		this.id = id;
 		this.apartmentId = apartmentId;
@@ -31,6 +34,7 @@ public class Reservation {
 		this.night = night;
 		this.price = price;
 		this.confirmation = confirmation;
+		this.message = message;
 		this.status = status;
 	}
 
@@ -90,6 +94,14 @@ public class Reservation {
 		this.confirmation = confirmation;
 	}
 
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
 	public Status getStatus() {
 		return status;
 	}
@@ -97,7 +109,7 @@ public class Reservation {
 	public void setStatus(Status status) {
 		this.status = status;
 	}
-	
+
 //	public Guest getGuest() {
 //	return guest;
 //}
@@ -105,7 +117,7 @@ public class Reservation {
 //public void setGuest(Guest guest) {
 //	this.guest = guest;
 //}
-	
+
 //	public Apartment getApartment() {
 //	return apartment;
 //}
