@@ -18,7 +18,7 @@ Vue.component('apartment-comments', {
                 <h3>Apartment id: {{apartmentId}}</h3>
             </div>
             <div class="comments" v-for='comment in comments'>
-                <div class="single-comment" v-if="comment.isVisible">
+                <div class="single-comment" v-if="comment.visible">
                     <div id='username'>{{comment.guestId}} </div>
                     <div id='star-rating'>
                         <star-rating
@@ -62,24 +62,6 @@ Vue.component('apartment-comments', {
                         {{comment.text}}  
                     </div>
                 </div>
-
-               <!--Kako bi trebalo da izgleda komentar na kraju-->
-                <!-- <div class="single-comment">
-                    <div id='username'> username1 </div>
-                    <div id='star-rating'>
-                        <star-rating
-                            inactive-color="#35424a"
-                            active-color="#e8491d"
-                            v-bind:read-only= "true"
-                            v-bind:star-size="25"
-                            v-bind:show-rating="false"
-                            v-model="rating">
-                        </star-rating>
-                    </div>
-                    <div id='comment'>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia quae quos eius et! Commodi nam ipsum ab natus quaerat! Pariatur neque quo, quibusdam expedita molestiae saepe architecto placeat cupiditate asperiores.   
-                    </div>
-                </div> -->
             </div> <!--comments-->
         </div>
 
@@ -120,7 +102,6 @@ Vue.component('apartment-comments', {
                         </div>
                     </div>
                 </div>
-                
             </div> <!--comments-->
         </div>
     </div>
@@ -134,43 +115,9 @@ Vue.component('apartment-comments', {
             isAdmin: false,
             isHost: false,
             isGuest: false,
-            rating: 3,
          
             //overview u modelu
-            comments:[
-                {
-                    id:'1',
-                    guestId:'1',
-                    apartmentId:'1',
-                    text:'Luxurious,clean,friendly people, huge pool... need I say more? This place is awesome!',
-                    star:5,
-                    isVisible:true
-                },
-                {
-                    id:'2',
-                    guestId:'2',
-                    apartmentId:'1',
-                    text:'Luxurious,clean... need I say more? This place is awesome!',
-                    star:4,
-                    isVisible:false
-                },
-                {
-                    id:'3',
-                    guestId:'3',
-                    apartmentId:'1',
-                    text:'Nicely apartment very nice place to live!',
-                    star:3,
-                    isVisible:true
-                },
-                {
-                    id:'4',
-                    guestId:'4',
-                    apartmentId:'2',
-                    text:'Bad,very very bad! Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas architecto non, blanditiis labore ipsa accusantium facilis excepturi in, illo accusamus inventore sunt omnis, odit earum corporis natus animi perspiciatis harum.',
-                    star:1,
-                    isVisible:false
-                }
-            ],
+            comments:[],
             apartmentId:''
         }
     },
@@ -178,21 +125,45 @@ Vue.component('apartment-comments', {
         setRating: function(rating){
         this.rating = rating;
         },
+
+    },
+    computed:{
+        id() {
+            return this.$route.params.id; //preuzimam id apartmana na cijoj sam stranici za prikaz komentara
+        }
     },
     created() {
         this.user.username = localStorage.getItem('user');
         this.user.role = localStorage.getItem('role');
+
         if (this.user.role == "ADMIN") {
             this.isAdmin = true;
+            // dobavljanje svih komentara za prikaz adminu
+            axios
+            .get('rest/reviews/')
+            .then(response => {
+                this.comments=response.data;
+            })
         } else if (this.user.role == "HOST") {
             this.isHost = true;
+            // dobavljanje komentara vezanih za stan koji
+            // pripada tom hostu
+            // var searchUrl = "?id=" + this.user.username;
+            axios
+            .get('rest/reviews/apartmentHost?id='+ this.user.username)
+            .then(response => {
+                this.comments=response.data;
+                alert(this.user.username);
+            })
         } else {
             this.isGuest = true;
+            this.apartmentId = this.id;
+            axios
+            .get(`rest/reviews/apartment/${this.apartmentId}`)
+            .then(response => {
+                this.comments=response.data;
+                alert(this.comments);
+            })
         }
     },
-    mounted(){
-        //simulira preuzimanje id-ja ustvari ce biti poslat zahtev za dovavljanje apartmana spram tog idja. 
-        //mozda cak i preuzimanje svih usera za username...
-        this.apartmentId = this.comments[0].apartmentId;
-    }
 });

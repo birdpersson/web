@@ -26,7 +26,8 @@ const routes = [
 	{ path: '/users', component: Users },
 	{ path: '/reservations', component: Reservations },
 	{ path: '/apartments', component: Apartments },
-	{ path: '/apartmentComments', component: ApartmentsComments }, //vrv treba /apartmentComments:idApartmana
+	{ path: '/apartmentComments/:id', component: ApartmentsComments }, //vrv treba /apartmentComments:idApartmana
+	{ path: '/apartmentComments', component: ApartmentsComments },
 	{ path: '/newReservation', component: NewReservation }, //vrv treba /apartmentComments:idApartmana
 	{ path: '/newComment', component: NewComment },
 

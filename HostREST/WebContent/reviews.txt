@@ -1,3 +1,7 @@
-1;1;1;Najbolji stan ikada!;5;
-2;2;1;Najbolji stan ikada kada je isti stan!;5;
-3;3;2;Ovaj nije bas tako dobar!;4;
+1;guest1;1;Najbolji stan ikada!;5;true;
+2;guest2;1;Najbolji stan ikada kada je isti stan!;5;true;
+3;guest1;2;Ovaj nije bas tako dobar!;2;true;
+4;guest3;1;Luxurious,clean,friendly people, huge pool... need I say more? This place is awesome!;5;true;
+5;guest5;1;Luxurious,clean... need I say more? This place is awesome!;4;false;
+6;guest4;1;Nicely apartment very nice place to live!;3;true;
+7;guest5;2;Bad,very very bad! Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas architecto non, blanditiis labore ipsa accusantium facilis excepturi in, illo accusamus inventore sunt omnis, odit earum corporis natus animi perspiciatis harum.;1;false;

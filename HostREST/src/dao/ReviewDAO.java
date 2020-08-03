@@ -66,9 +66,10 @@ public class ReviewDAO {
 			//We don't change id of existing review just text and username;
 			
 			oldReview.setText(updatedReview.getText());
-			oldReview.setStar(updatedReview.getStar());	
+			oldReview.setStar(updatedReview.getStar());
+			oldReview.setVisible(updatedReview.isVisible());
 			
-			//We save old product which is now updated.
+			//We save old review which is now updated.
 			return reviews.put(oldReview.getId(), oldReview);
 		}
 		
@@ -93,7 +94,7 @@ public class ReviewDAO {
 			String guestId= "";
 			String apartmentId= "";
 			String text= "";
-			int star = -1;
+			int star = 0;
 			boolean visible = false;
 
 			StringTokenizer st;
@@ -147,12 +148,12 @@ public class ReviewDAO {
 	
 	public Collection<Review> findAllByApartmentId(String id) {
 		Collection<Review> reviews =  findAll();
-		Collection<Review> testRet = new ArrayList<Review>();
+		Collection<Review> retVal = new ArrayList<Review>();
 		for(Review r : reviews) {
 			if(r.getApartmentId().equals(id)) {
-				testRet.add(r);
+				retVal.add(r);
 			}
 		}
-		return testRet;
+		return retVal;
 	}	
 }

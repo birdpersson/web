@@ -5,8 +5,6 @@ public class Review {
 	private String id;
 	private String guestId;
 	private String apartmentId;
-//	private User user;
-//	private Apartment apartment;
 	private String text;
 	private int star;
 	private boolean visible;

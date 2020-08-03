@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import beans.Location;
-import beans.Test;
+
 
 public class LocationDAO {
 
