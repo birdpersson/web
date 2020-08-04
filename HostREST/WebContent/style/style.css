@@ -114,20 +114,18 @@ color: transparent;
 }
 #navigation a:hover{
   border-bottom: #fff solid 1px;
-  font-weight: bold;
 }
+
 #btnLogin{
   height:38px;
-  background-color:#e8491d;
-  color:#fff;
+  background-color:#fff;
+  color:#096EB5;
   border:none;
   padding: 0 20px;
 }
-
 #btnLogin:hover{
   background-color:#cccccc;
   color:#fff;
-  font-weight: bold;
 }
 
 #btnLogout{
@@ -137,12 +135,35 @@ color: transparent;
   border:none;
   padding: 0 20px;
 }
-
 #btnLogout:hover{
   background-color:#cccccc;
   color:#fff;
-  font-weight: bold;
 }
+
+#btnRegister{
+  height:38px;
+  background-color:#096EB5;
+  color:#fff;
+  border:none;
+  padding: 0 20px;
+}
+#btnRegister:hover{
+  background-color:#E6F0F7;
+  color:#fff;
+}
+
+#btnProfile{
+  height:38px;
+  background-color:#FFD77D;
+  color:#fff;
+  border:none;
+  padding: 0 20px;
+}
+#btnProfile:hover{
+  background-color:#E6F0F7;
+  color:#fff;
+}
+
 
 #titleEffect{
   color:#e8491d;
