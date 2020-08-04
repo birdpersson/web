@@ -29,7 +29,7 @@ const routes = [
 	{ path: '/apartmentComments/:id', component: ApartmentsComments }, //vrv treba /apartmentComments:idApartmana
 	{ path: '/apartmentComments', component: ApartmentsComments },
 	{ path: '/newReservation', component: NewReservation }, //vrv treba /apartmentComments:idApartmana
-	{ path: '/newComment', component: NewComment },
+	{ path: '/newComment/:id', component: NewComment },
 
 	{ path: '/amenitiesOverview', component: AmenitiesOverview },
 	{ path: '/amenitiesNew', component: NewAmenities },

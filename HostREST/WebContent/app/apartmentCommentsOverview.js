@@ -9,11 +9,11 @@ Vue.component('apartment-comments', {
 
     <div id='main' class='container'>
         <div v-if='isGuest'>
-            Pregled svih komentara za taj stan koje je odobrio host. Ovo moze biti ista stranica na kojoj<br>
+           <!-- Pregled svih komentara za taj stan koje je odobrio host. Ovo moze biti ista stranica na kojoj<br>
             ce se prikazivati SVI stanovi za administraora ili SVI ono stanovi koji pripadaju jedom hostu.<br>
             Pa ako je id stana = null i rola != guest onda spram role da se geutje iz baze potrebni apartmani, ili da se<br>
             pravi posebna stranica za prikaz stanova za admina i hosta, a da ova bude samo za guesta.<br>
-            <br>
+            <br>-->
             <div id='apartmentInfo'>
                 <h3>Apartment id: {{apartmentId}}</h3>
             </div>
@@ -38,10 +38,10 @@ Vue.component('apartment-comments', {
         </div> <!--isGuest-->
 
         <div v-if='isAdmin'>
-            ● Kao Administrator:
+           <!-- ● Kao Administrator:
             ○ Mogu da vidim sve komentare na sve apartmane u sistemu (bez obzira na to da li<br>
             ih je Domaćin odabrao ili nije)<br>
-            <br>
+            <br>-->
             <div id='apartmentInfo'>
                 <h3>Apartmetn id: {{apartmentId}}</h3>
             </div>
@@ -66,13 +66,12 @@ Vue.component('apartment-comments', {
         </div>
 
         <div v-if='isHost'>
-            Kao Domaćin:<br>
+        <!--   Kao Domaćin:<br>
             ○ Imam pregled svih komentara na moje apartmane:<br>
             ■ Mogu da odaberem koji komentar će biti prikazan Gostima, a koji neće<br>
             (dakle Gosti vide samo komentare koje je Domaćin odabrao)<br>
-            <br>
+            <br> -->
             
-
             <div id='apartmentInfo'>
                 <h3>Apartmetn id: {{apartmentId}}</h3>
             </div>
@@ -97,7 +96,6 @@ Vue.component('apartment-comments', {
                     <div id='comment-visibility'>
                         <label style="display:block">Show comment</label>
                         <input type="checkbox" v-on:mouseup='checkComment(comment)' v-model='comment.visible'>
-                        <!--<input type="checkbox" v-on:mouseup='checkTestAfter(test)' v-on:mousedown='checkTestBefore(test)'>-->
                         <div id='visibility-message' v-if='comment.visible'>
                             <p>This comment will be shown to guest user!</p> 
                         </div>
@@ -135,19 +133,19 @@ Vue.component('apartment-comments', {
             })
         },
         checkComment:function(updatedComment){
-            alert(`Comment id: ${updatedComment.id}\nStari status:${updatedComment.visible}`);
+          
             updatedComment.visible = !updatedComment.visible;
             axios
             .put(`rest/reviews/${updatedComment.id}`, updatedComment)
             .then(response => {
-                alert('Novi status response:\n'+response.data.visible);
+                // alert('Novi status response:\n'+response.data.visible);
                 this.getHostsComments();
             })
         },
 
-        checkCommentAfter(updatedComment){
-            alert(`Comment id: ${updatedComment.id}\nNovi status:${updatedComment.visible}`);
-        },
+        // checkCommentAfter(updatedComment){
+        //     alert(`Comment id: ${updatedComment.id}\nNovi status:${updatedComment.visible}`);
+        // },
 
     },
     computed:{

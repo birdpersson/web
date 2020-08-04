@@ -116,17 +116,23 @@ public class ReviewsServices {
 		return Response.status(Response.Status.FORBIDDEN).build();
 	}
 	
-	//serverska metoda za dodavanje 1 produkta (koristi je host za izmenu statusa)
+	//serverska metoda za dodavanje novog komentara (koristi je guset)
 	@POST
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Review setReview(Review review) {
+	public Response setReview(@Context HttpServletRequest request, Review review) {
+		String username = AuthService.getUsername(request);
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
 		ReviewDAO dao = (ReviewDAO) ctx.getAttribute("reviewDAO");
-		return dao.save(review);
+		
+		if(userDao.findOne(username).getRole().toString().equals("GUEST")) {
+			return Response.status(Response.Status.OK).entity(dao.save(review)).build();
+		}
+		return Response.status(Response.Status.FORBIDDEN).build();
 	
 	}
-	
+	//serverska metoda za izmenu (koristi je host za izmenu statusa)
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)

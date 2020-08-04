@@ -72,6 +72,7 @@ public class AmenitieDAO {
 			
 			//We don't change id of existing host just username, password, firstname and lastname.
 			oldAmenitie.setName(updatedAmenitie.getName());
+			oldAmenitie.setType(updatedAmenitie.getType());
 			oldAmenitie.setApartmentId(updatedAmenitie.getApartmentId());
 			
 			//We save and return old admin which is now updated.
@@ -108,9 +109,9 @@ public class AmenitieDAO {
 					continue;
 				st = new StringTokenizer(line, ";");
 				while (st.hasMoreTokens()) {
-					type = st.nextToken().trim();
 					id = st.nextToken().trim();
 					name = st.nextToken().trim();
+					type = st.nextToken().trim();
 					apartmentsIds = getListOfApartIds(st.nextToken().trim());
 					
 				}

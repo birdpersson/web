@@ -276,7 +276,7 @@ Vue.component('apartments', {
         },
 
         showComments: function(id){
-            alert(`Id apartmana je ${id}!`);
+            // alert(`Id apartmana je ${id}!`);
             this.$router.push(`/apartmentComments/${id}`);
         },
 

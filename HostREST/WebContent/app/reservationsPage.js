@@ -9,7 +9,7 @@ Vue.component('reservations', {
     <div class="container" id='main'>
 
         <div v-if='!isGuest'>
-            ● Kao Domaćin/Administrator:<br>
+          ● Kao Domaćin/Administrator:<br>
             ○ Želim da pretražim rezervacije po korisničkom imenu gosta koji je kreirao
             rezervaciju,<br>
             ○ Želim da sortiram rezervacije po ceni:<br>
@@ -75,7 +75,7 @@ Vue.component('reservations', {
         <!--!isGeust-->
 
         <div v-if='isGuest'>
-            Pregled rezervacija<br>
+        <!--   Pregled rezervacija<br>
             ● Kao Gost:<br>
             ○ Želim da imam pregled svih svojih rezervacija:<br>
             ■ Imam i mogućnost odustanka od rezervacija, ali samo onih sa statusom<br>
@@ -85,7 +85,7 @@ Vue.component('reservations', {
             ○ Želim da sortiram svoje rezervacije po ceni:<br>
             ■ Rastuće<br>
             ■ Opadajuće<br>
-            <br>
+            <br>-->
 
             <table class="table">
                 <thead>
@@ -104,17 +104,17 @@ Vue.component('reservations', {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-bind:key='apartments.id' v-for="apartment in filteredApartments">
-                        <td>{{apartment.apartmentType}}</td>
-                        <td>{{apartment.apartmentLocation}}</td>
-                        <td>{{apartment.date}}</td>
-                        <td>{{apartment.night}}</td>
-                        <td>{{apartment.price}}</td>
-                        <td>{{apartment.confirmation}}</td>
-                        <td>{{apartment.status}}</td>
+                    <tr v-bind:key='reservations.id' v-for="reservation in filteredReservations">
+                        <td>{{reservation.apartmentType}}</td>
+                        <td>{{reservation.apartmentLocation}}</td>
+                        <td>{{reservation.date}}</td>
+                        <td>{{reservation.night}}</td>
+                        <td>{{reservation.price}}</td>
+                        <td>{{reservation.confirmation}}</td>
+                        <td>{{reservation.status}}</td>
                         <td><button v-on:click='message'> Odustani</button></td>
                         <td>
-                            <router-link to="/newComment"><button> + Komentar </button></router-link>
+                            <!--<router-link to="/newComment">--><button v-on:click='addComment(reservation.apartmentId)'> + Komentar </button><!--</router-link>-->
                         </td>
                     </tr>
                 </tbody>
@@ -136,11 +136,12 @@ Vue.component('reservations', {
             isGuest: false,
 
             //sort data //promeniti u reservations
-            apartments: [
+            reservations: [
                 {
                     id: '1',
                     apartmentType: 'apar',
                     apartmentLocation: 'Fiftieth street',
+                    apartmentId:'1',
                     date: '01.01.2020',
                     night: '10',
                     price: 250,
@@ -151,6 +152,7 @@ Vue.component('reservations', {
                     id: '2',
                     apartmentType: 'panthhouse',
                     apartmentLocation: 'Main Boulevard 1',
+                    apartmentId:'1',
                     date: '01.01.2020',
                     night: '15',
                     price: 100,
@@ -161,6 +163,7 @@ Vue.component('reservations', {
                     id: '3',
                     apartmentType: 'panthhouse',
                     apartmentLocation: 'Main Boulevard 2',
+                    apartmentId:'2',
                     date: '01.01.2020',
                     night: '15',
                     price: 50,
@@ -171,6 +174,7 @@ Vue.component('reservations', {
                     id: '4',
                     apartmentType: 'panthhouse',
                     apartmentLocation: 'Main Boulevard 3',
+                    apartmentId:'3',
                     date: '01.01.2020',
                     night: '20',
                     price: 150,
@@ -181,6 +185,7 @@ Vue.component('reservations', {
                     id: '5',
                     apartmentType: 'panthhouse',
                     apartmentLocation: 'Main Boulevard 4',
+                    apartmentId:'2',
                     date: '01.01.2020',
                     night: '20',
                     price: 550,
@@ -191,6 +196,7 @@ Vue.component('reservations', {
                     id: '6',
                     apartmentType: 'panthhouse',
                     apartmentLocation: 'Main Boulevard 5',
+                    apartmentId:'1',
                     date: '01.01.2020',
                     night: '20',
                     price: 450,
@@ -201,6 +207,7 @@ Vue.component('reservations', {
                     id: '7',
                     apartmentType: 'panthhouse',
                     apartmentLocation: 'Main Boulevard 6',
+                    apartmentId:'1',
                     date: '01.01.2020',
                     night: '20',
                     price: 1000,
@@ -211,6 +218,7 @@ Vue.component('reservations', {
                     id: '8',
                     apartmentType: 'panthhouse',
                     apartmentLocation: 'Main Boulevard 7',
+                    apartmentId:'2',
                     date: '01.01.2020',
                     night: '20',
                     price: 1000,
@@ -239,6 +247,10 @@ Vue.component('reservations', {
             alert('Menja se status rezervacije!');
         },
 
+        addComment: function(apartmentId){
+            this.$router.push(`/newComment/${apartmentId}`);
+        },
+
         sort: function (s) {
             //if s == current sort, reverse
             if (s === this.currentSort) {
@@ -248,8 +260,8 @@ Vue.component('reservations', {
         }
     },
     computed: {
-        sortedApartments: function () {
-            return this.apartments.sort((a, b) => {
+        sortedReservations: function () {
+            return this.reservations.sort((a, b) => {
                 let modifier = 1;
                 if (this.currentSortDir === 'desc') modifier = -1;
                 if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
@@ -258,8 +270,8 @@ Vue.component('reservations', {
             });
         },
         //filtriranje #2
-        filteredApartments: function () {
-            return this.sortedApartments.filter((items) => {
+        filteredReservations: function () {
+            return this.sortedReservations.filter((items) => {
                 for (var item in items) {
                     if (String(items[item]).indexOf(this.filterQuery) !== -1) {
                         return true
