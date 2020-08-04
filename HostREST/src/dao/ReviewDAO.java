@@ -54,11 +54,9 @@ public class ReviewDAO {
 	public Review update(String id, Review updatedReview) {
 		//We retrive host based on id we received as argument.
 		Review oldReview = findOne(id);
-//		System.out.println("\nStari status: " + oldReview.isVisible());
-//		System.out.println("nPoslati status: " + updatedReview.isVisible());
 		//if there is not host with such id we save that product as new one.
 		if(oldReview == null) {
-//			System.out.println("Usao u save host u okviru update");
+			System.out.println("Usao u save host u okviru update");
 			return save(updatedReview);
 		}
 		
@@ -66,11 +64,10 @@ public class ReviewDAO {
 			System.out.println("usao u update product u okviru update");
 			
 			//We don't change id of existing review just text and username;
-			
 			oldReview.setText(updatedReview.getText());
 			oldReview.setStar(updatedReview.getStar());
 			oldReview.setVisible(updatedReview.isVisible());
-//			System.out.println("Novi status: " + oldReview.isVisible());
+			
 			//We save old review which is now updated.
 			return reviews.put(oldReview.getId(), oldReview);
 		}
