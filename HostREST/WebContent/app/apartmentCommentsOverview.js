@@ -96,8 +96,9 @@ Vue.component('apartment-comments', {
 
                     <div id='comment-visibility'>
                         <label style="display:block">Show comment</label>
-                        <input type="checkbox" value="!comment.isVisible" v-model='comment.isVisible'>
-                        <div id='visibility-message' v-if='comment.isVisible'>
+                        <input type="checkbox" v-on:mouseup='checkComment(comment)' v-model='comment.visible'>
+                        <!--<input type="checkbox" v-on:mouseup='checkTestAfter(test)' v-on:mousedown='checkTestBefore(test)'>-->
+                        <div id='visibility-message' v-if='comment.visible'>
                             <p>This comment will be shown to guest user!</p> 
                         </div>
                     </div>
@@ -116,6 +117,7 @@ Vue.component('apartment-comments', {
             isHost: false,
             isGuest: false,
          
+            isTest:false,
             //overview u modelu
             comments:[],
             apartmentId:''
@@ -125,11 +127,33 @@ Vue.component('apartment-comments', {
         setRating: function(rating){
         this.rating = rating;
         },
+        getHostsComments:function(){
+            axios
+            .get('rest/reviews/apartmentHost?id='+ this.user.username)
+            .then(response => {
+                this.comments=response.data;
+            })
+        },
+        checkComment:function(updatedComment){
+            alert(`Comment id: ${updatedComment.id}\nStari status:${updatedComment.visible}`);
+            updatedComment.visible = !updatedComment.visible;
+            axios
+            .put(`rest/reviews/${updatedComment.id}`, updatedComment)
+            .then(response => {
+                alert('Novi status response:\n'+response.data.visible);
+                this.getHostsComments();
+            })
+        },
+
+        checkCommentAfter(updatedComment){
+            alert(`Comment id: ${updatedComment.id}\nNovi status:${updatedComment.visible}`);
+        },
 
     },
     computed:{
         id() {
             return this.$route.params.id; //preuzimam id apartmana na cijoj sam stranici za prikaz komentara
+            
         }
     },
     created() {
@@ -149,12 +173,8 @@ Vue.component('apartment-comments', {
             // dobavljanje komentara vezanih za stan koji
             // pripada tom hostu
             // var searchUrl = "?id=" + this.user.username;
-            axios
-            .get('rest/reviews/apartmentHost?id='+ this.user.username)
-            .then(response => {
-                this.comments=response.data;
-                alert(this.user.username);
-            })
+
+            this.getHostsComments();
         } else {
             this.isGuest = true;
             this.apartmentId = this.id;
@@ -162,7 +182,6 @@ Vue.component('apartment-comments', {
             .get(`rest/reviews/apartment/${this.apartmentId}`)
             .then(response => {
                 this.comments=response.data;
-                alert(this.comments);
             })
         }
     },
