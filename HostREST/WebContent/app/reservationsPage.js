@@ -18,7 +18,6 @@ Vue.component('reservations', {
             ○ Želim da filtriram rezervacije po statusu
             <br>
             <br>
-
             <div id='filter'>
                 <nav class="navbar navbar-light bg-light justify-content-between">
                     <a class="navbar-brand">Filter&Search</a>
@@ -42,6 +41,7 @@ Vue.component('reservations', {
             <table class="table">
                 <thead>
                     <tr>
+                        <th>Reserved by</th>
                         <th>Apartment type</th>
                         <th>Apartment location</th>
                         <th>Date</th>
@@ -57,35 +57,37 @@ Vue.component('reservations', {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-bind:key='apartments.id' v-for="apartment in filteredApartments">
-                        <td>{{apartment.apartmentType}}</td>
-                        <td>{{apartment.apartmentLocation}}</td>
-                        <td>{{apartment.date}}</td>
-                        <td>{{apartment.night}}</td>
-                        <td>{{apartment.price}}</td>
-                        <td>{{apartment.confirmation}}</td>
-                        <td>{{apartment.status}}</td>
+                    <tr  v-bind:key='reservations.id' v-for="reservation in filteredReservations">
+                        <td>{{reservation.userId}}</td>
+                        <td>{{reservation.apartmentType}}</td>
+                        <td>{{reservation.apartmentLocation}}</td>
+                        <td>{{reservation.date}}</td>
+                        <td>{{reservation.night}}</td>
+                        <td>{{reservation.price}}</td>
+                        <td>{{reservation.confirmation}}</td>
+                        <td>{{reservation.status}}</td>
                         <td v-if='isHost'><button v-on:click='messageHost'> prihvacen </button></td>
                         <td v-if='isHost'><button v-on:click='messageHost'> odbijen </button></td>
                         <td v-if='isHost'><button v-on:click='messageHost'> zavrsen </button></td>
                     </tr>
                 </tbody>
             </table>
-        </div>
-        <!--!isGeust-->
+        </div> <!--!isGeust-->
 
         <div v-if='isGuest'>
-        <!--   Pregled rezervacija<br>
+          Pregled rezervacija<br>
             ● Kao Gost:<br>
             ○ Želim da imam pregled svih svojih rezervacija:<br>
             ■ Imam i mogućnost odustanka od rezervacija, ali samo onih sa statusom<br>
             KREIRANA ili PRIHVAĆENA, pri čemu novi status postaje ODUSTANAK<br>
             <br>
+            Mogu da ostavim komnetar na apartman za koji imam rezervaciju sa statusom ODBIJENA ili ZAVRSENA.
+            <br>
             Kao Gost:<br>
             ○ Želim da sortiram svoje rezervacije po ceni:<br>
             ■ Rastuće<br>
             ■ Opadajuće<br>
-            <br>-->
+            <br>
 
             <table class="table">
                 <thead>
@@ -112,17 +114,13 @@ Vue.component('reservations', {
                         <td>{{reservation.price}}</td>
                         <td>{{reservation.confirmation}}</td>
                         <td>{{reservation.status}}</td>
-                        <td><button v-on:click='message'> Odustani</button></td>
-                        <td>
-                            <!--<router-link to="/newComment">--><button v-on:click='addComment(reservation.apartmentId)'> + Komentar </button><!--</router-link>-->
-                        </td>
+                        <td><button :disabled='statusCancel(reservation.status)' v-on:click='message'> Odustani </button></td>
+                        <td><button :disabled='statusComment(reservation.status)'v-on:click='addComment(reservation.apartmentId)'> + Komentar </button></td>
                     </tr>
                 </tbody>
             </table>
-        </div>
-        <!--isGeust-->
-    </div>
-    <!--id='main'-->
+        </div><!--isGeust-->
+    </div><!--id='main'-->
 </div> <!-- reservation-list-->` ,
     data: function () {
         return {
@@ -142,88 +140,96 @@ Vue.component('reservations', {
                     apartmentType: 'apar',
                     apartmentLocation: 'Fiftieth street',
                     apartmentId:'1',
+                    userId:'guest',
                     date: '01.01.2020',
                     night: '10',
                     price: 250,
                     confirmation: true,
-                    status: 'Kreiran'
+                    status: "Created"
                 },
                 {
                     id: '2',
                     apartmentType: 'panthhouse',
                     apartmentLocation: 'Main Boulevard 1',
                     apartmentId:'1',
+                    userId:'guest222',
                     date: '01.01.2020',
                     night: '15',
                     price: 100,
                     confirmation: true,
-                    status: 'Kreiran'
+                    status: "Created"
                 },
                 {
                     id: '3',
                     apartmentType: 'panthhouse',
                     apartmentLocation: 'Main Boulevard 2',
                     apartmentId:'2',
+                    userId:'guest',
                     date: '01.01.2020',
                     night: '15',
                     price: 50,
                     confirmation: false,
-                    status: 'Odustanak'
+                    status: 'Canceled'
                 },
                 {
                     id: '4',
                     apartmentType: 'panthhouse',
                     apartmentLocation: 'Main Boulevard 3',
                     apartmentId:'3',
+                    userId:'gue12st',
                     date: '01.01.2020',
                     night: '20',
                     price: 150,
                     confirmation: true,
-                    status: 'Odbijen'
+                    status: 'Canceled'
                 },
                 {
                     id: '5',
                     apartmentType: 'panthhouse',
                     apartmentLocation: 'Main Boulevard 4',
                     apartmentId:'2',
+                    userId:'guest213',
                     date: '01.01.2020',
                     night: '20',
                     price: 550,
                     confirmation: true,
-                    status: 'Prihvacen'
+                    status: 'Accepted'
                 },
                 {
                     id: '6',
                     apartmentType: 'panthhouse',
                     apartmentLocation: 'Main Boulevard 5',
                     apartmentId:'1',
+                    userId:'guest3123',
                     date: '01.01.2020',
                     night: '20',
                     price: 450,
                     confirmation: true,
-                    status: 'Prihvacen'
+                    status: 'Accepted'
                 },
                 {
                     id: '7',
                     apartmentType: 'panthhouse',
                     apartmentLocation: 'Main Boulevard 6',
                     apartmentId:'1',
+                    userId:'guest123',
                     date: '01.01.2020',
                     night: '20',
                     price: 1000,
                     confirmation: true,
-                    status: 'Zavrsen'
+                    status: 'Completed'
                 },
                 {
                     id: '8',
                     apartmentType: 'panthhouse',
                     apartmentLocation: 'Main Boulevard 7',
                     apartmentId:'2',
+                    userId:'gues213t',
                     date: '01.01.2020',
                     night: '20',
                     price: 1000,
                     confirmation: true,
-                    status: 'Zavrsen'
+                    status: 'Completed'
                 },
 
             ],
@@ -233,7 +239,7 @@ Vue.component('reservations', {
             currentSortDir: 'asc',
 
             //filtriranje:
-            statuses: ['Kreiran', 'Odbijen', 'Odustanak', 'Prihvacen', 'Zavrsen'],
+            statuses: ['Created', 'Rejected', 'Canceled', 'Accepted', 'Completed'],
             filterQuery: '',
 
  
@@ -257,6 +263,19 @@ Vue.component('reservations', {
                 this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc';
             }
             this.currentSort = s;
+        },
+
+        statusCancel:function(status){
+            if(status==="Created" || status==='Accepted'){
+                return false; //nemoj disable uraditi
+            }
+            return true; //za sve ostale ce uraditi disable
+        },
+        statusComment:function(status){
+            if(status==="Rejected" || status==='Completed'){
+                return false; //nemoj disable uraditi
+            }
+            return true; //za sve ostale ce uraditi disable
         }
     },
     computed: {
@@ -279,7 +298,7 @@ Vue.component('reservations', {
                 }
                 return false
             })
-        }
+        },
     },
     created() {
         this.user.username = localStorage.getItem('user');
