@@ -42,6 +42,14 @@ public class ApartmentDAO {
 		return apartments.values();
 	}
 	
+	/***
+	 *  Vraca stan na osnovu njegovog id-a. 
+	 *  @return Stan sa id-em ako postoji, u suprotnom null
+	 */
+	public Apartment findOne(String id) {
+		return apartments.containsKey(id) ? apartments.get(id) : null;
+	}
+	
 	/**
 	 * Uèitava korisnike iz WebContent/users.txt fajla i dodaje ih u mapu {@link #products}.
 	 * Kljuè je id proizovda.

@@ -72,7 +72,7 @@ public class ReservationDAO {
 			oldReservation.setNight(updatedReview.getNight());	
 			oldReservation.setPrice(updatedReview.getPrice());
 			oldReservation.setConfirmation(updatedReview.getConfirmation());
-			
+			oldReservation.setStatus(updatedReview.getStatus());
 			
 			//We save old product which is now updated.
 			return reservations.put(oldReservation.getId(), oldReservation);
@@ -128,8 +128,8 @@ public class ReservationDAO {
 				while (st.hasMoreTokens()) {
 					//ovde se svaki token trimuje...
 					id =  st.nextToken().trim();
-					guestId = st.nextToken().trim();
 					apartmentId = st.nextToken().trim();
+					guestId = st.nextToken().trim();
 					
 					date = formatter.parse(st.nextToken().trim());
 					formattedDate = formatter.format(date);
@@ -159,9 +159,7 @@ public class ReservationDAO {
 		}
 		
 	}
-	
-	
-	
+
 	
 	public Collection<Reservation> findAllByGuestId(String id) {
 		Collection<Reservation> allReservations =  findAll();

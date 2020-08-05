@@ -59,8 +59,8 @@ Vue.component('reservations', {
                 <tbody>
                     <tr  v-bind:key='reservations.id' v-for="reservation in filteredReservations">
                         <td>{{reservation.userId}}</td>
-                        <td>{{reservation.apartmentType}}</td>
-                        <td>{{reservation.apartmentLocation}}</td>
+                        <td>{{reservation.type}}</td>
+                        <td>{{reservation.location}}</td>
                         <td>{{reservation.date}}</td>
                         <td>{{reservation.night}}</td>
                         <td>{{reservation.price}}</td>
@@ -88,7 +88,8 @@ Vue.component('reservations', {
             ■ Rastuće<br>
             ■ Opadajuće<br>
             <br>
-
+            <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
+            <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
             <table class="table">
                 <thead>
                     <tr>
@@ -107,14 +108,14 @@ Vue.component('reservations', {
                 </thead>
                 <tbody>
                     <tr v-bind:key='reservations.id' v-for="reservation in filteredReservations">
-                        <td>{{reservation.apartmentType}}</td>
-                        <td>{{reservation.apartmentLocation}}</td>
+                        <td>{{reservation.type}}</td>
+                        <td>{{reservation.location}}</td>
                         <td>{{reservation.date}}</td>
                         <td>{{reservation.night}}</td>
                         <td>{{reservation.price}}</td>
                         <td>{{reservation.confirmation}}</td>
                         <td>{{reservation.status}}</td>
-                        <td><button :disabled='statusCancel(reservation.status)' v-on:click='message'> Odustani </button></td>
+                        <td><button :disabled='statusCancel(reservation.status)' v-on:click='cancelReservation(reservation)'> Odustani </button></td>
                         <td><button :disabled='statusComment(reservation.status)'v-on:click='addComment(reservation.apartmentId)'> + Komentar </button></td>
                     </tr>
                 </tbody>
@@ -134,105 +135,7 @@ Vue.component('reservations', {
             isGuest: false,
 
             //sort data //promeniti u reservations
-            reservations: [
-                {
-                    id: '1',
-                    apartmentType: 'apar',
-                    apartmentLocation: 'Fiftieth street',
-                    apartmentId:'1',
-                    userId:'guest',
-                    date: '01.01.2020',
-                    night: '10',
-                    price: 250,
-                    confirmation: true,
-                    status: "Created"
-                },
-                {
-                    id: '2',
-                    apartmentType: 'panthhouse',
-                    apartmentLocation: 'Main Boulevard 1',
-                    apartmentId:'1',
-                    userId:'guest222',
-                    date: '01.01.2020',
-                    night: '15',
-                    price: 100,
-                    confirmation: true,
-                    status: "Created"
-                },
-                {
-                    id: '3',
-                    apartmentType: 'panthhouse',
-                    apartmentLocation: 'Main Boulevard 2',
-                    apartmentId:'2',
-                    userId:'guest',
-                    date: '01.01.2020',
-                    night: '15',
-                    price: 50,
-                    confirmation: false,
-                    status: 'Canceled'
-                },
-                {
-                    id: '4',
-                    apartmentType: 'panthhouse',
-                    apartmentLocation: 'Main Boulevard 3',
-                    apartmentId:'3',
-                    userId:'gue12st',
-                    date: '01.01.2020',
-                    night: '20',
-                    price: 150,
-                    confirmation: true,
-                    status: 'Canceled'
-                },
-                {
-                    id: '5',
-                    apartmentType: 'panthhouse',
-                    apartmentLocation: 'Main Boulevard 4',
-                    apartmentId:'2',
-                    userId:'guest213',
-                    date: '01.01.2020',
-                    night: '20',
-                    price: 550,
-                    confirmation: true,
-                    status: 'Accepted'
-                },
-                {
-                    id: '6',
-                    apartmentType: 'panthhouse',
-                    apartmentLocation: 'Main Boulevard 5',
-                    apartmentId:'1',
-                    userId:'guest3123',
-                    date: '01.01.2020',
-                    night: '20',
-                    price: 450,
-                    confirmation: true,
-                    status: 'Accepted'
-                },
-                {
-                    id: '7',
-                    apartmentType: 'panthhouse',
-                    apartmentLocation: 'Main Boulevard 6',
-                    apartmentId:'1',
-                    userId:'guest123',
-                    date: '01.01.2020',
-                    night: '20',
-                    price: 1000,
-                    confirmation: true,
-                    status: 'Completed'
-                },
-                {
-                    id: '8',
-                    apartmentType: 'panthhouse',
-                    apartmentLocation: 'Main Boulevard 7',
-                    apartmentId:'2',
-                    userId:'gues213t',
-                    date: '01.01.2020',
-                    night: '20',
-                    price: 1000,
-                    confirmation: true,
-                    status: 'Completed'
-                },
-
-            ],
+            reservations: [],
 
             //sortiranje:
             currentSort: 'name',
@@ -242,17 +145,63 @@ Vue.component('reservations', {
             statuses: ['Created', 'Rejected', 'Canceled', 'Accepted', 'Completed'],
             filterQuery: '',
 
- 
+            messages:{
+                errorName:'',
+                errorType:'',
+                errorResponse:'',
+                successResponse:'',
+            },
+
+            updatedReserv:{
+                id:null,
+                apartmentId:null,
+                guestId:null,
+                date:null,
+                night:null,
+                price:null,
+                confirmation:null,
+                message:null,
+                status:null,
+            }
         }
     },
     methods: {
-        message: function () {
-            alert('Ako je aktivna rezervacija ovim bi se ona otkazala!');
+        showAllReservations:function(){
+            axios
+            .get('rest/reservations/')
+            .then(response => {
+                this.reservations=response.data;
+            })
         },
-        messageHost: function () {
-            alert('Menja se status rezervacije!');
-        },
+        cancelReservation:function(chosenReservation){
+            if(confirm('Do you whant to cancel this reservation?')){
+                //Mora da se iz reservationDTO prebaci u reservation model pre slanja;
+                this.updatedReserv.id = chosenReservation.id;
+                this.updatedReserv.apartmentId = chosenReservation.apartmentId;
+                this.updatedReserv.guestId = chosenReservation.guestId;
+                this.updatedReserv.date= chosenReservation.date;
+                this.updatedReserv.night= chosenReservation.night;
+                this.updatedReserv.price= chosenReservation.price;
+                this.updatedReserv.confirmation = chosenReservation.confirmation;
+                this.updatedReserv.message= chosenReservation.message;
+                this.updatedReserv.status = 'Canceled';
 
+                axios
+                .put(`rest/reservations/${this.updatedReserv.id}`,this.updatedReserv)
+                .then(response => {
+                    this.showAllReservations();
+                    this.messages.successResponse = `<h4>You successfuly canceled reservation!</h4>`;
+        
+                    setTimeout(()=>this.messages.successResponse='',5000);
+                }).catch(error => {
+                    if(error.response.status === 400){
+                        this.messages.errorResponse = `<h4>We had some server errors, please try again later!</h4>`;
+            
+                        setTimeout(()=>this.messages.errorResponse='',5000);
+                    }
+                });
+            }
+        },
         addComment: function(apartmentId){
             this.$router.push(`/newComment/${apartmentId}`);
         },
@@ -309,6 +258,9 @@ Vue.component('reservations', {
             this.isHost = true;
         } else {
             this.isGuest = true;
+            this.showAllReservations();
         }
     },
 });
+
+
