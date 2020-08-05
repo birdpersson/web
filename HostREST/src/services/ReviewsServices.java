@@ -9,11 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
-import org.apache.jasper.tagplugins.jstl.core.ForEach;
-
 import beans.Apartment;
 import beans.Review;
-import beans.User;
 import dao.ApartmentDAO;
 import dao.ReviewDAO;
 import dao.UserDAO;

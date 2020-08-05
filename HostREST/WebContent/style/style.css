@@ -286,7 +286,19 @@ color: transparent;
   margin-bottom:25px
 }
 
-
+/* ApartmentAmenitiesOverview */
+#amenities-overview #main #new-amenity #amenity-type{
+  margin-bottom: 15px;
+}
+#amenities-overview #main #new-amenity #amenity-type input{
+  display:inline-block;
+  margin-right: 10px;
+}
+#amenities-overview #main #new-amenity #amenity-type label{
+  display:inline-block;
+  size:16px;
+  font-weight: bold;
+}
 /*apartmentAmenityNew */
 /* html body div#app div#apartment-comments div#main.container div div.comments */
 

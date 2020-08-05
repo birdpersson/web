@@ -82,12 +82,6 @@ Vue.component('new-comment', {
                
             }
             else{
-                // alert(`
-                // GuestId:${this.review.guestId}\n
-                // ApartmentId:${this.review.apartmentId}\n
-                // Komentar: ${this.review.text}\n
-                // Ocena: ${this.review.star}\n
-                // Visible:${this.review.visible}`);
                 axios
                 .post('rest/reviews/', this.review)
                 .then(response => {
@@ -123,7 +117,7 @@ Vue.component('new-comment', {
             this.isGuest = true;
             this.review.guestId = this.user.username;
             this.review.apartmentId = this.id 
-            alert(this.review.apartmentId);
+            // alert(this.review.apartmentId);
         }
     },
 });

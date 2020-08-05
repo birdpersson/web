@@ -168,10 +168,6 @@ Vue.component('apartment-comments', {
             })
         } else if (this.user.role == "HOST") {
             this.isHost = true;
-            // dobavljanje komentara vezanih za stan koji
-            // pripada tom hostu
-            // var searchUrl = "?id=" + this.user.username;
-
             this.getHostsComments();
         } else {
             this.isGuest = true;
