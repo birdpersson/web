@@ -51,6 +51,68 @@ public class ReservationService {
 		}
 	}
 	
+	//serverska metoda za vracanje rezervacija spram usernama korisnika koji ju je napravio.
+	@GET
+	@Path("/search")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response searchReservation(@Context HttpServletRequest request, @QueryParam("username")String queryUsername) {
+		String username = AuthService.getUsername(request);
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+		ReservationDAO reservDao = (ReservationDAO) ctx.getAttribute("reservationDAO");
+		ApartmentDAO apartDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+		LocationDAO locatDao = (LocationDAO) ctx.getAttribute("locationDAO");
+		Collection<ReservationDTO> returnDTO = new ArrayList<ReservationDTO>();
+		
+		if(!userDao.findOne(username).getRole().toString().equals("GUEST")) {
+			Collection<Reservation> reserv = reservDao.findAllByGuestId(queryUsername);
+			
+			for(Reservation r : reserv) {
+				
+				ReservationDTO reservDTO = new ReservationDTO();
+				Apartment apartm = apartDao.findOne(r.getApartmentId());
+				Location locat = locatDao.findLocatByApartId(r.getApartmentId());
+				if(apartm == null || locat == null) {
+					return Response.status(Response.Status.BAD_REQUEST).build();
+				}
+				
+				//smestaju se vrednost iz objekta reservation i apartment u jedan objekat.
+				reservDTO.setId(r.getId());
+				reservDTO.setApartmentId(r.getApartmentId());
+				reservDTO.setGuestId(r.getGuestId());
+				reservDTO.setDate(r.getDate());
+				reservDTO.setNight(r.getNight());
+				reservDTO.setPrice(r.getPrice());
+				reservDTO.setConfirmation(r.getConfirmation());
+				reservDTO.setMessage(r.getMessage());
+				reservDTO.setStatus(r.getStatus());
+	
+				//Za apartman detalji:
+				if(apartm.getType()==null) {
+					reservDTO.setType(null);
+//					return Response.status(Response.Status.BAD_REQUEST).build();
+				}
+				else {
+					reservDTO.setType(apartm.getType());
+				}
+				//Za lokaciju apartmana:
+				if(locat.getAddress()==null) {
+					reservDTO.setAddress("unknown");
+//					return Response.status(Response.Status.BAD_REQUEST).build();
+				}
+				else {
+					reservDTO.setAddress(locat.getAddress());
+				}
+				
+				//vraca se lista reservacija sa svim podacima;
+				returnDTO.add(reservDTO);
+				
+			}
+			
+			return Response.status(Response.Status.OK).entity(returnDTO).build();
+		}
+		return  Response.status(Response.Status.FORBIDDEN).build();
+	}
+	
 	
 	//serverska metoda za vracanje svih produkata
 	//	@GET

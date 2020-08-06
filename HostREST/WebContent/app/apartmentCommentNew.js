@@ -117,7 +117,7 @@ Vue.component('new-comment', {
             this.isGuest = true;
             this.review.guestId = this.user.username;
             this.review.apartmentId = this.id 
-            // alert(this.review.apartmentId);
+            // alert('Apartment id: ' + this.review.apartmentId);
         }
     },
 });

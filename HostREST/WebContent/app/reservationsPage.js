@@ -15,7 +15,16 @@ Vue.component('reservations', {
             ○ Želim da sortiram rezervacije po ceni:<br>
             ■ Rastuće<br>
             ■ Opadajuće<br>
-            ○ Želim da filtriram rezervacije po statusu
+            ○ Želim da filtriram rezervacije po statusu<br>
+            <br>
+            Kao Domaćin:<br>
+            ○ Imam pregled rezervacija nad svim mojim apartmanima (bez obzira na status):<br>
+            ■ Mogu da prihvatim rezervaciju koja se nalazi u statusu KREIRANA, pri<br>
+            čemu rezervacija menja status u PRIHVAĆENA<br>
+            ■ Mogu da odbijem rezervaciju ako se nalazi u statusu KREIRANA ili<br>
+            PRIHVAĆENA, pri čemu rezervacija menja status u ODBIJENA<br>
+            ■ Nakon završnog datuma noćenja, mogu da postavim rezervaciju na<br>
+            status ZAVRŠENA<br>
             <br>
             <br>
             <div id='filter'>
@@ -31,9 +40,9 @@ Vue.component('reservations', {
                         </div>
                         <div>
                             <img src='img/searchIcon1.1.png' style="display:inline;">
-                            <input class="form-control mr-sm-2" type="text" placeholder="username" aria-label="Search">
+                            <input class="form-control mr-sm-2" type="text" placeholder="username" aria-label="Search" v-model="searchedQuery">
                         </div>
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click=''>Search</button>
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click='search()'>Search</button>
                     </form>
                 </nav>
             </div>
@@ -52,8 +61,8 @@ Vue.component('reservations', {
                         <th>Confirmation</th>
                         <th>Status</th>
                         <th v-if='isHost'>Status</th>
-                        <th v-if='isHost'>Status</th>
-                        <th v-if='isHost'>Status</th>
+                        <!-- <th v-if='isHost'>Status</th>
+                        <th v-if='isHost'>Status</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -66,9 +75,11 @@ Vue.component('reservations', {
                         <td>{{reservation.price}}</td>
                         <td>{{reservation.confirmation}}</td>
                         <td>{{reservation.status}}</td>
-                        <td v-if='isHost'><button v-on:click='messageHost'> prihvacen </button></td>
-                        <td v-if='isHost'><button v-on:click='messageHost'> odbijen </button></td>
-                        <td v-if='isHost'><button v-on:click='messageHost'> zavrsen </button></td>
+                        <td v-if='isHost'>
+                            <button v-if='statusAccept(reservation)' v-on:click='messageHost'> accept </button>
+                            <button v-if='statusReject(reservation)' v-on:click='messageHost'> reject </button>
+                            <button v-if='statusComplete(reservation)' v-on:click='messageHost'> complete </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -143,6 +154,7 @@ Vue.component('reservations', {
             //filtriranje:
             statuses: ['Created', 'Rejected', 'Canceled', 'Accepted', 'Completed'],
             filterQuery: '',
+            searchedQuery:'',
 
             messages:{
                 errorName:'',
@@ -161,7 +173,8 @@ Vue.component('reservations', {
                 confirmation:null,
                 message:null,
                 status:null,
-            }
+            },
+
         }
     },
     methods: {
@@ -182,7 +195,6 @@ Vue.component('reservations', {
                 this.reservations=response.data;
             })
         },
-        
         getGuestsReservations:function(){
             axios
             .get(`rest/reservations/${this.user.username}`)
@@ -222,7 +234,6 @@ Vue.component('reservations', {
         addComment: function(apartmentId){
             this.$router.push(`/newComment/${apartmentId}`);
         },
-
         sort: function (s) {
             //if s == current sort, reverse
             if (s === this.currentSort) {
@@ -230,7 +241,6 @@ Vue.component('reservations', {
             }
             this.currentSort = s;
         },
-
         statusCancel:function(status){
             if(status==="Created" || status==='Accepted'){
                 return false; //nemoj disable uraditi
@@ -242,6 +252,37 @@ Vue.component('reservations', {
                 return false; //nemoj disable uraditi
             }
             return true; //za sve ostale ce uraditi disable
+        },
+        //Za dugmad kod Host:
+        statusAccept:function(reservation){
+            if(reservation.status==='Accepted'){
+                return true;
+            }
+            return false; 
+        },
+        statusReject:function(reservation){
+            if(reservation.status==='Accepted' || reservation.status==="Created"){
+                return true;
+            }
+            return false; 
+        },
+        statusComplete:function(reservation){
+            return true;
+            // Nakon završnog datuma noćenja, mogu da postavim rezervaciju na
+            // status ZAVRŠENA
+            // const length = reservation.date + reservation.night;
+            // if(length<current.date){
+            //     return true;
+            // }
+            // return false; 
+        },
+        search:function(){
+            axios
+            .get(`rest/reservations/search?username=${this.searchedQuery}`)
+            .then(response => {
+                this.reservations=response.data;
+            })
+            
         }
     },
     computed: {
