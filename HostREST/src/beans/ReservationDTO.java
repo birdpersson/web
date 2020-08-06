@@ -8,7 +8,7 @@ public class ReservationDTO {
 	private String id;
 	private String apartmentId;
 	private Type type;
-	private Location location;
+	private String address; //from location
 	private String guestId;
 	private Date date;
 	private int night;
@@ -21,13 +21,13 @@ public class ReservationDTO {
 		super();
 	}
 	
-	public ReservationDTO(String id, String apartmentId, Type type, Location location, String guestId, Date date,
+	public ReservationDTO(String id, String apartmentId, Type type, String address, String guestId, Date date,
 			int night, int price, String confirmation, String message, Status status) {
 		super();
 		this.id = id;
 		this.apartmentId = apartmentId;
 		this.type = type;
-		this.location = location;
+		this.address = address;
 		this.guestId = guestId;
 		this.date = date;
 		this.night = night;
@@ -61,14 +61,14 @@ public class ReservationDTO {
 	}
 	
 	
-	public Location getLocation() {
-		return location;
+	public String getAddress() {
+		return address;
 	}
-	public void setLocation(Location location) {
-		this.location = location;
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
-	
-	
+
 	public String getGuestId() {
 		return guestId;
 	}

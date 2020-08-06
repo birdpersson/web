@@ -42,8 +42,8 @@ Vue.component('reservations', {
                 <thead>
                     <tr>
                         <th>Reserved by</th>
-                        <th>Apartment type</th>
-                        <th>Apartment location</th>
+                        <th>Apart. type</th>
+                        <th>Apart. locat.</th>
                         <th>Date</th>
                         <th>Night</th>
                         <th @click="sort('price')">Price <img v-if='currentSortDir == "asc"'
@@ -58,9 +58,9 @@ Vue.component('reservations', {
                 </thead>
                 <tbody>
                     <tr  v-bind:key='reservations.id' v-for="reservation in filteredReservations">
-                        <td>{{reservation.userId}}</td>
+                        <td>{{reservation.guestId}}</td>
                         <td>{{reservation.type}}</td>
-                        <td>{{reservation.location}}</td>
+                        <td>{{reservation.address}}</td>
                         <td>{{reservation.date}}</td>
                         <td>{{reservation.night}}</td>
                         <td>{{reservation.price}}</td>
@@ -93,8 +93,8 @@ Vue.component('reservations', {
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Apartment type</th>
-                        <th>Apartment location</th>
+                        <th>Apart. type</th>
+                        <th>Apart. locat.</th>
                         <th>Date</th>
                         <th>Night</th>
                         <th @click="sort('price')">Price <img v-if='currentSortDir == "asc"'
@@ -109,7 +109,7 @@ Vue.component('reservations', {
                 <tbody>
                     <tr v-bind:key='reservations.id' v-for="reservation in filteredReservations">
                         <td>{{reservation.type}}</td>
-                        <td>{{reservation.location}}</td>
+                        <td>{{reservation.address}}</td>
                         <td>{{reservation.date}}</td>
                         <td>{{reservation.night}}</td>
                         <td>{{reservation.price}}</td>
@@ -134,7 +134,6 @@ Vue.component('reservations', {
             isHost: false,
             isGuest: false,
 
-            //sort data //promeniti u reservations
             reservations: [],
 
             //sortiranje:
@@ -166,9 +165,27 @@ Vue.component('reservations', {
         }
     },
     methods: {
-        showAllReservations:function(){
+        messageHost:function(){
+            alert('Promeni se status!');
+        },
+        getAdminsReservations:function(){
             axios
-            .get('rest/reservations/')
+            .get(`rest/reservations/`)
+            .then(response => {
+                this.reservations=response.data;
+            })
+        },
+        getHostsReservations:function(){
+            axios
+            .get(`rest/reservations/hostsReservations`)
+            .then(response => {
+                this.reservations=response.data;
+            })
+        },
+        
+        getGuestsReservations:function(){
+            axios
+            .get(`rest/reservations/${this.user.username}`)
             .then(response => {
                 this.reservations=response.data;
             })
@@ -189,7 +206,7 @@ Vue.component('reservations', {
                 axios
                 .put(`rest/reservations/${this.updatedReserv.id}`,this.updatedReserv)
                 .then(response => {
-                    this.showAllReservations();
+                    this.getGuestsReservations();
                     this.messages.successResponse = `<h4>You successfuly canceled reservation!</h4>`;
         
                     setTimeout(()=>this.messages.successResponse='',5000);
@@ -254,11 +271,13 @@ Vue.component('reservations', {
         this.user.role = localStorage.getItem('role');
         if (this.user.role == "ADMIN") {
             this.isAdmin = true;
+            this.getAdminsReservations();
         } else if (this.user.role == "HOST") {
             this.isHost = true;
+            this.getHostsReservations();
         } else {
             this.isGuest = true;
-            this.showAllReservations();
+            this.getGuestsReservations();
         }
     },
 });
