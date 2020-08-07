@@ -181,23 +181,9 @@ Vue.component('reservations', {
         messageHost:function(){
             alert('Promeni se status!');
         },
-        getAdminsReservations:function(){
+        getReservations:function(){
             axios
             .get(`rest/reservations/`)
-            .then(response => {
-                this.reservations=response.data;
-            })
-        },
-        getHostsReservations:function(){
-            axios
-            .get(`rest/reservations/hostsReservations`)
-            .then(response => {
-                this.reservations=response.data;
-            })
-        },
-        getGuestsReservations:function(){
-            axios
-            .get(`rest/reservations/${this.user.username}`)
             .then(response => {
                 this.reservations=response.data;
             })
@@ -271,7 +257,7 @@ Vue.component('reservations', {
             // Nakon završnog datuma noćenja, mogu da postavim rezervaciju na
             // status ZAVRŠENA
             // const length = reservation.date + reservation.night;
-            // if(length<current.date){
+            // if(length>current.date){
             //     return true;
             // }
             // return false; 
@@ -312,13 +298,13 @@ Vue.component('reservations', {
         this.user.role = localStorage.getItem('role');
         if (this.user.role == "ADMIN") {
             this.isAdmin = true;
-            this.getAdminsReservations();
+            this.getReservations();
         } else if (this.user.role == "HOST") {
             this.isHost = true;
-            this.getHostsReservations();
+            this.getReservations();
         } else {
             this.isGuest = true;
-            this.getGuestsReservations();
+            this.getReservations();
         }
     },
 });

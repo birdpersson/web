@@ -64,6 +64,7 @@ public class ReservationService {
 		Collection<ReservationDTO> returnDTO = new ArrayList<ReservationDTO>();
 		
 		if(!userDao.findOne(username).getRole().toString().equals("GUEST")) {
+			
 			Collection<Reservation> reserv = reservDao.findAllByGuestId(queryUsername);
 			
 			for(Reservation r : reserv) {
@@ -111,219 +112,102 @@ public class ReservationService {
 			return Response.status(Response.Status.OK).entity(returnDTO).build();
 		}
 		return  Response.status(Response.Status.FORBIDDEN).build();
-	}
+	}	
 	
 	
-	//serverska metoda za vracanje svih produkata
-	//	@GET
-	//	@Path("/")
-	//	@Produces(MediaType.APPLICATION_JSON)
-	//	public Collection<Reservation> getReservation() {
-	//		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
-	//		return dao.findAll();
-	//	}
-	
-	//	@GET
-	//	@Path("/{id}")
-	//	@Produces(MediaType.APPLICATION_JSON)
-	//	public Reservation getReservation(@PathParam("id") String id) {
-	//		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
-	//		return dao.findOne(id);
-	//	}
-	
-	
-	//Vrati sve rezervacije od tog guesta.
-	@GET
-	@Path("/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getGuestsReservation(@Context HttpServletRequest request, @PathParam("id") String guestId) {
-		String username = AuthService.getUsername(request);
-		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-		ReservationDAO reservDao = (ReservationDAO) ctx.getAttribute("reservationDAO");
-		ApartmentDAO apartDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
-		LocationDAO locatDao = (LocationDAO) ctx.getAttribute("locationDAO");
-		Collection<ReservationDTO> returnDTO = new ArrayList<ReservationDTO>();
-		
-		if(userDao.findOne(username).getRole().toString().equals("GUEST")) {
-			//Prolazi kroz sve dobavljene rezervacije i za svaku dobavlja podatke o stanu 
-			//na koji se ta rezervacija odnosi.
-			Collection<Reservation> allReservations = reservDao.findAllByGuestId(guestId);
-			for(Reservation r : allReservations) {
-				//pomocne promenljive
-				ReservationDTO reservDTO = new ReservationDTO();
-				Apartment apartm = apartDao.findOne(r.getApartmentId());
-				Location locat = locatDao.findLocatByApartId(r.getApartmentId());
-				if(apartm == null || locat == null) {
-					return Response.status(Response.Status.BAD_REQUEST).build();
-				}
-				
-				//smestaju se vrednost iz objekta reservation i apartment u jedan objekat.
-				reservDTO.setId(r.getId());
-				reservDTO.setApartmentId(r.getApartmentId());
-				reservDTO.setGuestId(r.getGuestId());
-				reservDTO.setDate(r.getDate());
-				reservDTO.setNight(r.getNight());
-				reservDTO.setPrice(r.getPrice());
-				reservDTO.setConfirmation(r.getConfirmation());
-				reservDTO.setMessage(r.getMessage());
-				reservDTO.setStatus(r.getStatus());
-	
-				//Za apartman detalji:
-				if(apartm.getType()==null) {
-					reservDTO.setType(null);
-//					return Response.status(Response.Status.BAD_REQUEST).build();
-				}
-				else {
-					reservDTO.setType(apartm.getType());
-				}
-				//Za lokaciju apartmana:
-				if(locat.getAddress()==null) {
-					reservDTO.setAddress("unknown");
-//					return Response.status(Response.Status.BAD_REQUEST).build();
-				}
-				else {
-					reservDTO.setAddress(locat.getAddress());
-				}
-				
-				//vraca se lista reservacija sa svim podacima;
-				returnDTO.add(reservDTO);
-			}
-			return Response.status(Response.Status.OK).entity(returnDTO).build();
-		}
-		return  Response.status(Response.Status.FORBIDDEN).build();
-	}
-	
-	
-	//Vrati sve rezervacije za admina.
 	@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAdminsReservation(@Context HttpServletRequest request,@QueryParam("id") String hostId) {
+	public Response getReservation(@Context HttpServletRequest request) {
 		String username = AuthService.getUsername(request);
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
 		ReservationDAO reservDao = (ReservationDAO) ctx.getAttribute("reservationDAO");
-		LocationDAO locatDao = (LocationDAO) ctx.getAttribute("locationDAO");
-		ApartmentDAO apartDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+		Collection<Reservation> allReservations = new ArrayList<Reservation>();
 		Collection<ReservationDTO> returnDTO = new ArrayList<ReservationDTO>();
 		
+		//Prolazi kroz sve dobavljene rezervacije i za svaku dobavlja podatke o stanu 
+		//na koji se ta rezervacija odnosi.
 		if(userDao.findOne(username).getRole().toString().equals("ADMIN")) {
-			//Prolazi kroz sve dobavljene rezervacije i za svaku dobavlja podatke o stanu 
-			//na koji se ta rezervacija odnosi.
-			Collection<Reservation> allReservations = reservDao.findAll();
-			for(Reservation r : allReservations) {
-				
-				//pomocne promenljive
-				ReservationDTO reservDTO = new ReservationDTO();
-				Apartment apartm = apartDao.findOne(r.getApartmentId());
-				Location locat = locatDao.findLocatByApartId(r.getApartmentId());
-				
-				if(apartm == null || locat == null) {
-					return Response.status(Response.Status.BAD_REQUEST).build();
-				}
-				
-				//smestaju se vrednost iz objekta reservation i apartment u jedan objekat.
-				reservDTO.setId(r.getId());
-				reservDTO.setApartmentId(r.getApartmentId());
-				reservDTO.setGuestId(r.getGuestId());
-				reservDTO.setDate(r.getDate());
-				reservDTO.setNight(r.getNight());
-				reservDTO.setPrice(r.getPrice());
-				reservDTO.setConfirmation(r.getConfirmation());
-				reservDTO.setMessage(r.getMessage());
-				reservDTO.setStatus(r.getStatus());
-				
-				//Za apartman detalji:
-				if(apartm.getType()==null) {
-					reservDTO.setType(null);
-//						return Response.status(Response.Status.BAD_REQUEST).build();
-				}
-				else {
-					reservDTO.setType(apartm.getType());
-				}
-				//Za lokaciju apartmana:
-				if(locat.getAddress()==null) {
-					reservDTO.setAddress("unknown");
-//						return Response.status(Response.Status.BAD_REQUEST).build();
-				}
-				else {
-					reservDTO.setAddress(locat.getAddress());
-				}
-				
-				//vraca se lista reservacija sa svim podacima;
-				returnDTO.add(reservDTO);
-			}
-			return Response.status(Response.Status.OK).entity(returnDTO).build();
+	
+			 allReservations = reservDao.findAll();
+			 returnDTO = getReservationsDTO(allReservations, username, "ADMIN");
+			 return Response.status(Response.Status.OK).entity(returnDTO).build();
+
+		}
+		else if(userDao.findOne(username).getRole().toString().equals("GUEST")) {
+			
+			 allReservations = reservDao.findAllByGuestId(username);
+			 returnDTO = getReservationsDTO(allReservations, username, "GUEST");
+			 return Response.status(Response.Status.OK).entity(returnDTO).build();
+		}
+		
+		else if(userDao.findOne(username).getRole().toString().equals("HOST")) {
+
+			 allReservations = reservDao.findAll();
+			 returnDTO = getReservationsDTO(allReservations, username, "HOST");
+			 return Response.status(Response.Status.OK).entity(returnDTO).build();
 		}
 		return  Response.status(Response.Status.FORBIDDEN).build();
 	}
 	
+	
+	public Collection<ReservationDTO>  getReservationsDTO(Collection<Reservation> allReservations, String username, String role) {
+		LocationDAO locatDao = (LocationDAO) ctx.getAttribute("locationDAO");
+		ApartmentDAO apartDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+		Collection<ReservationDTO> returnDTO = new ArrayList<ReservationDTO>();
 		
-		
-		//Vrati sve rezervacije od stanova tog hosta.
-		@GET
-		@Path("/hostsReservations")
-		@Produces(MediaType.APPLICATION_JSON)
-		public Response getHostsReservation(@Context HttpServletRequest request,@QueryParam("id") String hostId) {
-			String username = AuthService.getUsername(request);
-			UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-			ReservationDAO reservDao = (ReservationDAO) ctx.getAttribute("reservationDAO");
-			ApartmentDAO apartDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
-			LocationDAO locatDao = (LocationDAO) ctx.getAttribute("locationDAO");
-			Collection<ReservationDTO> returnDTO = new ArrayList<ReservationDTO>();
+		for(Reservation r : allReservations) {
 			
-			if(userDao.findOne(username).getRole().toString().equals("HOST")) {
-				//Prolazi kroz sve dobavljene rezervacije i za svaku dobavlja podatke o stanu 
-				//na koji se ta rezervacija odnosi.
-				Collection<Reservation> allReservations = reservDao.findAll();
-				for(Reservation r : allReservations) {
-					//pomocne promenljive
-					ReservationDTO reservDTO = new ReservationDTO();
-					Apartment apartm = apartDao.findOne(r.getApartmentId());
-					Location locat = locatDao.findLocatByApartId(r.getApartmentId());
-					
-					if(apartm == null || locat == null) {
-						return Response.status(Response.Status.BAD_REQUEST).build();
-					}
-					
-					//Provera da li stan pripada tom hostu koji je ulogovan.
-					else if(!apartm.getHostId().equals(username)) {
-						continue;
-					}
-					//smestaju se vrednost iz objekta reservation i apartment u jedan objekat.
-					reservDTO.setId(r.getId());
-					reservDTO.setApartmentId(r.getApartmentId());
-					reservDTO.setGuestId(r.getGuestId());
-					reservDTO.setDate(r.getDate());
-					reservDTO.setNight(r.getNight());
-					reservDTO.setPrice(r.getPrice());
-					reservDTO.setConfirmation(r.getConfirmation());
-					reservDTO.setMessage(r.getMessage());
-					reservDTO.setStatus(r.getStatus());
-				
-					//Za apartman detalji:
-					if(apartm.getType()==null) {
-						reservDTO.setType(null);
-//								return Response.status(Response.Status.BAD_REQUEST).build();
-					}
-					else {
-						reservDTO.setType(apartm.getType());
-					}
-					//Za lokaciju apartmana:
-					if(locat.getAddress()==null) {
-						reservDTO.setAddress("unknown");
-//								return Response.status(Response.Status.BAD_REQUEST).build();
-					}
-					else {
-						reservDTO.setAddress(locat.getAddress());
-					}
-					
-					//vraca se lista reservacija sa svim podacima;
-					returnDTO.add(reservDTO);
-				}
-				return Response.status(Response.Status.OK).entity(returnDTO).build();
+			//pomocne promenljive
+			ReservationDTO reservDTO = new ReservationDTO();
+			Apartment apartm = apartDao.findOne(r.getApartmentId());
+			Location locat = locatDao.findLocatByApartId(r.getApartmentId());
+			
+			if(apartm == null || locat == null) {
+				return null;
 			}
-			return  Response.status(Response.Status.FORBIDDEN).build();
+			//Provera da li je rola usera Host
+			if(role == "HOST") {
+				//Provera da li stan pripada tom hostu koji je ulogovan.
+				if(!apartm.getHostId().equals(username)) {
+					continue;
+				}
+			}
+			
+			//smestaju se vrednost iz objekta reservation i apartment u jedan objekat.
+			reservDTO.setId(r.getId());
+			reservDTO.setApartmentId(r.getApartmentId());
+			reservDTO.setGuestId(r.getGuestId());
+			reservDTO.setDate(r.getDate());
+			reservDTO.setNight(r.getNight());
+			reservDTO.setPrice(r.getPrice());
+			reservDTO.setConfirmation(r.getConfirmation());
+			reservDTO.setMessage(r.getMessage());
+			reservDTO.setStatus(r.getStatus());
+			
+			//Za apartman detalji:
+			if(apartm.getType()==null) {
+				reservDTO.setType(null);
+//					return Response.status(Response.Status.BAD_REQUEST).build();
+			}
+			else {
+				reservDTO.setType(apartm.getType());
+			}
+			//Za lokaciju apartmana:
+			if(locat.getAddress()==null) {
+				reservDTO.setAddress("unknown");
+//					return Response.status(Response.Status.BAD_REQUEST).build();
+			}
+			else {
+				reservDTO.setAddress(locat.getAddress());
+			}
+			
+			//vraca se lista reservacija sa svim podacima;
+			returnDTO.add(reservDTO);
 		}
+		return returnDTO;
+	}
+
 		
 	//serverska metoda za dodavanje 1 produkta
 	@POST
@@ -369,3 +253,85 @@ public class ReservationService {
 		return dao.changeStatus(id, status);
 	}
 }
+
+
+
+//serverska metoda za vracanje svih produkata
+//	@GET
+//	@Path("/")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Collection<Reservation> getReservation() {
+//		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
+//		return dao.findAll();
+//	}
+
+//	@GET
+//	@Path("/{id}")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Reservation getReservation(@PathParam("id") String id) {
+//		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
+//		return dao.findOne(id);
+//	}
+
+
+//
+////Vrati sve rezervacije od tog guesta.
+//	@GET
+//	@Path("/{id}")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Response getGuestsReservation(@Context HttpServletRequest request, @PathParam("id") String guestId) {
+//		String username = AuthService.getUsername(request);
+//		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+//		ReservationDAO reservDao = (ReservationDAO) ctx.getAttribute("reservationDAO");
+//		ApartmentDAO apartDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+//		LocationDAO locatDao = (LocationDAO) ctx.getAttribute("locationDAO");
+//		Collection<ReservationDTO> returnDTO = new ArrayList<ReservationDTO>();
+//		
+//		if(userDao.findOne(username).getRole().toString().equals("GUEST")) {
+//			//Prolazi kroz sve dobavljene rezervacije i za svaku dobavlja podatke o stanu 
+//			//na koji se ta rezervacija odnosi.
+//			Collection<Reservation> allReservations = reservDao.findAllByGuestId(guestId);
+//			for(Reservation r : allReservations) {
+//				//pomocne promenljive
+//				ReservationDTO reservDTO = new ReservationDTO();
+//				Apartment apartm = apartDao.findOne(r.getApartmentId());
+//				Location locat = locatDao.findLocatByApartId(r.getApartmentId());
+//				if(apartm == null || locat == null) {
+//					return Response.status(Response.Status.BAD_REQUEST).build();
+//				}
+//				
+//				//smestaju se vrednost iz objekta reservation i apartment u jedan objekat.
+//				reservDTO.setId(r.getId());
+//				reservDTO.setApartmentId(r.getApartmentId());
+//				reservDTO.setGuestId(r.getGuestId());
+//				reservDTO.setDate(r.getDate());
+//				reservDTO.setNight(r.getNight());
+//				reservDTO.setPrice(r.getPrice());
+//				reservDTO.setConfirmation(r.getConfirmation());
+//				reservDTO.setMessage(r.getMessage());
+//				reservDTO.setStatus(r.getStatus());
+//	
+//				//Za apartman detalji:
+//				if(apartm.getType()==null) {
+//					reservDTO.setType(null);
+////					return Response.status(Response.Status.BAD_REQUEST).build();
+//				}
+//				else {
+//					reservDTO.setType(apartm.getType());
+//				}
+//				//Za lokaciju apartmana:
+//				if(locat.getAddress()==null) {
+//					reservDTO.setAddress("unknown");
+////					return Response.status(Response.Status.BAD_REQUEST).build();
+//				}
+//				else {
+//					reservDTO.setAddress(locat.getAddress());
+//				}
+//				
+//				//vraca se lista reservacija sa svim podacima;
+//				returnDTO.add(reservDTO);
+//			}
+//			return Response.status(Response.Status.OK).entity(returnDTO).build();
+//		}
+//		return  Response.status(Response.Status.FORBIDDEN).build();
+//	}
