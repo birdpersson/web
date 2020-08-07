@@ -125,9 +125,10 @@ Vue.component('apartment-comments', {
         setRating: function(rating){
         this.rating = rating;
         },
-        getHostsComments:function(){
+        getComments:function(){
+            // dobavljanje svih komentara za prikaz adminu ili hostu
             axios
-            .get('rest/reviews/apartmentHost?id='+ this.user.username)
+            .get('rest/reviews/')
             .then(response => {
                 this.comments=response.data;
             })
@@ -139,7 +140,7 @@ Vue.component('apartment-comments', {
             .put(`rest/reviews/${updatedComment.id}`, updatedComment)
             .then(response => {
                 // alert('Novi status response:\n'+response.data.visible);
-                this.getHostsComments();
+                this.getComments();
             })
         },
 
@@ -160,15 +161,10 @@ Vue.component('apartment-comments', {
 
         if (this.user.role == "ADMIN") {
             this.isAdmin = true;
-            // dobavljanje svih komentara za prikaz adminu
-            axios
-            .get('rest/reviews/')
-            .then(response => {
-                this.comments=response.data;
-            })
+            this.getComments();
         } else if (this.user.role == "HOST") {
             this.isHost = true;
-            this.getHostsComments();
+            this.getComments();
         } else {
             this.isGuest = true;
             this.apartmentId = this.id;

@@ -46,27 +46,36 @@ public class ReviewsServices {
 	}
 	
 	
-	//Vracanje svih komentara. (za admina)
+	//Vracanje svih komentara. (za admina i hosta)
 	@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllReviews(@Context HttpServletRequest request) {
 		String username = AuthService.getUsername(request);
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-		ReviewDAO dao = (ReviewDAO) ctx.getAttribute("reviewDAO");
+		ReviewDAO reviewDao = (ReviewDAO) ctx.getAttribute("reviewDAO");
+		ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+		Collection<Review> retVal = new ArrayList<Review>();
 		
 		if(userDao.findOne(username).getRole().toString().equals("ADMIN")) {
-			return Response.status(Response.Status.OK).entity(dao.findAll()).build();
+			System.out.println("Usao u ADMIN");
+			return Response.status(Response.Status.OK).entity(reviewDao.findAll()).build();
+		}
+		
+		else if(userDao.findOne(username).getRole().toString().equals("HOST")) {
+			//Prvo pronalazimo sve stanove vezane za tog hosta...
+			Collection<Apartment> hostsApart = apartmentDao.findAllApartByHostId(username);
+			System.out.println("Usao u HOST");
+			for(Apartment apar : hostsApart) {
+				//Prvo zatim pronalazimo sve komentare vezane za svaki stan tog hosta...
+				Collection<Review> reviewsByApar = reviewDao.findAllByApartmentId(apar.getId());
+				for(Review rev : reviewsByApar) {
+					retVal.add(rev);
+				}
+			}
+			return Response.status(Response.Status.OK).entity(retVal).build(); 
 		}
 		return Response.status(Response.Status.FORBIDDEN).build();
-	}
-	
-	@GET
-	@Path("/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Review getReview(@PathParam("id") String id) {
-		ReviewDAO dao = (ReviewDAO) ctx.getAttribute("reviewDAO");
-		return dao.findOne(id);
 	}
 	
 	
@@ -86,33 +95,39 @@ public class ReviewsServices {
 		return Response.status(Response.Status.FORBIDDEN).build();
 	}
 	
-	//Vracanje komentara spram id hosta. (za hosta)
-	@GET
-	@Path("/apartmentHost")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getReviewsByHostId(@Context HttpServletRequest request, @QueryParam("id") String hostId) {
-		String username = AuthService.getUsername(request);
-		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-		ReviewDAO reviewDao = (ReviewDAO) ctx.getAttribute("reviewDAO");
-		ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
-		Collection<Review> retVal = new ArrayList<Review>();
-		
-		if(userDao.findOne(username).getRole().toString().equals("HOST")) {
-			//Prvo pronalazimo sve stanove vezane za tog hosta...
-			Collection<Apartment> hostsApart = apartmentDao.findAllApartByHostId(hostId);
-			for(Apartment apar : hostsApart) {
-				
-				//Prvo zatim pronalazimo sve komentare vezane za svaki stan tog hosta...
-				Collection<Review> reviewsByApar = reviewDao.findAllByApartmentId(apar.getId());
-				for(Review rev : reviewsByApar) {
-					retVal.add(rev);
-				}
-			}
-			return Response.status(Response.Status.OK).entity(retVal).build(); 
-		}
-		return Response.status(Response.Status.FORBIDDEN).build();
-	}
-	
+//	//Vracanje komentara spram id hosta. (za hosta)
+//	@GET
+//	@Path("/apartmentHost")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Response getReviewsByHostId(@Context HttpServletRequest request, @QueryParam("id") String hostId) {
+//		String username = AuthService.getUsername(request);
+//		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+//		ReviewDAO reviewDao = (ReviewDAO) ctx.getAttribute("reviewDAO");
+//		ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+//		Collection<Review> retVal = new ArrayList<Review>();
+//		
+//		if(userDao.findOne(username).getRole().toString().equals("HOST")) {
+//			//Prvo pronalazimo sve stanove vezane za tog hosta...
+//			Collection<Apartment> hostsApart = apartmentDao.findAllApartByHostId(hostId);
+//			for(Apartment apar : hostsApart) {
+//				
+//				//Prvo zatim pronalazimo sve komentare vezane za svaki stan tog hosta...
+//				Collection<Review> reviewsByApar = reviewDao.findAllByApartmentId(apar.getId());
+//				for(Review rev : reviewsByApar) {
+//					retVal.add(rev);
+//				}
+//			}
+//			return Response.status(Response.Status.OK).entity(retVal).build(); 
+//		}
+//		return Response.status(Response.Status.FORBIDDEN).build();
+//	}
+//	@GET
+//	@Path("/{id}")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Review getReview(@PathParam("id") String id) {
+//		ReviewDAO dao = (ReviewDAO) ctx.getAttribute("reviewDAO");
+//		return dao.findOne(id);
+//	}
 	//serverska metoda za dodavanje novog komentara (koristi je guset)
 	@POST
 	@Path("/")
