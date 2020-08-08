@@ -155,6 +155,7 @@ public class ReviewsServices {
 		ReviewDAO dao = (ReviewDAO) ctx.getAttribute("reviewDAO");
 		
 		if(userDao.findOne(username).getRole().toString().equals("HOST")) {
+		
 			return Response.status(Response.Status.OK).entity(dao.update(id, review)).build();
 		}
 		

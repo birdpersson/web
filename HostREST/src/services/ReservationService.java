@@ -229,7 +229,8 @@ public class ReservationService {
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
 		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
 		
-		if(userDao.findOne(username).getRole().toString().equals("GUEST")) {
+		if(userDao.findOne(username).getRole().toString().equals("GUEST") || 
+		   userDao.findOne(username).getRole().toString().equals("HOST")) {
 			return Response.status(Response.Status.OK).entity(dao.update(id, reservation)).build();
 		}
 		return  Response.status(Response.Status.FORBIDDEN).build();
