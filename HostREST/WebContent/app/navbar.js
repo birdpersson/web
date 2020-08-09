@@ -36,8 +36,8 @@ Vue.component('navbar', {
 
                     <button v-if="loggedIn" class="btn" id='btnLogout' v-on:click='logout()'>Log Out</button>
 
-                    <router-link to='/register' class="nav-link" exact>
-                        <button v-if="!loggedIn" class="btn" id='btnRegister'>Register</button>
+                    <router-link to='/signup' class="nav-link" exact>
+                        <button v-if="!loggedIn" class="btn" id='btnRegister'>Sign Up</button>
                     </router-link>
                     
                     <router-link to='/profile' class="nav-link" exact>
