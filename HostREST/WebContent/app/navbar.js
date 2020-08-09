@@ -11,7 +11,6 @@ Vue.component('navbar', {
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
-
                         <li class="nav-item active">
                             <router-link to="/homepage" class="nav-link" exact>Home</router-link>
                         </li>
@@ -22,24 +21,28 @@ Vue.component('navbar', {
                             </router-link>
                         </li>
 
-                        <li class="nav-item" v-if='!isGuest'>
+                        <li class="nav-item" v-if='isAdmin || isHost'>
                             <router-link class="nav-link" to="/users" exact>Users</router-link>
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item" v-if='loggedIn'>
                             <router-link class="nav-link" to="/reservations" exact>Reservations</router-link>
                         </li>
-
-                        <li class="nav-item">
-                            <router-link class="nav-link" to="/profile" exact>Profile</router-link>
-                        </li>
-                        <!--Zakomentarisati za navbar-->
                     </ul>
 
-                    <router-link to='#' class="nav-link" exact>
-                        <button class="btn" id='btnLogin'>Log In</button>
+                    <router-link to='/login' class="nav-link" exact>
+                        <button v-if="!loggedIn" class="btn" id='btnLogin'>Log In</button>
                     </router-link>
-                    <button class="btn" id='btnLogout' v-on:click='logout()'>Log Out</button>
+
+                    <button v-if="loggedIn" class="btn" id='btnLogout' v-on:click='logout()'>Log Out</button>
+
+                    <router-link to='/signup' class="nav-link" exact>
+                        <button v-if="!loggedIn" class="btn" id='btnRegister'>Sign Up</button>
+                    </router-link>
+                    
+                    <router-link to='/profile' class="nav-link" exact>
+                        <button v-if="loggedIn" class="btn" id='btnProfile'>Profile</button>
+                    </router-link>
                 </div>
             </div>
         </nav>
@@ -47,7 +50,11 @@ Vue.component('navbar', {
 </div>`,
     data: function () {
         return {
-            loggedIn: false
+            role: localStorage.getItem('role'),
+            loggedIn: localStorage.getItem('jwt') ? true : false,
+            isAdmin: false,
+            isHost: false,
+            isGuest: false
         }
     },
     methods: {
@@ -59,8 +66,14 @@ Vue.component('navbar', {
         }
     },
     created() {
-        if (localStorage.getItem('jwt')) {
-            loggedIn = true;
+        if (this.role == "ADMIN") {
+            this.isAdmin = true;
+        } else if (this.role == "HOST") {
+            this.isHost = true;
+        } else if (this.role == "GUEST") {
+            this.isGuest = true;
+        } else {
+            this.loggedIn = false;
         }
     },
 });

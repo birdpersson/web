@@ -73,13 +73,12 @@ public class AuthService {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 
-		User loggedUser = userDao.save(ctx.getRealPath(""), user);
-		String jws = Jwts.builder()
-				.setSubject(loggedUser.getUsername())
-				.setExpiration(new Date(new Date().getTime() + 1000*9000L))
-				.setIssuedAt(new Date()).signWith(key).compact();
-		loggedUser.setJwt(jws);
-		return Response.status(Response.Status.CREATED).build();
+		User newUser = userDao.save(ctx.getRealPath(""), user);
+		if (newUser == null) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+		}
+		
+		return Response.status(Response.Status.CREATED).entity(newUser).build();
 
 	}
 

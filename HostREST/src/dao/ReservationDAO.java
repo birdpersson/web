@@ -5,19 +5,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
-import javax.ws.rs.PUT;
-import javax.ws.rs.core.MediaType;
-
 import beans.Reservation;
-import beans.Status;
 
 
 public class ReservationDAO {
@@ -27,7 +21,7 @@ public class ReservationDAO {
 	public ReservationDAO() {}
 	
 	/***
-	 * @param contextPath Putanja do aplikacije u Tomcatu. Može se pristupiti samo iz servleta.
+	 * @param contextPath Putanja do aplikacije u Tomcatu. Moï¿½e se pristupiti samo iz servleta.
 	 */
 	//KlubManager(String fileName)
 	public ReservationDAO(String contextPath) {
@@ -78,7 +72,7 @@ public class ReservationDAO {
 			oldReservation.setNight(updatedReview.getNight());	
 			oldReservation.setPrice(updatedReview.getPrice());
 			oldReservation.setConfirmation(updatedReview.getConfirmation());
-			
+			oldReservation.setStatus(updatedReview.getStatus());
 			
 			//We save old product which is now updated.
 			return reservations.put(oldReservation.getId(), oldReservation);
@@ -95,7 +89,7 @@ public class ReservationDAO {
 	
 	public Reservation changeStatus(String id, String status) {
 		Reservation res = findOne(id);
-		Status newStatus = Status.valueOf(status);
+		Reservation.Status newStatus = Reservation.Status.valueOf(status);
 		res.setStatus(newStatus);
 		return res;
 	}
@@ -119,7 +113,8 @@ public class ReservationDAO {
 			int night = -1;
 			int price = -1; // apartment.price * night;
 			String confirmation = "";
-			Status status = null;
+			String message = "";
+			Reservation.Status status = null;
 
 			StringTokenizer st;
 		
@@ -133,8 +128,8 @@ public class ReservationDAO {
 				while (st.hasMoreTokens()) {
 					//ovde se svaki token trimuje...
 					id =  st.nextToken().trim();
-					guestId = st.nextToken().trim();
 					apartmentId = st.nextToken().trim();
+					guestId = st.nextToken().trim();
 					
 					date = formatter.parse(st.nextToken().trim());
 					formattedDate = formatter.format(date);
@@ -145,11 +140,11 @@ public class ReservationDAO {
 					night = Integer.parseInt(st.nextToken().trim());
 					price = Integer.parseInt(st.nextToken().trim());
 					confirmation = st.nextToken().trim();
-					status = Status.valueOf(st.nextToken().trim());
+					status = Reservation.Status.valueOf(st.nextToken().trim());
 				}
 				
 				reservations.put(id, new Reservation(id, apartmentId, guestId, date, night,  price,
-						confirmation, status));
+						confirmation, message, status));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -164,9 +159,7 @@ public class ReservationDAO {
 		}
 		
 	}
-	
-	
-	
+
 	
 	public Collection<Reservation> findAllByGuestId(String id) {
 		Collection<Reservation> allReservations =  findAll();

@@ -19,7 +19,7 @@ Vue.component("login", {
 			<div class="row">
 				<div class="col-md-9 col-lg-8 mx-auto">
 				<h3 class="login-heading mb-4">Welcome back!</h3>
-				<div class="alert alert-danger" v-if="error">Wrong username of password</div>
+				<div class="alert alert-danger" v-if="error">Wrong username or password</div>
 
 				<form>
 					<div class="form-label-group">
@@ -33,7 +33,7 @@ Vue.component("login", {
 					</div>
 
 					<button type="button" class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" v-on:click='login(user)'>Sign in</button>
-					<router-link to='/registration' class="small" exact>Not Registered?</router-link>
+					<router-link to='/signup' class="small" exact>Not Registered?</router-link>
 				</form>
 				</div>
 			</div>

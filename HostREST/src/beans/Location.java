@@ -12,14 +12,6 @@ public class Location {
 		super();
 	}
 	
-//	public Location(String id, double longitude, double latitude, String address) {
-//		super();
-//		this.id = id;
-//		this.longitude = longitude;
-//		this.latitude = latitude;
-//		this.address = address;
-//	}
-
 	public Location(String id, String apartmentId, double longitude, double latitude, String address) {
 		super();
 		this.id = id;

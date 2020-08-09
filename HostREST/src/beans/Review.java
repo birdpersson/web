@@ -5,23 +5,26 @@ public class Review {
 	private String id;
 	private String guestId;
 	private String apartmentId;
-//	private Guest guest;
-//	private Apartment apartment;
 	private String text;
 	private int star;
-	
-	
+	private boolean visible;
+
 	public Review() {
 		super();
 	}
 
-	public Review(String id, String guestId, String apartmentId, String text, int star) {
+	public Review(String id, String guestId, String apartmentId, String text, int star, boolean visible) {
 		super();
 		this.id = id;
 		this.guestId = guestId;
 		this.apartmentId = apartmentId;
 		this.text = text;
 		this.star = star;
+		this.visible = visible;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public void setId(String id) {
@@ -44,23 +47,6 @@ public class Review {
 		this.apartmentId = apartmentId;
 	}
 
-
-//	public Guest getGuest() {
-//		return guest;
-//	}
-//
-//	public void setGuest(Guest guest) {
-//		this.guest = guest;
-//	}
-//
-//	public Apartment getApartment() {
-//		return apartment;
-//	}
-//
-//	public void setApartment(Apartment apartment) {
-//		this.apartment = apartment;
-//	}
-
 	public String getText() {
 		return text;
 	}
@@ -77,8 +63,12 @@ public class Review {
 		this.star = star;
 	}
 
-	public String getId() {
-		return id;
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 
 }

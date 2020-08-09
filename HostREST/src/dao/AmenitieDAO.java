@@ -18,7 +18,7 @@ public class AmenitieDAO {
 	}
 	
 	/***
-	 * @param contextPath Putanja do aplikacije u Tomcatu. Može se pristupiti samo iz servleta.
+	 * @param contextPath Putanja do aplikacije u Tomcatu. Moï¿½e se pristupiti samo iz servleta.
 	 */
 	public AmenitieDAO(String contextPath) {
 		loadAmenities(contextPath);
@@ -72,6 +72,7 @@ public class AmenitieDAO {
 			
 			//We don't change id of existing host just username, password, firstname and lastname.
 			oldAmenitie.setName(updatedAmenitie.getName());
+			oldAmenitie.setType(updatedAmenitie.getType());
 			oldAmenitie.setApartmentId(updatedAmenitie.getApartmentId());
 			
 			//We save and return old admin which is now updated.
@@ -99,7 +100,8 @@ public class AmenitieDAO {
 			in = new BufferedReader(new FileReader(file));
 			String line, id = "";
 			ArrayList<String> apartmentsIds = new ArrayList<String>();
-			String name= "";
+			String name = "";
+			String type = "";
 			StringTokenizer st;
 			while ((line = in.readLine()) != null) {
 				line = line.trim();
@@ -109,10 +111,11 @@ public class AmenitieDAO {
 				while (st.hasMoreTokens()) {
 					id = st.nextToken().trim();
 					name = st.nextToken().trim();
+					type = st.nextToken().trim();
 					apartmentsIds = getListOfApartIds(st.nextToken().trim());
 					
 				}
-				amenities.put(id, new Amenitie(id, apartmentsIds, name));
+				amenities.put(id, new Amenitie(Amenitie.Type.valueOf(type), id, name, apartmentsIds));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

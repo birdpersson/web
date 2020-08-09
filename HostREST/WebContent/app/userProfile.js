@@ -89,6 +89,5 @@ Vue.component('profile', {
         axios
             .get('rest/profile/' + localStorage.getItem('user'))
             .then(response => this.loadProfile(response.data))
-
     },
 });

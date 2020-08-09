@@ -105,7 +105,7 @@ Vue.component('apartments', {
                             </div> -->
                         </td>
                         <td v-if='isGuest'>
-                            <router-link to="/apartmentComments"><button> Comments </button></router-link>
+                           <!-- <router-link to="/apartmentComments"> --><button v-on:click='showComments(apartment.id)'> Comments </button><!--</router-link>-->
                         </td>
                         <td v-if='isGuest'>
                             <router-link to="/newReservation"><button> Reserv </button></router-link>
@@ -263,7 +263,7 @@ Vue.component('apartments', {
             filterQueryStatus: '',
             filterQueryAmanity: '',
             types: ['ceo apartman', 'soba'],
-            statuses:['aktivno', 'neaktivno'],
+            statuses:[' aktivno', 'neaktivno'],
             amenities:['frizider','parking','klima','TV','ves masina','djakuzi'],
 
             isFilter:true,
@@ -273,6 +273,11 @@ Vue.component('apartments', {
     methods: {
         showMessage: function () {
             alert('Klikom na ovo dugme se brise odabrani stan!');
+        },
+
+        showComments: function(id){
+            // alert(`Id apartmana je ${id}!`);
+            this.$router.push(`/apartmentComments/${id}`);
         },
 
         sort: function (s) {

@@ -1,6 +1,6 @@
 Vue.component('amenities-overview', {
     template: `
-<div id="home">
+<div id="amenities-overview">
     <div class="container" id='page-title'>
         <h1 style="margin-top:10px;color:#35424a;">List of <span id='titleEffect'>Amenities</span></h1>
         <hr style='background:#e8491d;height:1px;'>
@@ -8,7 +8,7 @@ Vue.component('amenities-overview', {
     <div class="container" id='main'>
         <div v-if='isAdmin'>
             Održavanje sadržaja apartmana<br>
-            ● Kao administrator zadužen sam i za održavanje liste koja predstavlja sadržaj apartmana:<br>
+            <!-- ● Kao administrator zadužen sam i za održavanje liste koja predstavlja sadržaj apartmana:<br>
             ○ Mogu da dodajem novi entitet u spisak sadržaja apartmana:<br>
 
             ■ Neophodno je uneti naziv novog sadržaja<br>
@@ -16,7 +16,7 @@ Vue.component('amenities-overview', {
             apartmana na server<br>
             ■ U slučaju uspešnog dodavanja korisnik se obaveštava o tome<br>
             ■ U slučaju neuspešne izmene korisniku se ispisuje greška<br>
-            ○ Mogu da menjam nazive postojećih sadržaja apartmana<br>
+            ○ Mogu da menjam nazive postojećih sadržaja apartmana<br> -->
             ○ Mogu da obrišem neki postojeći sadržaj apartmana (potrebno je obrisati taj<br>
             sadržaj i kod svih apartmana koji ga poseduju)<br>
             <br>
@@ -25,6 +25,7 @@ Vue.component('amenities-overview', {
                 <thead>
                     <tr>
                         <th>Name</th>
+                        <th>Type</th>
                         <th>In apartment</th>
                         <th>Change name</th>
                     </tr>
@@ -32,28 +33,66 @@ Vue.component('amenities-overview', {
                 <tbody>
                 <tr v-for='amenity in amenities'>
                     <td>{{amenity.name}}</td>
+                    <td>{{amenity.type}}</td>
                     <td>{{amenity.apartmentId}}</td>
-                    <td><button v-on:click='message'> edit </button></td>
+                    <td><a href="#edit-amenity"><button v-on:click='showEdit(amenity)'> edit </button></a></td>
                 </tr>
                 </tbody>
             </table>
-                <router-link to="/amenitiesNew"><button class="btn btn-lg btn-success" v-if='!isGuest' style='padding-left: 5px;'>Add amenity</button>
-                </router-link>
-                <button v-on:click='isAddNew=!isAddNew' class="btn btn-lg btn-dark" style='margin-top: 80px;'>New amenity</button> 
+               <!-- <button class="btn btn-lg btn-success" v-if='!isGuest' style='padding-left: 5px;'>Add amenity</button> -->
+               <a href="#new-amenity"><button v-on:click='showNew()' class="btn btn-lg btn-dark" style='margin-top: 80px;'>Add amenity</button></a>
             <hr>
+
             <div v-if='isAddNew' id="new-amenity">
                 <div class="container" id='page-title'>
-                    <h1 style="margin-top:10px;color:#35424a;">New <span id='titleEffect'>Amenity</span></h1>
+                    <h1 v-if='isAddNew' style="margin-top:10px;color:#35424a;">New <span id='titleEffect'>Amenity</span></h1>
                     <hr style='background:#e8491d;height:1px;'>
                 </div>
                 <div class="container">
-                    <div>       
+                    <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
+                    <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
+                    <div>
+                        <div v-if='messages.errorName' class="alert alert-danger" v-html="messages.errorName"></div>       
                         <label>Name of new amenity :</label>
-                        <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Enter name...">
-                        <button class="btn btn-success">Save</button>
+                        <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Enter name..." v-model="newAmenity.name">
+                        <div v-if='messages.errorType' class="alert alert-danger" v-html="messages.errorType"></div>
+                        <label>Type :</label>
+                        <div id="amenity-type">
+                            <label for="one">Base</label>
+                            <input type="radio" id="one" value="Base" v-model="newAmenity.type">
+                         
+                            <label for="two">Dining</label>
+                            <input type="radio" id="two" value="Dining" v-model="newAmenity.type">
+                            
+                            <label for="two">Facilities</label>
+                            <input type="radio" id="two" value="Facilities" v-model="newAmenity.type">
+                           
+                            <label for="two">Family</label>
+                            <input type="radio" id="two" value="Family" v-model="newAmenity.type">
+                        </div>
+                        <button class="btn btn-success" v-on:click='addAmenity()'>Save</button>
                     </div>
                 </div>
-            </div>,
+            </div><!--New Amenity-->
+            <div v-if='isEdit' id="edit-amenity">
+                <div class="container" id='page-title'>
+                    <h1 style="margin-top:10px;color:#35424a;">Edit <span id='titleEffect'>Amenity</span></h1>
+                    <hr style='background:#e8491d;height:1px;'>
+                </div>
+                <div class="container">
+                    <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
+                    <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
+                    <div>    
+                        <div v-if='messages.errorName' class="alert alert-danger" v-html="messages.errorName"></div>          
+                        <label>Name of new amenity :</label>
+                        <input style="width:100%; padding:10px; margin-bottom:25px" type="text" v-model="updatedAmenity.name" placeholder="Enter name...">
+                                            
+                        </div>
+                        <button class="btn btn-success" v-on:click='editAmenity()'>Save</button>
+                        <button class="btn btn-danger" v-on:click='closeEdit()'>Close</button>
+                    </div>
+                </div>
+            </div><!--Edit Amenity-->
             <hr>
         </div>
     </div>
@@ -64,70 +103,153 @@ Vue.component('amenities-overview', {
                 username: '',
                 role: ''
             },
+
             isAdmin: false,
             isHost: false,
             isGuest: false,
-            amenities:[
-                {	
-                    id:'1',
-                    name:'parking',
-                    apartmentId:[1,2,3],
-                },
-                {	
-                    id:'2',
-                    name:'frizider',
-                    apartmentId:[1,2,3],
-                },
-                {	
-                    id:'3',
-                    name:'kuhinja',
-                    apartmentId:[1,2,3],
-                },
-                {	
-                    id:'4',
-                    name:'pegla',
-                    apartmentId:[1,2,3],
-                },
-                {	
-                    id:'5',
-                    name:'ves masina',
-                    apartmentId:[1,2,3],
-                },
-                {	
-                    id:'6',
-                    name:'djakuzi',
-                    apartmentId:[1,2,3],
-                },
-                {	
-                    id:'7',
-                    name:'parking',
-                    apartmentId:[1,2,3],
-                },
-                {	
-                    id:'8',
-                    name:'klima',
-                    apartmentId:[1,2,3],
-                },
-                {	
-                    id:'9',
-                    name:'TV',
-                    apartmentId:[1,2,3],
-                }
-            ],
+            amenities:[],
 
+            newAmenity:{
+                name:'',
+                type:'',
+                apartmentId:[],
+            },
             isAddNew:false,
+            isEdit:false,
+            updatedAmenity:{
+                id:'',
+                name:'',
+                type:'',
+                apartmentId:[],
+            },
+            beckupName:'',
+
+            messages:{
+                errorName:'',
+                errorType:'',
+                errorResponse:'',
+                successResponse:'',
+            }
         }
     },
     methods: {
-        message: function() {
-            alert('Menja se ime sadrzaja ili direktno u tabeli ili iz posebnog prozora');
-        }
+        showAllAmenities:function(){
+            axios
+            .get('rest/amenities/')
+            .then(response => {
+                this.amenities=response.data;
+            })
+        },
+        showNew:function(){
+            //Ako je otvoreno polje za edit zatvori se prvo
+            // da bi se otvorilo polje za dodavanje novog sadrzaja.
+            if(this.isEdit === true){
+                this.isEdit = false;
+                
+                this.updatedAmenity.name = this.beckupName 
+            }
+            this.isAddNew=!this.isAddNew
+        },
+        showEdit:function(chosenAmenity){
+            //Ako je otvoreno polje za dodavanje novog sadrzaja
+            //zatvori se prvo da bi se otvorilo polje za edit.
+            if(this.isAddNew === true){
+                this.isAddNew = false;
+            }
+            //Ako je vec otvoreno polje za edit
+            //i odabere se neki drugi sadrzaj ostaje polje otvoreno,
+            //a novi sadrzaj se edituje.
+            if(this.isEdit === true){
+                this.isEdit = true;
+                //ako promeni ime a ne sacuva nego skoci na sledeci sadrzaj
+                //promenjeo ime se gubi i vraca na staro;
+                this.updatedAmenity.name = this.beckupName 
+
+                this.updatedAmenity = chosenAmenity;
+                this.beckupName = chosenAmenity.name;
+            }
+            else{
+                this.isEdit=!this.isEdit;
+                this.updatedAmenity = chosenAmenity;
+                this.beckupName = chosenAmenity.name;
+            }
+        },
+        closeEdit(){
+            //Ako je vec otvoreno polje za edit zatvori se.
+            if(this.isEdit === true){
+                this.isEdit=!this.isEdit;
+                //ako promeni ime a ne sacuva nego ugasi edit 
+                //promenjeo ime se gubi i vraca na staro;
+                this.updatedAmenity.name = this.beckupName 
+                // this.updatedAmenity = {};
+            }
+        },
+        addAmenity:function(){
+            if(this.newAmenity.name=='' &&  this.newAmenity.type!=''){
+                this.messages.errorName =  `<h4>Name of amenity can't be empty!</h4>`;
+                setTimeout(()=>this.messages.errorName='',3000);
+            }
+            else if(this.newAmenity.name!='' && this.newAmenity.type==''){
+                this.messages.errorType =  `<h4>Type of amenity can't be empty!</h4>`;
+                setTimeout(()=>this.messages.errorType='',3000);
+            }
+            else if(this.newAmenity.name=='' && this.newAmenity.type==''){
+                this.messages.errorName =  `<h4>Name of amenity can't be empty!</h4>`;
+                this.messages.errorType =  `<h4>Type of amenity can't be empty!</h4>`;
+                setTimeout(()=>this.messages.errorName='',3000);
+                setTimeout(()=>this.messages.errorType='',3000);
+               
+            }
+            else{
+                axios
+                .post('rest/amenities/', this.newAmenity)
+                .then(response => {
+                    this.messages.successResponse = `<h4>Amenity was added successfuly!</h4>`;
+                    this.newAmenity.name='';
+                    this.newAmenity.type='';
+                    this.showAllAmenities();
+                    setTimeout(() => this.messages.successResponse='', 5000);
+
+                })
+                .catch(error => {
+                    if(error.response.status === 500 || error.response.status === 404){
+                        this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
+                        setTimeout(() => this.messages.errorResponse='', 5000);
+                    }
+                });
+            }
+        },
+        editAmenity:function(){
+            if(this.updatedAmenity.name===''){
+                this.messages.errorName =  `<h4>Name of amenity can't be empty!</h4>`;
+                setTimeout(()=>this.messages.errorName='',3000);
+            }
+            else{
+                axios
+                .put(`rest/amenities/${this.updatedAmenity.id}`, this.updatedAmenity)
+                .then(response => {
+                    this.messages.successResponse = `<h4>Amenity was updated successfuly!</h4>`;
+                    this.updatedAmenity.name='';
+                    this.showAllAmenities();
+                    setTimeout(() => this.messages.successResponse='', 5000);
+
+                })
+                .catch(error => {
+                    if(error.response.status === 500 || error.response.status === 404){
+                        this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
+                        setTimeout(() => this.messages.errorResponse='', 5000);
+                    }
+                });
+            }
+        },
     },
     created() {
         this.user.username = localStorage.getItem('user');
         this.user.role = localStorage.getItem('role');
         if (this.user.role == "ADMIN") {
             this.isAdmin = true;
+            this.showAllAmenities();
+           
         } else if (this.user.role == "HOST") {
             this.isHost = true;
         } else {
@@ -135,4 +257,3 @@ Vue.component('amenities-overview', {
         }
     },
 });
-

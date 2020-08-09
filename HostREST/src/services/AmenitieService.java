@@ -4,11 +4,13 @@ import java.util.Collection;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
 import beans.Amenitie;
 import dao.AmenitieDAO;
+import dao.UserDAO;
 
 @Path("/amenities")
 public class AmenitieService {
@@ -27,14 +29,24 @@ public class AmenitieService {
 			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("amenitieDAO", new AmenitieDAO(contextPath));
 		}
+		if (ctx.getAttribute("userDAO") == null) {
+			String contextPath = ctx.getRealPath("");
+			ctx.setAttribute("userDAO", new UserDAO(contextPath));
+		}
 	}
 	
 	@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Amenitie> getAllAdmins(){
+	public Response getAllAdmins(@Context HttpServletRequest request){
+		String username = AuthService.getUsername(request);
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
 		AmenitieDAO daoAmenitie = (AmenitieDAO) ctx.getAttribute("amenitieDAO");
-		return  daoAmenitie.findAll();
+		
+		if(userDao.findOne(username).getRole().toString().equals("ADMIN")) {
+			return  Response.status(Response.Status.OK).entity(daoAmenitie.findAll()).build();
+		}
+		return  Response.status(Response.Status.FORBIDDEN).build();
 	}
 	
 	@GET
@@ -45,23 +57,37 @@ public class AmenitieService {
 		return daoAmenitie.findOne(id);
 	}
 	
-	//serverska metoda za dodavanje 1 produkta
+	//serverska metoda za dodavanje novog sadrzaja
 	@POST
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Amenitie setAdmin(Amenitie amenitie) {
+	public Response setAdmin(@Context HttpServletRequest request, Amenitie amenitie) {
+		String username = AuthService.getUsername(request);
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
 		AmenitieDAO dao = (AmenitieDAO) ctx.getAttribute("amenitieDAO");
-		return dao.save(amenitie);
+		
+		if(userDao.findOne(username).getRole().toString().equals("ADMIN")) {
+			return Response.status(Response.Status.OK).entity(dao.save(amenitie)).build();
+		}
+		return  Response.status(Response.Status.FORBIDDEN).build();
+		
 	}
 	
+	//serverska metoda za editovanje naziva novog sadrzaja
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Amenitie updateAmenitie(@PathParam("id") String id, Amenitie amenitie) {
+	public Response updateAmenitie(@Context HttpServletRequest request, @PathParam("id") String id, Amenitie amenitie) {
+		String username = AuthService.getUsername(request);
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
 		AmenitieDAO dao = (AmenitieDAO) ctx.getAttribute("amenitieDAO");
-		return dao.update(id, amenitie);
+		
+		if(userDao.findOne(username).getRole().toString().equals("ADMIN")) {
+			return Response.status(Response.Status.OK).entity(dao.update(id, amenitie)).build();
+		}
+		return  Response.status(Response.Status.FORBIDDEN).build();
 	}
 	
 	@DELETE

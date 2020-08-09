@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import beans.Location;
-import beans.Test;
+
 
 public class LocationDAO {
 
@@ -127,10 +127,10 @@ private HashMap<String, Location> locations = new HashMap<String, Location>();
 			System.out.println(file.getCanonicalPath());
 			in = new BufferedReader(new FileReader(file));
 			String line, id = "";
+			String apartmentId = "";
 			double longitude = 0;
 			double latitude = 0;
 			String address = "";	
-			String apartmentId = "";
 			
 			StringTokenizer st;
 			while ((line = in.readLine()) != null) {
@@ -140,10 +140,11 @@ private HashMap<String, Location> locations = new HashMap<String, Location>();
 				st = new StringTokenizer(line, ";");
 				while (st.hasMoreTokens()) {
 					id = st.nextToken().trim();
+					apartmentId = st.nextToken().trim();
 					longitude = Double.parseDouble(st.nextToken().trim());
 					latitude = Double.parseDouble(st.nextToken().trim());;
 					address =  st.nextToken().trim();
-					apartmentId = st.nextToken().trim();
+					
 				}
 				locations.put(id, new Location(id, apartmentId, longitude, latitude, address));
 			}

@@ -1,4 +1,5 @@
 const Login = { template: '<login></login>' }
+const Signup = { template: '<signup></signup>' }
 const Navbar = { template: '<navbar></navbar>' }
 const Homepage = { template: '<homepage></homepage>' }
 const Profile = { template: '<profile></profile>' }
@@ -16,19 +17,20 @@ const NewApartment = { template: '<new-apartment></new-apartment>' }
 
 const Test = { template: '<test></test>' }
 
-
 const routes = [
 	// { path: '/', component: FrontHomepage }, //stranica pre logina
 	{ path: '/login', component: Login },
+	{ path: '/signup', component: Signup },
 	{ path: '/homepage', component: Homepage },
 	{ path: '/profile', component: Profile },
 	{ path: '/patient/update', component: ProfileUpdate },
 	{ path: '/users', component: Users },
 	{ path: '/reservations', component: Reservations },
 	{ path: '/apartments', component: Apartments },
-	{ path: '/apartmentComments', component: ApartmentsComments }, //vrv treba /apartmentComments:idApartmana
+	{ path: '/apartmentComments/:id', component: ApartmentsComments }, //vrv treba /apartmentComments:idApartmana
+	{ path: '/apartmentComments', component: ApartmentsComments },
 	{ path: '/newReservation', component: NewReservation }, //vrv treba /apartmentComments:idApartmana
-	{ path: '/newComment', component: NewComment },
+	{ path: '/newComment/:id', component: NewComment },
 
 	{ path: '/amenitiesOverview', component: AmenitiesOverview },
 	{ path: '/amenitiesNew', component: NewAmenities },
@@ -40,6 +42,7 @@ const routes = [
 const router = new VueRouter({
 	routes
 });
+
 
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwt');
 

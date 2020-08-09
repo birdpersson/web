@@ -18,7 +18,7 @@ public class ReviewDAO {
 	public ReviewDAO() {}
 	
 	/***
-	 * @param contextPath Putanja do aplikacije u Tomcatu. Može se pristupiti samo iz servleta.
+	 * @param contextPath Putanja do aplikacije u Tomcatu. Moï¿½e se pristupiti samo iz servleta.
 	 */
 	//KlubManager(String fileName)
 	public ReviewDAO(String contextPath) {
@@ -52,23 +52,23 @@ public class ReviewDAO {
 	}	
 
 	public Review update(String id, Review updatedReview) {
-		
 		//We retrive host based on id we received as argument.
 		Review oldReview = findOne(id);
-		
 		//if there is not host with such id we save that product as new one.
 		if(oldReview == null) {
 			System.out.println("Usao u save host u okviru update");
 			return save(updatedReview);
 		}
+		
 		else {
 			System.out.println("usao u update product u okviru update");
+			
 			//We don't change id of existing review just text and username;
-			
 			oldReview.setText(updatedReview.getText());
-			oldReview.setStar(updatedReview.getStar());	
+			oldReview.setStar(updatedReview.getStar());
+			oldReview.setVisible(updatedReview.isVisible());
 			
-			//We save old product which is now updated.
+			//We save old review which is now updated.
 			return reviews.put(oldReview.getId(), oldReview);
 		}
 		
@@ -81,8 +81,6 @@ public class ReviewDAO {
 	}
 	
 
-	
-
 	private void loadReviews(String contextPath) {
 		BufferedReader in = null;
 		try {
@@ -93,7 +91,8 @@ public class ReviewDAO {
 			String guestId= "";
 			String apartmentId= "";
 			String text= "";
-			int star = -1;
+			int star = 0;
+			boolean visible = false;
 
 			StringTokenizer st;
 		
@@ -111,10 +110,11 @@ public class ReviewDAO {
 					apartmentId = st.nextToken().trim();
 					text = st.nextToken().trim();
 					star = Integer.parseInt(st.nextToken().trim());
+					visible = Boolean.parseBoolean(st.nextToken().trim());
 					
 				}
 				
-				reviews.put(id, new Review(id, guestId, apartmentId, text, star));
+				reviews.put(id, new Review(id, guestId, apartmentId, text, star, visible));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -145,12 +145,12 @@ public class ReviewDAO {
 	
 	public Collection<Review> findAllByApartmentId(String id) {
 		Collection<Review> reviews =  findAll();
-		Collection<Review> testRet = new ArrayList<Review>();
+		Collection<Review> retVal = new ArrayList<Review>();
 		for(Review r : reviews) {
 			if(r.getApartmentId().equals(id)) {
-				testRet.add(r);
+				retVal.add(r);
 			}
 		}
-		return testRet;
+		return retVal;
 	}	
 }
