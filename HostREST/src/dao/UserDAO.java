@@ -51,6 +51,7 @@ public class UserDAO {
 				+ user.getLastname() + ";"
 				+ user.getGender() + ";"
 				+ user.getRole().toString(); // UNSAFE!
+		System.out.println(line);
 		BufferedWriter writer = null;
 		try {
 			File file = new File(contextPath + "/users.txt");

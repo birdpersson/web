@@ -1,4 +1,5 @@
 const Login = { template: '<login></login>' }
+const Signup = { template: '<signup></signup>' }
 const Navbar = { template: '<navbar></navbar>' }
 const Homepage = { template: '<homepage></homepage>' }
 const Profile = { template: '<profile></profile>' }
@@ -16,10 +17,10 @@ const NewApartment = { template: '<new-apartment></new-apartment>' }
 
 const Test = { template: '<test></test>' }
 
-
 const routes = [
 	// { path: '/', component: FrontHomepage }, //stranica pre logina
 	{ path: '/login', component: Login },
+	{ path: '/signup', component: Signup },
 	{ path: '/homepage', component: Homepage },
 	{ path: '/profile', component: Profile },
 	{ path: '/patient/update', component: ProfileUpdate },
