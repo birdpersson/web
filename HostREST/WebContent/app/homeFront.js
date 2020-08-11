@@ -5,7 +5,7 @@ Vue.component('home-front', {
             <div class="container">
                 <div>
                 <h1>The best software solution in the field of apartment renting</h1>
-                <h5 >Whether you are a host who want to facilitate creation of ads for their apartments or someone who wants to quickly and easily schedule the desired place to stay... <span style="color: #e8491d;font-weight: bold;">ApartmentFinder</span> is aplication just for you!</h4>
+                <h5 >Whether you are a host who want to facilitate creation of ads for their apartments or someone who wants to quickly and easily schedule the desired place to stay <span style="color: #e8491d;font-weight: bold;">ApartmentFinder</span> is aplication just for you!</h5>
                 </div>
         </section>
 

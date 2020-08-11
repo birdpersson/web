@@ -33,7 +33,7 @@ Vue.component("login", {
 					</div>
 
 					<button type="button" class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" v-on:click='login(user)'>Sign in</button>
-					<router-link to='/registration' class="small" exact>Not Registered?</router-link>
+					<router-link to='/signup' class="small" exact>Not Registered?</router-link>
 				</form>
 				</div>
 			</div>

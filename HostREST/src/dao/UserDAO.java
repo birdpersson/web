@@ -46,10 +46,12 @@ public class UserDAO {
 
 	public User save(String contextPath, User user) {
 		String line = user.getUsername() + ";"
+				+ user.getPassword() + ";"
 				+ user.getFirstname() + ";"
 				+ user.getLastname() + ";"
 				+ user.getGender() + ";"
-				+ user.getRole(); // UNSAFE!
+				+ user.getRole().toString(); // UNSAFE!
+		System.out.println(line);
 		BufferedWriter writer = null;
 		try {
 			File file = new File(contextPath + "/users.txt");
@@ -70,6 +72,7 @@ public class UserDAO {
 				}
 			}
 		}
+		loadUsers(contextPath); 
 		return user;
 	}
 
