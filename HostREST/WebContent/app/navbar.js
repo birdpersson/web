@@ -11,7 +11,12 @@ Vue.component('navbar', {
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item active">
+
+                        <li class="nav-item active" v-if='!loggedIn'>
+                            <router-link to="/" class="nav-link" exact>Home</router-link>
+                        </li>
+
+                        <li class="nav-item active"  v-if='loggedIn'>
                             <router-link to="/homepage" class="nav-link" exact>Home</router-link>
                         </li>
 
