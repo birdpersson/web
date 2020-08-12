@@ -18,45 +18,50 @@ Vue.component("test", {
               <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
               <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
             </ol>
-            <div class="carousel-inner" role="listbox">
-              <!-- Slide One - Set the background image for this slide in the line below -->
-              <div class="carousel-item active" style="background-image: url('https://source.unsplash.com/RCAhiGJsUUE/1920x1080')">
+            <div class="carousel-inner"  role="listbox">
+              <!-- Slide One - Set the background image for this slide in the line below  "{background-image:  'url(' + getImgUrl() + ')}"--> 
+              <div class="carousel-item active"   :style="{'background-image': 'url(' + apartment.img[0] + ')'}">
                 <div class="carousel-caption d-none d-md-block">
-                  <h3 class="display-4">First Slide</h3>
-                  <p class="lead">This is a description for the first slide.</p>
+                  <!-- <h3 class="display-4">First Slide</h3> -->
+                  <!-- <p class="lead">This is a description for the first slide.</p> -->
                 </div>
               </div>
               <!-- Slide Two - Set the background image for this slide in the line below -->
-              <div class="carousel-item" style="background-image: url('https://source.unsplash.com/wfh8dDlNFOk/1920x1080')">
+              <div class="carousel-item" v-for="img in getOtherImgs" :style="{'background-image': 'url(' + img + ')'}">
                 <div class="carousel-caption d-none d-md-block">
                   <h3 class="display-4">Second Slide</h3>
                   <p class="lead">This is a description for the second slide.</p>
                 </div>
-              </div>
-              <!-- Slide Three - Set the background image for this slide in the line below -->
-              <div class="carousel-item" style="background-image: url('https://source.unsplash.com/O7fzqFEfLlo/1920x1080')">
-                <div class="carousel-caption d-none d-md-block">
-                  <h3 class="display-4">Third Slide</h3>
-                  <p class="lead">This is a description for the third slide.</p>
-                </div>
-              </div>
+              </div> 
+    
             </div>
-            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <a v-if='isOtherImgs' class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
                   <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                   <span class="sr-only">Previous</span>
                 </a>
-            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <a v-if='isOtherImgs' class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
                   <span class="carousel-control-next-icon" aria-hidden="true"></span>
                   <span class="sr-only">Next</span>
                 </a>
           </div>
         </header>
-        <div class="card-body">
-          <h3 class="card-title">{{apartment.type}}</h3>
-          <h3 class="card-title">{{apartment.location}}</h3>
-          <h4>Price: {{apartment.price}}</h4>
-          <h4>Rooms: {{apartment.rooms}}</h4>
-          <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente dicta fugit fugiat hic aliquam itaque facere, soluta. Totam id dolores, sint aperiam sequi pariatur praesentium animi perspiciatis molestias iure, ducimus!</p>
+        <div class="card-body" style="display: margin-left:10px;">
+          <h3 class="card-title">Type: 
+            <span style="font-size: 30px;">{{apartment.type}}</span >
+          </h3>
+      
+          <h3 class="card-title">Address:
+            <span style="font-size: 30px;">{{apartment.location.address}} <small class="text-muted">(longitude:{{apartment.location.longitude}} latitude:{{apartment.location.latitude}})</small></span >
+          </h3>
+
+          <h3 class="card-title">Price:
+            <span style="font-size: 30px;">{{apartment.price}}/ per day</span >
+          </h3>
+
+          <h3 class="card-title">Rooms:
+            <span style="font-size: 30px;">{{apartment.rooms}}</span >
+          </h3>
+          
         </div>
       </div>
       <!-- /.card -->
@@ -99,27 +104,26 @@ Vue.component("test", {
         <!-- /.row -->
       </div>
 
+      <h3 class="my-4">Reviews</h3>
       <div class="card card-outline-secondary my-4">
         <div class="card-header">
-          Product Reviews
+          Apartment Reviews
         </div>
-        <div class="card-body">
-          <span class="text-warning">&#9733; &#9733; &#9733; &#9733; &#9734;</span>
-          4.0 stars
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
-          <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+        <div class="card-body" v-for="review in apartment.reviews">
+          <div style="margin-bottom: 10px;" id='star-rating'>
+              <star-rating
+                  inactive-color="#35424a"
+                  active-color="#e8491d"
+                  v-bind:read-only= "true"
+                  v-bind:star-size="20"
+                  v-bind:show-rating="false"
+                  v-bind:rating="review.star">
+              </star-rating>
+          </div>
+          <p>{{review.text}}</p>
+          <small class="text-muted">Posted by {{review.guestId}}</small>
           <hr>
-          <span class="text-warning">&#9733; &#9733; &#9733; &#9733; &#9734;</span>
-          4.0 stars
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
-          <small class="text-muted">Posted by Anonymous on 3/1/17</small>
-          <hr>
-          <span class="text-warning">&#9733; &#9733; &#9733; &#9733; &#9734;</span>
-          4.0 stars
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
-          <small class="text-muted">Posted by Anonymous on 3/1/17</small>
-          <hr>
-          <a href="#" class="btn btn-success">Leave a Review</a>
+
         </div>
       </div>
       <!-- /.card -->
@@ -139,30 +143,180 @@ Vue.component("test", {
                 id: '1',
                 type: 'ceo apartman',
                 rooms: 4,
-                // img:`C:\\Users\\Maregenije\\Desktop\\TestSlike`,
-                location: 'Fiftieth street',
+                reviews:[
+                  {
+                    id:'1',
+                    guestId:'guesttt',
+                    apartmentId:'1',
+                    text:'Best ever! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.',
+                    star:5,
+                    visible:'true',
+                  },
+                  {
+                    id:'2',
+                    guestId:'NoobMaster69',
+                    apartmentId:'1',
+                    text:'Very good! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.',
+                    star:4,
+                    visible:'true',
+                  },
+                  {
+                    id:'3',
+                    guestId:'guest',
+                    apartmentId:'1',
+                    text:'Bad, very bad! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.',
+                    star:2,
+                    visible:'true',
+                  }
+                ],
+                img:['https://source.unsplash.com/RCAhiGJsUUE/1920x1080','https://source.unsplash.com/wfh8dDlNFOk/1920x1080','https://source.unsplash.com/O7fzqFEfLlo/1920x1080'],
+                // img:['https://source.unsplash.com/RCAhiGJsUUE/1920x1080'],
+                location:{
+                  id:'1',
+                  longitude:'12.256',
+                  latitude:'44.12',
+                  address:'Fiftieth street',
+                }, 
                 dates: '01.01.2020',
                 availability: true,
                 price: 250,
                 status: 'aktivno',
-                amenities:['frizider','parking'],
+                amenities:[
+                  {
+                    id:'1',
+                    name:'Wifi',
+                    type:'Base',
+                  },
+                  {
+                    id:'2',
+                    name:'Laptop friendly workspace',
+                    type:'Base',
+                  },
+                  {
+                    id:'3',
+                    name:'Cable TV',
+                    type:'Base',
+                  },
+                  {
+                    id:'4',
+                    name:'Washer',
+                    type:'Base',
+                  },
+                  {
+                    id:'5',
+                    name:'Air conditioning',
+                    type:'Base',
+                  },
+                  {
+                    id:'6',
+                    name:'TV',
+                    type:'Base',
+                  },
+
+                  {
+                    id:'7',
+                    name:'Crib',
+                    type:'Family',
+                  },
+                  {
+                    id:'8',
+                    name:'High chair',
+                    type:'Family',
+                  },
+                  {
+                    id:'9',
+                    name:"Pack'n Play",
+                    type:'Family',
+                  },
+                  {
+                    id:'10',
+                    name:'Room-darkening shades',
+                    type:'Family',
+                  },
+
+                  {
+                    id:'11',
+                    name:'Elevator',
+                    type:'Facilities',
+                  },
+                  {
+                    id:'12',
+                    name:'Paid parking off premises',
+                    type:'Facilities',
+                  },
+                  {
+                    id:'13',
+                    name:'Single level home',
+                    type:'Facilities',
+                  },
+                  {
+                    id:'14',
+                    name:'Free street parking',
+                    type:'Facilities',
+                  },
+
+                  {
+                    id:'15',
+                    name:'Kitchen',
+                    type:'Dining',
+                  },
+                  {
+                    id:'16',
+                    name:'Coffee maker',
+                    type:'Dining',
+                  },
+                  {
+                    id:'17',
+                    name:'Cooking basics',
+                    type:'Dining',
+                  },
+                  {
+                    id:'18',
+                    name:'Refrigerator',
+                    type:'Dining',
+                  },
+
+                ],
             },
             amenities:{
-                base:['base1','base2','base3','base4','base5','base6'],
-                family:[' family1','family2','family3','family4','family5','family6'],
-                dining:[' dining1','dining2','dining3','dining4','dining5','dining6'],
-                fac:[' fac1','fac2','fac3','fac4','fac5','fac6'],
-            }
+                base:[],
+                family:[],
+                dining:[],
+                fac:[],
+            },
+            isOtherImgs: true,
         }
     },
     methods: {
-    
+      
     },
     computed: {
-     
+      getOtherImgs:function(){
+        //Prva slika mora da se manuelno postavi, a ostale se dodaju preko v-for:
+        imgs = this.apartment.img.slice(1);
+        //Ako ima samo jednu sliku onda se sklanjaju strelice < > za kretanje kroz slike. 
+        if(imgs.length === 0){
+          this.isOtherImgs = false;
+        }
+        return imgs;
+      }
     },
-    created(){
-        // alert(this.img);
+    mounted(){
+
+      for(let i = 0; i< this.apartment.amenities.length; i++){
+        if(this.apartment.amenities[i].type === 'Base'){
+          this.amenities.base.push(this.apartment.amenities[i].name);
+        }
+        else if(this.apartment.amenities[i].type === 'Family' ){
+          this.amenities.family.push(this.apartment.amenities[i].name);
+        }
+        else if(this.apartment.amenities[i].type === 'Dining'){
+          this.amenities.dining.push(this.apartment.amenities[i].name);
+        }
+        else if(this.apartment.amenities[i].type === 'Facilities'){
+          this.amenities.fac.push(this.apartment.amenities[i].name);
+        }
+      }
     }
 })
 
