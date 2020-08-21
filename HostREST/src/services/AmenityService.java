@@ -29,9 +29,9 @@ public class AmenityService {
 
 	@PostConstruct
 	public void init() {
-		if (ctx.getAttribute("amenitieDAO") == null) {
+		if (ctx.getAttribute("amenityDAO") == null) {
 			String contextPath = ctx.getRealPath("");
-			ctx.setAttribute("amenitieDAO", new AmenityDAO(contextPath));
+			ctx.setAttribute("amenityDAO", new AmenityDAO(contextPath));
 		}
 		if (ctx.getAttribute("userDAO") == null) {
 			String contextPath = ctx.getRealPath("");
@@ -45,10 +45,10 @@ public class AmenityService {
 	public Response getAllAdmins(@Context HttpServletRequest request) {
 		String username = AuthService.getUsername(request);
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-		AmenityDAO daoAmenitie = (AmenityDAO) ctx.getAttribute("amenitieDAO");
+		AmenityDAO daoAmenity = (AmenityDAO) ctx.getAttribute("amenityDAO");
 
 		if (userDao.findOne(username).getRole().toString().equals("ADMIN")) {
-			return Response.status(Response.Status.OK).entity(daoAmenitie.findAll()).build();
+			return Response.status(Response.Status.OK).entity(daoAmenity.findAll()).build();
 		}
 		return Response.status(Response.Status.FORBIDDEN).build();
 	}
@@ -56,9 +56,9 @@ public class AmenityService {
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Amenity getAmenitie(@PathParam("id") String id) {
-		AmenityDAO daoAmenitie = (AmenityDAO) ctx.getAttribute("amenitieDAO");
-		return daoAmenitie.findOne(id);
+	public Amenity getAmenity(@PathParam("id") String id) {
+		AmenityDAO daoAmenity = (AmenityDAO) ctx.getAttribute("amenityDAO");
+		return daoAmenity.findOne(id);
 	}
 
 	// serverska metoda za dodavanje novog sadrzaja
@@ -66,13 +66,13 @@ public class AmenityService {
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response setAdmin(@Context HttpServletRequest request, Amenity amenitie) {
+	public Response setAdmin(@Context HttpServletRequest request, Amenity amenity) {
 		String username = AuthService.getUsername(request);
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-		AmenityDAO dao = (AmenityDAO) ctx.getAttribute("amenitieDAO");
+		AmenityDAO dao = (AmenityDAO) ctx.getAttribute("amenityDAO");
 
 		if (userDao.findOne(username).getRole().toString().equals("ADMIN")) {
-			return Response.status(Response.Status.OK).entity(dao.save(amenitie)).build();
+			return Response.status(Response.Status.OK).entity(dao.save(amenity)).build();
 		}
 		return Response.status(Response.Status.FORBIDDEN).build();
 
@@ -83,13 +83,13 @@ public class AmenityService {
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateAmenitie(@Context HttpServletRequest request, @PathParam("id") String id, Amenity amenitie) {
+	public Response updateAmenity(@Context HttpServletRequest request, @PathParam("id") String id, Amenity amenity) {
 		String username = AuthService.getUsername(request);
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-		AmenityDAO dao = (AmenityDAO) ctx.getAttribute("amenitieDAO");
+		AmenityDAO dao = (AmenityDAO) ctx.getAttribute("amenityDAO");
 
 		if (userDao.findOne(username).getRole().toString().equals("ADMIN")) {
-			return Response.status(Response.Status.OK).entity(dao.update(id, amenitie)).build();
+			return Response.status(Response.Status.OK).entity(dao.update(id, amenity)).build();
 		}
 		return Response.status(Response.Status.FORBIDDEN).build();
 	}
@@ -98,7 +98,7 @@ public class AmenityService {
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Amenity deleteHost(@PathParam("id") String id) {
-		AmenityDAO dao = (AmenityDAO) ctx.getAttribute("amenitieDAO");
+		AmenityDAO dao = (AmenityDAO) ctx.getAttribute("amenityDAO");
 		return dao.delete(id);
 	}
 
@@ -107,7 +107,7 @@ public class AmenityService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Amenity addToApartment(@PathParam("id") String id, @PathParam("apartId") String aprtId) {
-		AmenityDAO dao = (AmenityDAO) ctx.getAttribute("amenitieDAO");
+		AmenityDAO dao = (AmenityDAO) ctx.getAttribute("amenityDAO");
 		return dao.addToApartmen(id, aprtId);
 	}
 

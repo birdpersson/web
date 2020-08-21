@@ -21,64 +21,55 @@ import dao.LocationDAO;
 import dao.ReservationDAO;
 import dao.ReviewDAO;
 
-
 @Path("/apartments")
-public class ApartmentService  {
+public class ApartmentService {
 	@Context
 	ServletContext ctx;
-	
-	public ApartmentService() {}
-	
+
+	public ApartmentService() {
+	}
+
 	@PostConstruct
-	// ctx polje je null u konstruktoru, mora se pozvati nakon konstruktora (@PostConstruct anotacija)
 	public void init() {
-		// Ovaj objekat se instancira vi�e puta u toku rada aplikacije
-		// Inicijalizacija treba da se obavi samo jednom
 		if (ctx.getAttribute("apartmentDAO") == null) {
-	    	String contextPath = ctx.getRealPath("");
+			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("apartmentDAO", new ApartmentDAO(contextPath));
 		}
-		
 		if (ctx.getAttribute("locationDAO") == null) {
-	    	String contextPath = ctx.getRealPath("");
+			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("locationDAO", new LocationDAO(contextPath));
 		}
-		
 		if (ctx.getAttribute("reviewDAO") == null) {
-	    	String contextPath = ctx.getRealPath("");
+			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("reviewDAO", new ReviewDAO(contextPath));
 		}
-		
 		if (ctx.getAttribute("reservationDAO") == null) {
-	    	String contextPath = ctx.getRealPath("");
+			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("reservationDAO", new ReservationDAO(contextPath));
 		}
-		
-		if (ctx.getAttribute("amenitieDAO") == null) {
-	    	String contextPath = ctx.getRealPath("");
-			ctx.setAttribute("amenitieDAO", new AmenityDAO(contextPath));
+		if (ctx.getAttribute("amenityDAO") == null) {
+			String contextPath = ctx.getRealPath("");
+			ctx.setAttribute("amenityDAO", new AmenityDAO(contextPath));
 		}
 	}
-	
-	
-	//serverska metoda za vracanje svih produkata
-		@GET
-		@Path("/")
-		@Produces(MediaType.APPLICATION_JSON)
-		public Collection<Apartment> getApartments() {
-			ApartmentDAO daoApartment = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
-			ReviewDAO daoReview = (ReviewDAO) ctx.getAttribute("reviewDAO");
-			ReservationDAO daoReser = (ReservationDAO) ctx.getAttribute("reservationDAO");
-			LocationDAO daoLoc = (LocationDAO) ctx.getAttribute("locationDAO");
-			AmenityDAO daoAmen = (AmenityDAO) ctx.getAttribute("amenitieDAO");
-			Collection<Apartment> retApartment = daoApartment.findAll();
-			
-			for(Apartment a : retApartment) {
-				a.setReviews((ArrayList<Review>) daoReview.findAllByApartmentId(a.getId()));
-				a.setReservations((ArrayList<Reservation>) daoReser.findAllByApartmentId(a.getId()));
-				a.setLocation(daoLoc.findLocatByApartId(a.getId()));
-				a.setAmenities((ArrayList<Amenity>) daoAmen.findAllByApartmentId(a.getId()));
-			}
-			return retApartment;
+
+	@GET
+	@Path("/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Apartment> getApartments() {
+		ApartmentDAO daoApartment = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+		ReviewDAO daoReview = (ReviewDAO) ctx.getAttribute("reviewDAO");
+		ReservationDAO daoReser = (ReservationDAO) ctx.getAttribute("reservationDAO");
+		LocationDAO daoLoc = (LocationDAO) ctx.getAttribute("locationDAO");
+		AmenityDAO daoAmen = (AmenityDAO) ctx.getAttribute("amenitieDAO");
+		Collection<Apartment> retApartment = daoApartment.findAll();
+
+		for (Apartment a : retApartment) {
+			a.setReviews((ArrayList<Review>) daoReview.findAllByApartmentId(a.getId()));
+			a.setReservations((ArrayList<Reservation>) daoReser.findAllByApartmentId(a.getId()));
+			a.setLocation(daoLoc.findLocatByApartId(a.getId()));
+			a.setAmenities((ArrayList<Amenity>) daoAmen.findAllByApartmentId(a.getId()));
 		}
+		return retApartment;
+	}
 }
