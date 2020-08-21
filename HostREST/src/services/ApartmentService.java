@@ -11,11 +11,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import beans.Amenitie;
+import beans.Amenity;
 import beans.Apartment;
 import beans.Reservation;
 import beans.Review;
-import dao.AmenitieDAO;
+import dao.AmenityDAO;
 import dao.ApartmentDAO;
 import dao.LocationDAO;
 import dao.ReservationDAO;
@@ -23,11 +23,11 @@ import dao.ReviewDAO;
 
 
 @Path("/apartments")
-public class ApartmentServices  {
+public class ApartmentService  {
 	@Context
 	ServletContext ctx;
 	
-	public ApartmentServices() {}
+	public ApartmentService() {}
 	
 	@PostConstruct
 	// ctx polje je null u konstruktoru, mora se pozvati nakon konstruktora (@PostConstruct anotacija)
@@ -56,7 +56,7 @@ public class ApartmentServices  {
 		
 		if (ctx.getAttribute("amenitieDAO") == null) {
 	    	String contextPath = ctx.getRealPath("");
-			ctx.setAttribute("amenitieDAO", new AmenitieDAO(contextPath));
+			ctx.setAttribute("amenitieDAO", new AmenityDAO(contextPath));
 		}
 	}
 	
@@ -70,14 +70,14 @@ public class ApartmentServices  {
 			ReviewDAO daoReview = (ReviewDAO) ctx.getAttribute("reviewDAO");
 			ReservationDAO daoReser = (ReservationDAO) ctx.getAttribute("reservationDAO");
 			LocationDAO daoLoc = (LocationDAO) ctx.getAttribute("locationDAO");
-			AmenitieDAO daoAmen = (AmenitieDAO) ctx.getAttribute("amenitieDAO");
+			AmenityDAO daoAmen = (AmenityDAO) ctx.getAttribute("amenitieDAO");
 			Collection<Apartment> retApartment = daoApartment.findAll();
 			
 			for(Apartment a : retApartment) {
 				a.setReviews((ArrayList<Review>) daoReview.findAllByApartmentId(a.getId()));
 				a.setReservations((ArrayList<Reservation>) daoReser.findAllByApartmentId(a.getId()));
 				a.setLocation(daoLoc.findLocatByApartId(a.getId()));
-				a.setAmenities((ArrayList<Amenitie>) daoAmen.findAllByApartmentId(a.getId()));
+				a.setAmenities((ArrayList<Amenity>) daoAmen.findAllByApartmentId(a.getId()));
 			}
 			return retApartment;
 		}

@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
 import javax.servlet.ServletContext;
 import javax.ws.rs.core.Context;
 
-import beans.Amenitie;
+import beans.Amenity;
 import beans.Apartment;
 import beans.Location;
 import beans.Reservation;
@@ -29,7 +29,7 @@ public class ApartmentDAO {
 	private HashMap<String, Apartment> apartments = new HashMap<String, Apartment>();
 	
 	/***
-	 * @param contextPath Putanja do aplikacije u Tomcatu. Može se pristupiti samo iz servleta.
+	 * @param contextPath Putanja do aplikacije u Tomcatu. Moï¿½e se pristupiti samo iz servleta.
 	 */
 	public ApartmentDAO(String contextPath) {
 		loadApartments(contextPath);
@@ -51,8 +51,8 @@ public class ApartmentDAO {
 	}
 	
 	/**
-	 * Uèitava korisnike iz WebContent/users.txt fajla i dodaje ih u mapu {@link #products}.
-	 * Kljuè je id proizovda.
+	 * Uï¿½itava korisnike iz WebContent/users.txt fajla i dodaje ih u mapu {@link #products}.
+	 * Kljuï¿½ je id proizovda.
 	 * @param contextPath Putanja do aplikacije u Tomcatu
 	 */
 	private void loadApartments(String contextPath) {
@@ -77,7 +77,7 @@ public class ApartmentDAO {
 			String checkin = "";
 			String checkout = "";
 			boolean status = false;
-			ArrayList<Amenitie>  amenities = new ArrayList<Amenitie>();
+			ArrayList<Amenity>  amenities = new ArrayList<Amenity>();
 			ArrayList<Reservation> reservations = new ArrayList<Reservation>();
 			
 			StringTokenizer st;
