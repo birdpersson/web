@@ -5,30 +5,32 @@ import java.util.Date;
 
 public class Apartment {
 
+	public enum Type {
+		APARTMENT, ROOM
+	}
+
 	private String id;
-	private String hostId;	//ovo se ne menja jer je vlasnik isti;
-	private String guestId; //ovo se menja sa promenom gosta;
+	private String hostId; // ovo se ne menja jer je vlasnik isti;
+	private String guestId; // ovo se menja sa promenom gosta;
 	private Type type;
 	private int rooms;
 	private int guests;
 	private Location location;
 	private ArrayList<Date> dates;
 	private ArrayList<Date> availability;
-//	private Host host;
+	private String host;
 	private ArrayList<Review> reviews;
 	private ArrayList<String> images;
 	private int price;
 	private String checkin;
 	private String checkout;
-	private boolean status;
+	private boolean available;
 	private ArrayList<Amenity> amenities;
 	private ArrayList<Reservation> reservations;
-	
 
 	public Apartment() {
 		super();
 	}
-	
 
 	public Apartment(String id, String hostId, String guestId, Type type, Location location, ArrayList<Review> reviews,
 			ArrayList<Amenity> amenities, ArrayList<Reservation> reservations) {
@@ -74,7 +76,6 @@ public class Apartment {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
 
 	public String getHostId() {
 		return hostId;
@@ -140,13 +141,13 @@ public class Apartment {
 		this.availability = availability;
 	}
 
-//	public Host getHost() {
-//		return host;
-//	}
-//
-//	public void setHost(Host host) {
-//		this.host = host;
-//	}
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
 
 	public ArrayList<Review> getReviews() {
 		return reviews;
@@ -188,12 +189,12 @@ public class Apartment {
 		this.checkout = checkout;
 	}
 
-	public boolean isStatus() {
-		return status;
+	public boolean isAvailable() {
+		return available;
 	}
 
-	public void setStatus(boolean status) {
-		this.status = status;
+	public void setAvailablie(boolean available) {
+		this.available = available;
 	}
 
 	public ArrayList<Amenity> getAmenities() {

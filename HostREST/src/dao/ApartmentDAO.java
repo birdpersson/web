@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import javax.servlet.ServletContext;
@@ -17,44 +18,37 @@ import beans.Apartment;
 import beans.Location;
 import beans.Reservation;
 import beans.Review;
-import beans.Type;
 
 //import beans.Apartment.Type;
 
 public class ApartmentDAO {
-	
+
 	@Context
 	ServletContext ctx;
 
-	private HashMap<String, Apartment> apartments = new HashMap<String, Apartment>();
-	
-	/***
-	 * @param contextPath Putanja do aplikacije u Tomcatu. Mo�e se pristupiti samo iz servleta.
-	 */
+	private Map<String, Apartment> apartments = new HashMap<>();
+
+	public ApartmentDAO() {
+		super();
+	}
+
 	public ApartmentDAO(String contextPath) {
 		loadApartments(contextPath);
 	}
-	/***
-	 * Vraca sve apartmane.
-	 * @return
-	 */
+
 	public Collection<Apartment> findAll() {
 		return apartments.values();
 	}
-	
-	/***
-	 *  Vraca stan na osnovu njegovog id-a. 
-	 *  @return Stan sa id-em ako postoji, u suprotnom null
-	 */
+
 	public Apartment findOne(String id) {
 		return apartments.containsKey(id) ? apartments.get(id) : null;
 	}
-	
-	/**
-	 * U�itava korisnike iz WebContent/users.txt fajla i dodaje ih u mapu {@link #products}.
-	 * Klju� je id proizovda.
-	 * @param contextPath Putanja do aplikacije u Tomcatu
-	 */
+
+	public Apartment save(String contextPath, Apartment apartment) {
+
+		return apartment;
+	}
+
 	private void loadApartments(String contextPath) {
 		BufferedReader in = null;
 		try {
@@ -64,7 +58,7 @@ public class ApartmentDAO {
 			String line, id = "";
 			String hostId = "";
 			String guestId = "";
-			Type type = null; 
+			Apartment.Type type = null;
 			int rooms = -1;
 			int guests = -1;
 			Location location = new Location();
@@ -77,9 +71,9 @@ public class ApartmentDAO {
 			String checkin = "";
 			String checkout = "";
 			boolean status = false;
-			ArrayList<Amenity>  amenities = new ArrayList<Amenity>();
+			ArrayList<Amenity> amenities = new ArrayList<Amenity>();
 			ArrayList<Reservation> reservations = new ArrayList<Reservation>();
-			
+
 			StringTokenizer st;
 			while ((line = in.readLine()) != null) {
 				line = line.trim();
@@ -88,9 +82,9 @@ public class ApartmentDAO {
 				st = new StringTokenizer(line, ";");
 				while (st.hasMoreTokens()) {
 					id = st.nextToken().trim();
-					hostId =  st.nextToken().trim();
+					hostId = st.nextToken().trim();
 					guestId = st.nextToken().trim();
-					type = Type.valueOf(st.nextToken().trim());
+					type = Apartment.Type.valueOf(st.nextToken().trim());
 					System.out.println("Type is: " + type);
 //					rooms =   Integer.parseInt(st.nextToken().trim());
 //					guests =  Integer.parseInt(st.nextToken().trim());
@@ -101,50 +95,53 @@ public class ApartmentDAO {
 //					checkin = st.nextToken().trim();
 //					checkout = st.nextToken().trim();
 //					status =  Boolean.parseBoolean(st.nextToken().trim());
-					
+
 					location = null;
 					reviews = null;
 					amenities = null;
 					reservations = null;
 //					host = null;
-					
+
 				}
-				apartments.put(id,new Apartment(id, hostId, guestId, type,/* rooms, guests,*/ location,/* dates,
-						 availability, host,*/ reviews,/* images, price,
-						checkin, checkout, status,*/ amenities, reservations));
+				apartments.put(id, new Apartment(id, hostId, guestId, type, /* rooms, guests, */ location,
+						/*
+						 * dates, availability, host,
+						 */ reviews, /*
+										 * images, price, checkin, checkout, status,
+										 */ amenities, reservations));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if ( in != null ) {
+			if (in != null) {
 				try {
 					in.close();
+				} catch (Exception e) {
 				}
-				catch (Exception e) { }
 			}
 		}
 	}
-	
-	
+
 	public Collection<Apartment> findAllApartByHostId(String id) {
-		Collection<Apartment> allApartments =  findAll();
+		Collection<Apartment> allApartments = findAll();
 		Collection<Apartment> testApart = new ArrayList<Apartment>();
-		for(Apartment a : allApartments) {
-			if(a.getHostId().equals(id)) {
+		for (Apartment a : allApartments) {
+			if (a.getHostId().equals(id)) {
 				testApart.add(a);
 			}
 		}
 		return testApart;
 	}
+
 	public Collection<Apartment> findAllApartByGuestId(String id) {
-		Collection<Apartment> allApartments =  findAll();
+		Collection<Apartment> allApartments = findAll();
 		Collection<Apartment> testApart = new ArrayList<Apartment>();
-		for(Apartment a : allApartments) {
-			if(a.getGuestId().equals(id)) {
+		for (Apartment a : allApartments) {
+			if (a.getGuestId().equals(id)) {
 				testApart.add(a);
 			}
 		}
 		return testApart;
 	}
-	
+
 }

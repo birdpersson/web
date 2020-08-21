@@ -7,7 +7,7 @@ import beans.Reservation.Status;
 public class ReservationDTO {
 	private String id;
 	private String apartmentId;
-	private Type type;
+	private Apartment.Type type;
 	private String address; //from location
 	private String guestId;
 	private Date date;
@@ -21,7 +21,7 @@ public class ReservationDTO {
 		super();
 	}
 	
-	public ReservationDTO(String id, String apartmentId, Type type, String address, String guestId, Date date,
+	public ReservationDTO(String id, String apartmentId, Apartment.Type type, String address, String guestId, Date date,
 			int night, int price, String confirmation, String message, Status status) {
 		super();
 		this.id = id;
@@ -53,10 +53,10 @@ public class ReservationDTO {
 	}
 	
 	
-	public Type getType() {
+	public Apartment.Type getType() {
 		return type;
 	}
-	public void setType(Type type) {
+	public void setType(Apartment.Type type) {
 		this.type = type;
 	}
 	
