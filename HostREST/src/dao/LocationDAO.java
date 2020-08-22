@@ -132,12 +132,11 @@ private HashMap<String, Location> locations = new HashMap<String, Location>();
 					String longitude = st.nextToken().trim();
 
 					String street = st.nextToken().trim();
-					String number = st.nextToken().trim();
 					String city = st.nextToken().trim();
 					String postalCode = st.nextToken().trim();
 					
 					locations.put(id, new Location(id, latitude, longitude,
-							new Address(street, number, city, postalCode)));					
+							new Address(street, city, postalCode)));					
 				}
 			}
 		} catch (Exception e) {

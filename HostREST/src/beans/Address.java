@@ -3,14 +3,12 @@ package beans;
 public class Address {
 
 	private String street;
-	private String number;
 	private String city;
 	private String postalCode;
 
-	public Address(String street, String number, String city, String postalCode) {
+	public Address(String street, String city, String postalCode) {
 		super();
 		this.street = street;
-		this.number = number;
 		this.city = city;
 		this.postalCode = postalCode;
 	}
@@ -21,14 +19,6 @@ public class Address {
 
 	public void setStreet(String street) {
 		this.street = street;
-	}
-
-	public String getNumber() {
-		return number;
-	}
-
-	public void setNumber(String number) {
-		this.number = number;
 	}
 
 	public String getCity() {

@@ -1,3 +1,3 @@
-1;1;45.02512;27.1235;Neznanog i znanog heroja bb;
-2;2;45.02512;18.1235;30 Februara 25;
-3;3;49.02512;34.1235;9. Marta 28;
+1;45.02512;27.1235;Neznanog i znanog heroja bb;Novi Sad;21000
+2;45.02512;18.1235;30 Februara 25;Novi Sad;21000
+3;49.02512;34.1235;9. Marta 28;Novi Sad;21000
