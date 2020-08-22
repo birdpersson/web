@@ -3,11 +3,11 @@ package dao;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
+import beans.Address;
 import beans.Location;
 
 
@@ -18,7 +18,7 @@ private HashMap<String, Location> locations = new HashMap<String, Location>();
 	public LocationDAO() {}
 	
 	/***
-	 * @param contextPath Putanja do aplikacije u Tomcatu. Može se pristupiti samo iz servleta.
+	 * @param contextPath Putanja do aplikacije u Tomcatu. Moï¿½e se pristupiti samo iz servleta.
 	 */
 	public LocationDAO(String contextPath) {
 		loadLocations(contextPath);
@@ -78,7 +78,7 @@ private HashMap<String, Location> locations = new HashMap<String, Location>();
 			System.out.println("usao u update product u okviru update");
 			//We don't change id of existing host just username, password, firstname and lastname.
 			
-			oldLocation.setApartmentId(updatedLocation.getApartmentId());
+//			oldLocation.setApartmentId(updatedLocation.getApartmentId());
 			oldLocation.setLongitude(updatedLocation.getLongitude());
 			oldLocation.setLatitude(updatedLocation.getLatitude());
 			oldLocation.setAddress(updatedLocation.getAddress());
@@ -104,34 +104,22 @@ private HashMap<String, Location> locations = new HashMap<String, Location>();
 	 * @return lokaciju sa koja sadrzi id stana u protivnom null
 	 * @param id stana ciju lokaciju prosledjujemo
 	 */
-	public Location findLocatByApartId(String id) {
-		Collection<Location> allLocations =  findAll();
-		for(Location l : allLocations) {
-			if(l.getApartmentId().equals(id)) {
-				return l;
-			}
-		}
-		return null;
-	}
+//	public Location findLocatByApartId(String id) {
+//		Collection<Location> allLocations =  findAll();
+//		for(Location l : allLocations) {
+//			if(l.getApartmentId().equals(id)) {
+//				return l;
+//			}
+//		}
+//		return null;
+//	}
 	
-	
-	/**
-	 * Ucitava korisnike iz WebContent/users.txt fajla i dodaje ih u mapu {@link #hosts}.
-	 * Kljuc je id proizovda.
-	 * @param contextPath Putanja do aplikacije u Tomcatu
-	 */
 	private void loadLocations(String contextPath) {
 		BufferedReader in = null;
 		try {
 			File file = new File(contextPath + "/locations.txt");
-			System.out.println(file.getCanonicalPath());
 			in = new BufferedReader(new FileReader(file));
-			String line, id = "";
-			String apartmentId = "";
-			double longitude = 0;
-			double latitude = 0;
-			String address = "";	
-			
+			String line;
 			StringTokenizer st;
 			while ((line = in.readLine()) != null) {
 				line = line.trim();
@@ -139,14 +127,18 @@ private HashMap<String, Location> locations = new HashMap<String, Location>();
 					continue;
 				st = new StringTokenizer(line, ";");
 				while (st.hasMoreTokens()) {
-					id = st.nextToken().trim();
-					apartmentId = st.nextToken().trim();
-					longitude = Double.parseDouble(st.nextToken().trim());
-					latitude = Double.parseDouble(st.nextToken().trim());;
-					address =  st.nextToken().trim();
+					String id = st.nextToken().trim();
+					String latitude = st.nextToken().trim();
+					String longitude = st.nextToken().trim();
+
+					String street = st.nextToken().trim();
+					String number = st.nextToken().trim();
+					String city = st.nextToken().trim();
+					String postalCode = st.nextToken().trim();
 					
+					locations.put(id, new Location(id, latitude, longitude,
+							new Address(street, number, city, postalCode)));					
 				}
-				locations.put(id, new Location(id, apartmentId, longitude, latitude, address));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -158,6 +150,6 @@ private HashMap<String, Location> locations = new HashMap<String, Location>();
 				catch (Exception e) { }
 			}
 		}
-		
 	}
+
 }
