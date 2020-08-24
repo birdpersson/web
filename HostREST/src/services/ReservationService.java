@@ -169,7 +169,7 @@ public class ReservationService {
 			//Provera da li je rola usera Host
 			if(role == "HOST") {
 				//Provera da li stan pripada tom hostu koji je ulogovan.
-				if(!apartm.getHostId().equals(username)) {
+				if(!apartm.getHost().equals(username)) {
 					continue;
 				}
 			}

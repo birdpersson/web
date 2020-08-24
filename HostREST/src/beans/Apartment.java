@@ -10,8 +10,6 @@ public class Apartment {
 	}
 
 	private String id;
-	private String hostId; // ovo se ne menja jer je vlasnik isti;
-	private String guestId; // ovo se menja sa promenom gosta;
 	private Type type;
 	private int rooms;
 	private int guests;
@@ -24,50 +22,24 @@ public class Apartment {
 	private int price;
 	private String checkin;
 	private String checkout;
-	private boolean available;
+	private boolean active;
 	private ArrayList<Amenity> amenities;
 	private ArrayList<Reservation> reservations;
 
-	public Apartment() {
-		super();
-	}
-
-	public Apartment(String id, String hostId, String guestId, Type type, Location location, ArrayList<Review> reviews,
-			ArrayList<Amenity> amenities, ArrayList<Reservation> reservations) {
+	public Apartment(String id, Type type, int rooms, int guests, Location location, String host, int price,
+			String checkin, String checkout, boolean active) {
 		super();
 		this.id = id;
-		this.hostId = hostId;
-		this.guestId = guestId;
 		this.type = type;
+		this.rooms = rooms;
+		this.guests = guests;
 		this.location = location;
-		this.reviews = reviews;
-		this.amenities = amenities;
-		this.reservations = reservations;
+		this.host = host;
+		this.price = price;
+		this.checkin = checkin;
+		this.checkout = checkout;
+		this.active = active;
 	}
-
-//	public Apartment(String id, String hostId, String guestId, /* Type type,*/ int rooms, int guests, Location location, ArrayList<Date> dates,
-//			ArrayList<Date> availability,/* Host host,*/ ArrayList<Review> reviews, ArrayList<String> images, int price,
-//			String checkin, String checkout, boolean status, ArrayList<Amenities> amenities, ArrayList<Reservation> reservations) {
-//		super();
-//		this.id = id;
-//		this.hostId = hostId;
-//		this.guestId = guestId;
-//		//this.type = type;
-//		this.rooms = rooms;
-//		this.guests = guests;
-//		this.location = location;
-//		this.dates = dates;
-//		this.availability = availability;
-////		this.host = host;
-//		this.reviews = reviews;
-//		this.images = images;
-//		this.price = price;
-//		this.checkin = checkin;
-//		this.checkout = checkout;
-//		this.status = status;
-//		this.amenities = amenities;
-//		this.reservations = reservations;
-//	}
 
 	public String getId() {
 		return id;
@@ -75,22 +47,6 @@ public class Apartment {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getHostId() {
-		return hostId;
-	}
-
-	public void setHostId(String hostId) {
-		this.hostId = hostId;
-	}
-
-	public String getGuestId() {
-		return guestId;
-	}
-
-	public void setGuestId(String guestId) {
-		this.guestId = guestId;
 	}
 
 	public Type getType() {
@@ -189,12 +145,12 @@ public class Apartment {
 		this.checkout = checkout;
 	}
 
-	public boolean isAvailable() {
-		return available;
+	public boolean isActive() {
+		return active;
 	}
 
-	public void setAvailablie(boolean available) {
-		this.available = available;
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	public ArrayList<Amenity> getAmenities() {

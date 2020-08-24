@@ -73,12 +73,12 @@ public class ApartmentService {
 		AmenityDAO daoAmen = (AmenityDAO) ctx.getAttribute("amenityDAO");
 		Collection<Apartment> retApartment = daoApartment.findAll();
 
-		for (Apartment a : retApartment) {
-			a.setReviews((ArrayList<Review>) daoReview.findAllByApartmentId(a.getId()));
-			a.setReservations((ArrayList<Reservation>) daoReser.findAllByApartmentId(a.getId()));
+//		for (Apartment a : retApartment) {
+//			a.setReviews((ArrayList<Review>) daoReview.findAllByApartmentId(a.getId()));
+//			a.setReservations((ArrayList<Reservation>) daoReser.findAllByApartmentId(a.getId()));
 //			a.setLocation(daoLoc.findLocatByApartId(a.getId()));
-			a.setAmenities((ArrayList<Amenity>) daoAmen.findAllByApartmentId(a.getId()));
-		}
+//			a.setAmenities((ArrayList<Amenity>) daoAmen.findAllByApartmentId(a.getId()));
+//		}
 		return retApartment;
 	}
 

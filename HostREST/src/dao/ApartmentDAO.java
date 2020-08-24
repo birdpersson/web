@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -13,11 +12,8 @@ import java.util.StringTokenizer;
 import javax.servlet.ServletContext;
 import javax.ws.rs.core.Context;
 
-import beans.Amenity;
 import beans.Apartment;
 import beans.Location;
-import beans.Reservation;
-import beans.Review;
 
 //import beans.Apartment.Type;
 
@@ -27,6 +23,7 @@ public class ApartmentDAO {
 	ServletContext ctx;
 
 	private Map<String, Apartment> apartments = new HashMap<>();
+	private LocationDAO locationDAO;
 
 	public ApartmentDAO() {
 		super();
@@ -53,27 +50,8 @@ public class ApartmentDAO {
 		BufferedReader in = null;
 		try {
 			File file = new File(contextPath + "/apartments.txt");
-			System.out.println(file.getCanonicalPath());
 			in = new BufferedReader(new FileReader(file));
-			String line, id = "";
-			String hostId = "";
-			String guestId = "";
-			Apartment.Type type = null;
-			int rooms = -1;
-			int guests = -1;
-			Location location = new Location();
-			ArrayList<Date> dates = new ArrayList<Date>();
-			ArrayList<Date> availability = new ArrayList<Date>();
-//			Host host ;
-			ArrayList<Review> reviews = new ArrayList<Review>();
-			ArrayList<String> images = new ArrayList<String>();
-			int price = -1;
-			String checkin = "";
-			String checkout = "";
-			boolean status = false;
-			ArrayList<Amenity> amenities = new ArrayList<Amenity>();
-			ArrayList<Reservation> reservations = new ArrayList<Reservation>();
-
+			String line;
 			StringTokenizer st;
 			while ((line = in.readLine()) != null) {
 				line = line.trim();
@@ -81,34 +59,25 @@ public class ApartmentDAO {
 					continue;
 				st = new StringTokenizer(line, ";");
 				while (st.hasMoreTokens()) {
-					id = st.nextToken().trim();
-					hostId = st.nextToken().trim();
-					guestId = st.nextToken().trim();
-					type = Apartment.Type.valueOf(st.nextToken().trim());
-					System.out.println("Type is: " + type);
-//					rooms =   Integer.parseInt(st.nextToken().trim());
-//					guests =  Integer.parseInt(st.nextToken().trim());
-//					dates = null;
-//					availability = null;
-//					images = null;
-//					price =  Integer.parseInt(st.nextToken().trim());
-//					checkin = st.nextToken().trim();
-//					checkout = st.nextToken().trim();
-//					status =  Boolean.parseBoolean(st.nextToken().trim());
-
-					location = null;
-					reviews = null;
-					amenities = null;
-					reservations = null;
-//					host = null;
-
+					String id = st.nextToken().trim();
+					Apartment.Type type = Apartment.Type.valueOf(st.nextToken().trim());
+					int rooms = Integer.parseInt(st.nextToken().trim());
+					int guests = Integer.parseInt(st.nextToken().trim());
+					Location location = locationDAO.findOne(st.nextToken().trim());
+//					ArrayList<Date> dates = new ArrayList<>();
+//					ArrayList<Date> availability = new ArrayList<>();
+					String host = st.nextToken().trim();
+//					ArrayList<Review> reviews = new ArrayList<>();
+//					ArrayList<String> images = new ArrayList<>();
+					int price = Integer.parseInt(st.nextToken().trim());
+					String checkin = st.nextToken().trim();
+					String checkout = st.nextToken().trim();
+					boolean active = Boolean.parseBoolean(st.nextToken().trim());
+//					ArrayList<Amenity> amenities = new ArrayList<>();
+//					ArrayList<Reservation> reservations = new ArrayList<>();
+					apartments.put(id,
+							new Apartment(id, type, rooms, guests, location, host, price, checkin, checkout, active));
 				}
-				apartments.put(id, new Apartment(id, hostId, guestId, type, /* rooms, guests, */ location,
-						/*
-						 * dates, availability, host,
-						 */ reviews, /*
-										 * images, price, checkin, checkout, status,
-										 */ amenities, reservations));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -116,8 +85,7 @@ public class ApartmentDAO {
 			if (in != null) {
 				try {
 					in.close();
-				} catch (Exception e) {
-				}
+				} catch (Exception e) { }
 			}
 		}
 	}
@@ -126,22 +94,22 @@ public class ApartmentDAO {
 		Collection<Apartment> allApartments = findAll();
 		Collection<Apartment> testApart = new ArrayList<Apartment>();
 		for (Apartment a : allApartments) {
-			if (a.getHostId().equals(id)) {
+			if (a.getHost().equals(id)) {
 				testApart.add(a);
 			}
 		}
 		return testApart;
 	}
 
-	public Collection<Apartment> findAllApartByGuestId(String id) {
-		Collection<Apartment> allApartments = findAll();
-		Collection<Apartment> testApart = new ArrayList<Apartment>();
-		for (Apartment a : allApartments) {
-			if (a.getGuestId().equals(id)) {
-				testApart.add(a);
-			}
-		}
-		return testApart;
-	}
+//	public Collection<Apartment> findAllApartByGuestId(String id) {
+//		Collection<Apartment> allApartments = findAll();
+//		Collection<Apartment> testApart = new ArrayList<Apartment>();
+//		for (Apartment a : allApartments) {
+//			if (a.getGuest().equals(id)) {
+//				testApart.add(a);
+//			}
+//		}
+//		return testApart;
+//	}
 
 }
