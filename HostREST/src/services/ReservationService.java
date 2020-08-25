@@ -37,7 +37,7 @@ public class ReservationService {
 		
 		if (ctx.getAttribute("apartmentDAO") == null) {
 	    	String contextPath = ctx.getRealPath("");
-			ctx.setAttribute("apartmentDAO", new ApartmentDAO(contextPath));
+			ctx.setAttribute("apartmentDAO", new ApartmentDAO(contextPath, (LocationDAO) ctx.getAttribute("locationDAO")));
 		}
 		
 		if (ctx.getAttribute("userDAO") == null) {

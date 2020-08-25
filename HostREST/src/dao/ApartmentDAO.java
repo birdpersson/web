@@ -9,18 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import javax.servlet.ServletContext;
-import javax.ws.rs.core.Context;
-
 import beans.Apartment;
 import beans.Location;
 
-//import beans.Apartment.Type;
-
 public class ApartmentDAO {
-
-	@Context
-	ServletContext ctx;
 
 	private Map<String, Apartment> apartments = new HashMap<>();
 	private LocationDAO locationDAO;
@@ -29,7 +21,8 @@ public class ApartmentDAO {
 		super();
 	}
 
-	public ApartmentDAO(String contextPath) {
+	public ApartmentDAO(String contextPath, LocationDAO locationDAO) {
+		this.locationDAO = locationDAO;
 		loadApartments(contextPath);
 	}
 
@@ -85,7 +78,8 @@ public class ApartmentDAO {
 			if (in != null) {
 				try {
 					in.close();
-				} catch (Exception e) { }
+				} catch (Exception e) {
+				}
 			}
 		}
 	}
