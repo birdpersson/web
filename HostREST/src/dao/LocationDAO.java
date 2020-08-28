@@ -1,8 +1,11 @@
 package dao;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.StringTokenizer;
@@ -40,12 +43,7 @@ private HashMap<String, Location> locations = new HashMap<String, Location>();
 		return locations.containsKey(id) ? locations.get(id) : null;
 	}
 	
-	/***
-	 * Dodaje lokaciju u mapu proizvoda. Id nove lokacije ce biti postavljen na maxPostojeciId + 1.
-	 * @param lokacija
-	 * @return Nova lokacija
-	 */
-	public Location save(Location location) {
+	public Location save(String contextPath, Location location) {
 		Integer maxId = -1;
 		for (String id : locations.keySet()) {
 			int idNum =Integer.parseInt(id);
@@ -55,6 +53,33 @@ private HashMap<String, Location> locations = new HashMap<String, Location>();
 		}
 		maxId++;
 		location.setId(maxId.toString());
+		String line = location.getId() + ";"
+				+ location.getLatitude() + ";"
+				+ location.getLongitude() + ";"
+				+ location.getAddress().getStreet() + ";"
+				+ location.getAddress().getCity() + ";"
+				+ location.getAddress().getPostalCode();
+		System.out.println(line);
+		BufferedWriter writer = null;
+		try {
+			File file = new File(contextPath + "/locations.txt");
+			writer = new BufferedWriter(new FileWriter(file, true));
+			PrintWriter out = new PrintWriter(writer);
+			out.println(line);
+			out.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		} finally {
+			if (writer != null) {
+				try {
+					writer.close();
+				}
+				catch (Exception e) {
+					return null;
+				}
+			}
+		}
 		locations.put(location.getId(), location);
 		return location;
 	}
@@ -72,7 +97,7 @@ private HashMap<String, Location> locations = new HashMap<String, Location>();
 		//if there is not host with such id we save that product as new one.
 		if(oldLocation == null) {
 			System.out.println("Usao u save host u okviru update");
-			return save(updatedLocation);
+			return updatedLocation;
 		}
 		else {
 			System.out.println("usao u update product u okviru update");

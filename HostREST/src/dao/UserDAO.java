@@ -72,7 +72,7 @@ public class UserDAO {
 				}
 			}
 		}
-		loadUsers(contextPath); 
+		users.put(user.getUsername(), user);
 		return user;
 	}
 
