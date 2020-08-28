@@ -8,45 +8,36 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import beans.Address;
 import beans.Location;
 
-
 public class LocationDAO {
 
-private HashMap<String, Location> locations = new HashMap<String, Location>(); 
-	
-	public LocationDAO() {}
-	
-	/***
-	 * @param contextPath Putanja do aplikacije u Tomcatu. Mo�e se pristupiti samo iz servleta.
-	 */
+	private Map<String, Location> locations = new HashMap<>();
+
+	public LocationDAO() {
+		super();
+	}
+
 	public LocationDAO(String contextPath) {
 		loadLocations(contextPath);
 	}
-	
-	/***
-	 * Vraca sve lokacije.
-	 * @return
-	 */
+
 	public Collection<Location> findAll() {
 		return locations.values();
 	}
-	
-	/***
-	 *  Vraca lokaciju na osnovu njenog id-a. 
-	 *  @return Lokacija sa id-em ako postoji, u suprotnom null
-	 */
+
 	public Location findOne(String id) {
 		return locations.containsKey(id) ? locations.get(id) : null;
 	}
-	
+
 	public Location save(String contextPath, Location location) {
 		Integer maxId = -1;
 		for (String id : locations.keySet()) {
-			int idNum =Integer.parseInt(id);
+			int idNum = Integer.parseInt(id);
 			if (idNum > maxId) {
 				maxId = idNum;
 			}
@@ -74,8 +65,7 @@ private HashMap<String, Location> locations = new HashMap<String, Location>();
 			if (writer != null) {
 				try {
 					writer.close();
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					return null;
 				}
 			}
@@ -83,62 +73,39 @@ private HashMap<String, Location> locations = new HashMap<String, Location>();
 		locations.put(location.getId(), location);
 		return location;
 	}
-	
-	/***
-	 * Vrsi izmenu atributa domacina u mapi domacina. Id izmenjenog domacina ce imati istu vrednost kao i stari domacin.
-	 * @param Id domacina koji se zeli izmeniti, novi domacin sa izmenjenim atributima 
-	 * @return Izmenjeni domacin 
-	 */
+
+	//TODO: rewrite
 	public Location update(String id, Location updatedLocation) {
-		
-		//We retrive host based on id we received as argument.
+
+		// We retrive host based on id we received as argument.
 		Location oldLocation = findOne(id);
-		
-		//if there is not host with such id we save that product as new one.
-		if(oldLocation == null) {
+
+		// if there is not host with such id we save that product as new one.
+		if (oldLocation == null) {
 			System.out.println("Usao u save host u okviru update");
 			return updatedLocation;
-		}
-		else {
+		} else {
 			System.out.println("usao u update product u okviru update");
-			//We don't change id of existing host just username, password, firstname and lastname.
-			
+			// We don't change id of existing host just username, password, firstname and
+			// lastname.
+
 //			oldLocation.setApartmentId(updatedLocation.getApartmentId());
 			oldLocation.setLongitude(updatedLocation.getLongitude());
 			oldLocation.setLatitude(updatedLocation.getLatitude());
 			oldLocation.setAddress(updatedLocation.getAddress());
-			
-			//We save old product which is now updated.
+
+			// We save old product which is now updated.
 			return locations.put(oldLocation.getId(), oldLocation);
 		}
-		
+
 	}
-	
-	/**
-	 * Pretrazuje lokacije iz WebContent/locations.txt fajla i brise ih ako ih nadje.
-	 * @return obirsanog domacina u protivnom null
-	 * @param id domacina koji je kljuc
-	 */
+
+	//TODO: rewrite
 	public Location delete(String id) {
-		//hosts.get(id).isLogicalyRemoved(true); za logicko brisanje...
+		// hosts.get(id).isLogicalyRemoved(true); za logicko brisanje...
 		return locations.containsKey(id) ? locations.remove(id) : null;
 	}
-	
-	/**
-	 * Pretrazuje lokacije iz WebContent/locations.txt fajla na osnovu id apartmana i vraca lokaciju ako je nadje, u suprotnom null.
-	 * @return lokaciju sa koja sadrzi id stana u protivnom null
-	 * @param id stana ciju lokaciju prosledjujemo
-	 */
-//	public Location findLocatByApartId(String id) {
-//		Collection<Location> allLocations =  findAll();
-//		for(Location l : allLocations) {
-//			if(l.getApartmentId().equals(id)) {
-//				return l;
-//			}
-//		}
-//		return null;
-//	}
-	
+
 	private void loadLocations(String contextPath) {
 		BufferedReader in = null;
 		try {
@@ -159,19 +126,18 @@ private HashMap<String, Location> locations = new HashMap<String, Location>();
 					String street = st.nextToken().trim();
 					String city = st.nextToken().trim();
 					String postalCode = st.nextToken().trim();
-					
+
 					locations.put(id, new Location(id, latitude, longitude,
-							new Address(street, city, postalCode)));					
+							new Address(street, city, postalCode)));
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if ( in != null ) {
+			if (in != null) {
 				try {
 					in.close();
-				}
-				catch (Exception e) { }
+				} catch (Exception e) { }
 			}
 		}
 	}

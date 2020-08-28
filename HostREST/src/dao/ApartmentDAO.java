@@ -1,8 +1,11 @@
 package dao;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,7 +38,46 @@ public class ApartmentDAO {
 	}
 
 	public Apartment save(String contextPath, Apartment apartment) {
-
+		Integer maxId = -1;
+		for (String id : apartments.keySet()) {
+			int idNum = Integer.parseInt(id);
+			if (idNum > maxId) {
+				maxId = idNum;
+			}
+		}
+		maxId++;
+		apartment.setId(maxId.toString());
+		String line = apartment.getId() + ";"
+				+ apartment.getType() + ";"
+				+ apartment.getRooms() + ";"
+				+ apartment.getGuests() + ";"
+				+ locationDAO.save(contextPath, apartment.getLocation()).getId() + ";"
+				+ apartment.getHost() + ";"
+				+ apartment.getPrice() + ";"
+				+ apartment.getCheckin() + ";"
+				+ apartment.getCheckout() + ";"
+				+ "false" + ";";
+		System.out.println(line);
+		BufferedWriter writer = null;
+		try {
+			File file = new File(contextPath + "/apartments.txt");
+			writer = new BufferedWriter(new FileWriter(file, true));
+			PrintWriter out = new PrintWriter(writer);
+			out.println(line);
+			out.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		} finally {
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) {
+					return null;
+				}
+			}
+		}
+		apartments.put(apartment.getId(), apartment);
 		return apartment;
 	}
 
@@ -78,8 +120,7 @@ public class ApartmentDAO {
 			if (in != null) {
 				try {
 					in.close();
-				} catch (Exception e) {
-				}
+				} catch (Exception e) { }
 			}
 		}
 	}

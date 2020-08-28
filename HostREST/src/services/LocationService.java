@@ -21,7 +21,7 @@ public class LocationService {
 	@PostConstruct
 	// ctx polje je null u konstruktoru, mora se pozvati nakon konstruktora (@PostConstruct anotacija)
 	public void init() {
-		// Ovaj objekat se instancira više puta u toku rada aplikacije
+		// Ovaj objekat se instancira viï¿½e puta u toku rada aplikacije
 		// Inicijalizacija treba da se obavi samo jednom
 		if(ctx.getAttribute("locationDAO")==null){
 			String contextPath = ctx.getRealPath("");
@@ -54,7 +54,7 @@ public class LocationService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Location setLocation(Location location) {
 		LocationDAO dao = (LocationDAO) ctx.getAttribute("locationDAO");
-		return dao.save(location);
+		return dao.save(ctx.getRealPath(""), location);
 	}
 	
 	@PUT
