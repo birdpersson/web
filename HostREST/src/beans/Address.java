@@ -6,6 +6,10 @@ public class Address {
 	private String city;
 	private String postalCode;
 
+	public Address() {
+		super();
+	}
+
 	public Address(String street, String city, String postalCode) {
 		super();
 		this.street = street;

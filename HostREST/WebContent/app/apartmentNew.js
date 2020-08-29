@@ -28,13 +28,17 @@ Vue.component('new-apartment', {
 			</select>
 
 			<label>Location</label>
-			<input class='half-size' type="text" placeholder="Enter location longitude..."
-				v-model='apartment.location.longitude'> -
 			<input class='half-size' type="text" placeholder="Enter location latitude..."
-				v-model='apartment.location.latitude'>
+			v-model='apartment.location.latitude'> -
+			<input class='half-size' type="text" placeholder="Enter location longitude..."
+				v-model='apartment.location.longitude'>
 
-			<label style="display:inline;">Address</label>
-			<input id='address' type="text" placeholder="Enter address..." v-model='apartment.location.address'>
+			<div class="row">
+				<label style="display:inline;">Address</label>
+				<input placeholder="Enter street" v-model='apartment.location.address.street'>
+				<input placeholder="Enter city" v-model='apartment.location.address.city'>
+				<input placeholder="Enter postal colde" v-model='apartment.location.address.postalCode'>	
+			</div>
 
 			<label>Price</label>
 			<input id='price' type="text" placeholder="Enter price..." v-model='apartment.price'>
@@ -53,7 +57,7 @@ Vue.component('new-apartment', {
 				</div>
 			</div>
 
-			<button class="btn btn-lg btn-success" v-on:click="checkSave()">Save</button>
+			<button class="btn btn-lg btn-success" v-on:click="create(this.apartment)">Save</button>
 		</div>
 	</div>
 </div>`,
@@ -74,9 +78,13 @@ Vue.component('new-apartment', {
 				rooms: null,
 				guests: null,
 				location: {
-					longitude: '',
 					latitude: '',
-					address: ''
+					longitude: '',
+					address: {
+						street: '',
+						city: '',
+						postalCode: ''
+					}
 				},
 				dates: {
 					to: null,
@@ -89,19 +97,10 @@ Vue.component('new-apartment', {
 				price: null,
 				checkin: '2 PM',
 				checkout: '10 AM',
-				status: 'neaktivno',
 				amenities: []
 			},
 
 			types: ['APARTMENT', 'ROOM'],
-			statuses: ['ACTIVE', 'INACTIVE'],
-			rooms: null,
-			guests: null,
-			location: {
-				longitude: '',
-				latitude: '',
-				address: '',
-			},
 
 			disabledDates: {
 				ranges: [],

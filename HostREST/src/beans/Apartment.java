@@ -26,6 +26,10 @@ public class Apartment {
 	private ArrayList<Amenity> amenities;
 	private ArrayList<Reservation> reservations;
 
+	public Apartment() {
+		super();
+	}
+
 	public Apartment(String id, Type type, int rooms, int guests, Location location, String host, int price,
 			String checkin, String checkout, boolean active) {
 		super();
