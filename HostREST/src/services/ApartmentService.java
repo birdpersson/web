@@ -83,6 +83,7 @@ public class ApartmentService {
 			return Response.status(Response.Status.FORBIDDEN).build();
 		}
 		ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+		apartment.setHost(username);
 		Apartment newApartment = apartmentDao.save(ctx.getRealPath(""), apartment);
 
 		return Response.status(Response.Status.CREATED).entity(newApartment).build();

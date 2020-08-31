@@ -1,4 +1,47 @@
 Vue.component('new-apartment', {
+	data: function () {
+		return {
+			isApartment: 'true',
+
+			apartment: {
+				type: null,
+				rooms: null,
+				guests: null,
+				location: {
+					latitude: '',
+					longitude: '',
+					address: {
+						street: '',
+						city: '',
+						postalCode: ''
+					}
+				},
+				price: null,
+				checkin: '2 PM',
+				checkout: '10 AM'
+			},
+
+			types: ['APARTMENT', 'ROOM'],
+			rooms: null,
+			guests: null,
+
+			dates: {
+				to: null,
+				from: null
+			},
+
+			disabledDates: {
+				ranges: [],
+				to: null,
+				from: null
+			},
+
+			highlighted: {
+				to: null,
+				from: null
+			},
+		}
+	},
 	template: `
 <div id="new-apartment">
 	<div class="container" id='page-title'>
@@ -7,7 +50,7 @@ Vue.component('new-apartment', {
 	</div>
 
 	<div class="container" id='main'>
-		<div v-if='isHost'>
+		<div>
 
 			<label>Type of apartment</label>
 			<select v-model="apartment.type">
@@ -15,7 +58,6 @@ Vue.component('new-apartment', {
 			</select>
 
 			<label>Number of rooms</label>
-			<img src="img/negativ1.1.png" v-show="!isApartment">
 			<select v-show="isApartment" v-model="apartment.rooms">
 				<option disabled value="">No. of rooms</option>
 				<option v-for="room in rooms">{{room}}</option>
@@ -50,110 +92,30 @@ Vue.component('new-apartment', {
 			<label>Dates available</label>
 			<div class="row">
 				<div class="col">
-					<vuejsDatepicker placeholder="Select Checkin Date" v-model="apartment.dates.from" :highlighted="apartment.dates"></vuejsDatepicker>
+					<vuejsDatepicker placeholder="Select Checkin Date" v-model="dates.from" :highlighted="dates"></vuejsDatepicker>
 				</div>
 				<div class="col">
-					<vuejsDatepicker placeholder="Select Checkout Date" v-model="apartment.dates.to" :highlighted="apartment.dates"></vuejsDatepicker>
+					<vuejsDatepicker placeholder="Select Checkout Date" v-model="dates.to" :highlighted="dates"></vuejsDatepicker>
 				</div>
 			</div>
 
-			<button class="btn btn-lg btn-success" v-on:click="create(this.apartment)">Save</button>
+			<button class="btn btn-lg btn-success" v-on:click="create(apartment)">Save</button>
 		</div>
 	</div>
-</div>`,
-	data: function () {
-		return {
-			user: {
-				username: '',
-				role: ''
-			},
-			isAdmin: false,
-			isHost: false,
-			isGuest: false,
-
-			isApartment: true,
-
-			apartment: {
-				type: null,
-				rooms: null,
-				guests: null,
-				location: {
-					latitude: '',
-					longitude: '',
-					address: {
-						street: '',
-						city: '',
-						postalCode: ''
-					}
-				},
-				dates: {
-					to: null,
-					from: null
-				},
-				// availability:null,
-				host: localStorage.getItem("username"),
-				// reviews:null,
-				images: null,
-				price: null,
-				checkin: '2 PM',
-				checkout: '10 AM',
-				amenities: []
-			},
-
-			types: ['APARTMENT', 'ROOM'],
-
-			disabledDates: {
-				ranges: [],
-				to: null,
-				from: null
-			},
-
-			highlighted: {
-				to: null,
-				from: null
-			},
-			checkinDate: null,
-			checkoutDate: null,
-			date: null
-		}
-	},
+</div>
+`
+	,
 	methods: {
 		create: function (apartment) {
 			axios
-				.post('rest/apartment/new', apartment)
-				.then(Response => (this.newApartmentSuccessful(Response)))
+				.post('rest/apartment', apartment)
+				.then(Response => (console.log(Response)))
 		},
 		update: function (apartment) {
 
 		},
-		checkSave: function () {
-			// this.apartment.location = this.location
-
-			alert(`
-            type:${this.apartment.type}\n
-            rooms:${this.apartment.rooms}\n
-            guests:${this.apartment.guests}\n
-			longitude:${this.apartment.location.longitude}\n
-			latitude:${this.apartment.location.latitude}\n
-			address:${this.apartment.location.address}\n
-			dates:${this.apartment.dates}\n
-			to:${this.apartment.dates.to}\n
-			from:${this.apartment.dates.from}\n
-            host:${this.apartment.host}\n
-            reviews:${this.apartment.reviews}\n
-            images:${this.apartment.images}\n
-            price:${this.apartment.price}\n
-            checkin:${this.apartment.checkin}\n
-            checkout:${this.apartment.checkout}\n
-            status:${this.apartment.status}\n
-            amenities:${this.apartment.amenities}\n
-            `);
-		},
 		checkApartment: function () {
-			if (this.apartment.type === "APARTMENT") {
-				this.isApartment = true;
-			}
-			else {
+			if (this.apartment.type == "ROOM") {
 				this.isApartment = false;
 			}
 		},
@@ -167,22 +129,8 @@ Vue.component('new-apartment', {
 		},
 	},
 	created() {
-		this.user.username = localStorage.getItem('user');
-		this.user.role = localStorage.getItem('role');
-		if (this.user.role == "ADMIN") {
-			this.isAdmin = true;
-		} else if (this.user.role == "HOST") {
-			this.isHost = true;
-		} else {
-			this.isGuest = true;
-		}
 	},
 	mounted() {
-		if (this.isGuest === true) {
-			//preuzeti hosta pa ga smestiti ovde;
-			//ovo samo za test
-			this.apartment.host = this.user.username;
-		}
 		this.rooms = this.range(1, 10);
 		this.guests = this.range(1, 15);
 	},
