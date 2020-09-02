@@ -2,7 +2,7 @@ package beans;
 
 import java.util.ArrayList;
 
-public class Amenitie {
+public class Amenity {
 
 	public enum Type {
 		Base, Dining, Facilities, Family
@@ -13,11 +13,11 @@ public class Amenitie {
 	private String name;
 	private ArrayList<String> apartmentId;
 
-	public Amenitie() {
+	public Amenity() {
 		super();
 	}
 
-	public Amenitie(Type type, String id, String name, ArrayList<String> apartmentId) {
+	public Amenity(Type type, String id, String name, ArrayList<String> apartmentId) {
 		super();
 		this.type = type;
 		this.id = id;

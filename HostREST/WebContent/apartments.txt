@@ -1,3 +1,1 @@
-1;host;1;Apartment;
-2;2;2;Apartment;
-3;2;3;Room;
+1;APARTMENT;2;4;1;host;60;5 PM;11 AM;true

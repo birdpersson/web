@@ -50,7 +50,7 @@ public class UserDAO {
 				+ user.getFirstname() + ";"
 				+ user.getLastname() + ";"
 				+ user.getGender() + ";"
-				+ user.getRole().toString(); // UNSAFE!
+				+ user.getRole().toString();
 		System.out.println(line);
 		BufferedWriter writer = null;
 		try {
@@ -66,13 +66,12 @@ public class UserDAO {
 			if (writer != null) {
 				try {
 					writer.close();
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					return null;
 				}
 			}
 		}
-		loadUsers(contextPath); 
+		users.put(user.getUsername(), user);
 		return user;
 	}
 
@@ -95,9 +94,10 @@ public class UserDAO {
 					String lastname = st.nextToken().trim();
 					String gender = st.nextToken().trim();
 					String role = st.nextToken().trim();
-					users.put(username, new User(username, password, firstname, lastname, gender, User.Role.valueOf(role)));
+					users.put(username,
+							new User(username, password, firstname, lastname, gender, User.Role.valueOf(role)));
 				}
-				
+
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -105,8 +105,7 @@ public class UserDAO {
 			if (in != null) {
 				try {
 					in.close();
-				}
-				catch (Exception e) { }
+				} catch (Exception e) { }
 			}
 		}
 	}

@@ -85,50 +85,7 @@ Vue.component('users', {
                 username: '',
                 role: ''
             },
-            users: [
-                {
-                    username: 'username1',
-                    password: 'password1',
-                    firstname: 'Test',
-                    lastname: 'Testovic',
-                    gender: 'M',
-                    role: 'admin',
-                },
-                {
-                    username: 'username2',
-                    password: 'password2',
-                    firstname: 'Test1',
-                    lastname: 'Testovic1',
-                    gender: 'M',
-                    role: 'host',
-                },
-                {
-                    username: 'username3',
-                    password: 'password3',
-                    firstname: 'Test2',
-                    lastname: 'Testovic',
-                    gender: 'M',
-                    role: 'host',
-                },
-                {
-                    username: 'username4',
-                    password: 'password4',
-                    firstname: 'Test3',
-                    lastname: 'Testovic',
-                    gender: 'M',
-                    role: 'guest',
-                },
-                {
-                    username: 'username5',
-                    password: 'password5',
-                    firstname: 'Testa',
-                    lastname: 'Testovic',
-                    gender: 'Z',
-                    role: 'guest',
-                },
-            ],
-            //User objekat koji sadrzi atribute po kojima pretrazujemo i
-            // kojeg saljemo na bek.
+            users: [],
             searchedUser: {
                 username: '',
                 gender: '',
@@ -146,6 +103,11 @@ Vue.component('users', {
             ${this.searchedUser.role}
             `);
         }
+    },
+    mounted() {
+        axios
+        .get('rest/user/all')
+        .then(Response => (this.users=Response.data));
     },
     created() {
         this.user.username = localStorage.getItem('user');

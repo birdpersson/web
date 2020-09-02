@@ -2,6 +2,7 @@ const Login = { template: '<login></login>' }
 const Signup = { template: '<signup></signup>' }
 const Navbar = { template: '<navbar></navbar>' }
 const Homepage = { template: '<homepage></homepage>' }
+const HomeFront = { template: '<home-front></home-front>' }
 const Profile = { template: '<profile></profile>' }
 const ProfileUpdate = { template: '<profile-update></profile-update>' }
 const Users = { template: '<users></users>' }
@@ -18,7 +19,7 @@ const NewApartment = { template: '<new-apartment></new-apartment>' }
 const Test = { template: '<test></test>' }
 
 const routes = [
-	// { path: '/', component: FrontHomepage }, //stranica pre logina
+	{ path: '/', component: HomeFront}, //stranica pre logina
 	{ path: '/login', component: Login },
 	{ path: '/signup', component: Signup },
 	{ path: '/homepage', component: Homepage },
