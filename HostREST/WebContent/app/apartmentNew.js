@@ -16,8 +16,10 @@ Vue.component('new-apartment', {
 						postalCode: ''
 					}
 				},
-				from: null,
-				to: null,
+				period: {
+					to: null,
+					from: null
+				},
 				price: null,
 				checkin: '2 PM',
 				checkout: '10 AM'
@@ -109,8 +111,9 @@ Vue.component('new-apartment', {
 	,
 	methods: {
 		create: function (apartment) {
-			this.apartment.from = this.dates.from.getTime();
-			this.apartment.to = this.dates.to.getTime();
+			// unselected dates will be disabled
+			this.apartment.period.to = this.dates.from.getTime();
+			this.apartment.period.from = this.dates.to.getTime();
 			console.log(apartment);
 			axios
 				.post('rest/apartment', apartment)

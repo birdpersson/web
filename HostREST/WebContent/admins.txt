@@ -1,2 +1,0 @@
-admin1;123;Marko;Markovic;Muski;
-admin2;456;Zarko;Zarkovic;Muski;

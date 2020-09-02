@@ -1,3 +1,0 @@
-guest1;123;Marko;Markovic;Muski;
-guest2;456;Zarko;Zarkovic;Muski;
-guest3;789;Ana;Anic;Zenski;
