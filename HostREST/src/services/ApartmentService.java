@@ -34,6 +34,18 @@ public class ApartmentService {
 //			String contextPath = ctx.getRealPath("");
 //			ctx.setAttribute("userDAO", new UserDAO(contextPath));
 //		}
+//		if (ctx.getAttribute("reservationDAO") == null) {
+//			String contextPath = ctx.getRealPath("");
+//			ctx.setAttribute("reservationDAO", new ReservationDAO(contextPath));
+//		}
+//		if (ctx.getAttribute("reviewDAO") == null) {
+//			String contextPath = ctx.getRealPath("");
+//			ctx.setAttribute("reviewDAO", new ReviewDAO(contextPath));
+//		}
+//		if (ctx.getAttribute("amenityDAO") == null) {
+//			String contextPath = ctx.getRealPath("");
+//			ctx.setAttribute("amenityDAO", new AmenityDAO(contextPath));
+//		}
 		if (ctx.getAttribute("locationDAO") == null) {
 			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("locationDAO", new LocationDAO(contextPath));
@@ -42,18 +54,6 @@ public class ApartmentService {
 			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("apartmentDAO", new ApartmentDAO(contextPath, (LocationDAO) ctx.getAttribute("locationDAO")));
 		}
-//		if (ctx.getAttribute("reviewDAO") == null) {
-//			String contextPath = ctx.getRealPath("");
-//			ctx.setAttribute("reviewDAO", new ReviewDAO(contextPath));
-//		}
-//		if (ctx.getAttribute("reservationDAO") == null) {
-//			String contextPath = ctx.getRealPath("");
-//			ctx.setAttribute("reservationDAO", new ReservationDAO(contextPath));
-//		}
-//		if (ctx.getAttribute("amenityDAO") == null) {
-//			String contextPath = ctx.getRealPath("");
-//			ctx.setAttribute("amenityDAO", new AmenityDAO(contextPath));
-//		}
 	}
 
 	@GET
@@ -66,7 +66,6 @@ public class ApartmentService {
 //		for (Apartment a : retApartment) {
 //			a.setReviews((ArrayList<Review>) daoReview.findAllByApartmentId(a.getId()));
 //			a.setReservations((ArrayList<Reservation>) daoReser.findAllByApartmentId(a.getId()));
-//			a.setLocation(locatoinDAO.findOne(a.getId()));
 //			a.setAmenities((ArrayList<Amenity>) daoAmen.findAllByApartmentId(a.getId()));
 //		}
 		return retApartment;

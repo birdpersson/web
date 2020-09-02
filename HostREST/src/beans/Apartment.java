@@ -14,6 +14,8 @@ public class Apartment {
 	private int rooms;
 	private int guests;
 	private Location location;
+	private Date from;
+	private Date to;
 	private ArrayList<Date> dates;
 	private ArrayList<Date> availability;
 	private String host;
@@ -83,6 +85,22 @@ public class Apartment {
 
 	public void setLocation(Location location) {
 		this.location = location;
+	}
+
+	public Date getFrom() {
+		return from;
+	}
+
+	public void setFrom(Date from) {
+		this.from = from;
+	}
+
+	public Date getTo() {
+		return to;
+	}
+
+	public void setTo(Date to) {
+		this.to = to;
 	}
 
 	public ArrayList<Date> getDates() {
