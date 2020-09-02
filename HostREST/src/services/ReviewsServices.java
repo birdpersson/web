@@ -12,6 +12,7 @@ import javax.ws.rs.core.*;
 import beans.Apartment;
 import beans.Review;
 import dao.ApartmentDAO;
+import dao.LocationDAO;
 import dao.ReviewDAO;
 import dao.UserDAO;
 
@@ -27,7 +28,7 @@ public class ReviewsServices {
 	@PostConstruct
 	// ctx polje je null u konstruktoru, mora se pozvati nakon konstruktora (@PostConstruct anotacija)
 	public void init() {
-		// Ovaj objekat se instancira više puta u toku rada aplikacije
+		// Ovaj objekat se instancira viï¿½e puta u toku rada aplikacije
 		// Inicijalizacija treba da se obavi samo jednom
 		if(ctx.getAttribute("reviewDAO")==null){
 			String contextPath = ctx.getRealPath("");
@@ -36,7 +37,7 @@ public class ReviewsServices {
 		
 		if (ctx.getAttribute("apartmentDAO") == null) {
 	    	String contextPath = ctx.getRealPath("");
-			ctx.setAttribute("apartmentDAO", new ApartmentDAO(contextPath));
+			ctx.setAttribute("apartmentDAO", new ApartmentDAO(contextPath, (LocationDAO) ctx.getAttribute("locationDAO")));
 		}
 		
 		if (ctx.getAttribute("userDAO") == null) {

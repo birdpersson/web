@@ -28,7 +28,7 @@ public class ReservationService {
 	@PostConstruct
 	// ctx polje je null u konstruktoru, mora se pozvati nakon konstruktora (@PostConstruct anotacija)
 	public void init() {
-		// Ovaj objekat se instancira više puta u toku rada aplikacije
+		// Ovaj objekat se instancira viï¿½e puta u toku rada aplikacije
 		// Inicijalizacija treba da se obavi samo jednom
 		if(ctx.getAttribute("reservationDAO")==null){
 			String contextPath = ctx.getRealPath("");
@@ -37,7 +37,7 @@ public class ReservationService {
 		
 		if (ctx.getAttribute("apartmentDAO") == null) {
 	    	String contextPath = ctx.getRealPath("");
-			ctx.setAttribute("apartmentDAO", new ApartmentDAO(contextPath));
+			ctx.setAttribute("apartmentDAO", new ApartmentDAO(contextPath, (LocationDAO) ctx.getAttribute("locationDAO")));
 		}
 		
 		if (ctx.getAttribute("userDAO") == null) {
@@ -71,8 +71,8 @@ public class ReservationService {
 				
 				ReservationDTO reservDTO = new ReservationDTO();
 				Apartment apartm = apartDao.findOne(r.getApartmentId());
-				Location locat = locatDao.findLocatByApartId(r.getApartmentId());
-				if(apartm == null || locat == null) {
+//				Location locat = locatDao.findLocatByApartId(r.getApartmentId());
+				if(apartm == null /*|| locat == null*/) {
 					return Response.status(Response.Status.BAD_REQUEST).build();
 				}
 				
@@ -96,13 +96,13 @@ public class ReservationService {
 					reservDTO.setType(apartm.getType());
 				}
 				//Za lokaciju apartmana:
-				if(locat.getAddress()==null) {
-					reservDTO.setAddress("unknown");
-//					return Response.status(Response.Status.BAD_REQUEST).build();
-				}
-				else {
-					reservDTO.setAddress(locat.getAddress());
-				}
+//				if(locat.getAddress()==null) {
+//					reservDTO.setAddress("unknown");
+////					return Response.status(Response.Status.BAD_REQUEST).build();
+//				}
+//				else {
+//					reservDTO.setAddress(locat.getAddress());
+//				}
 				
 				//vraca se lista reservacija sa svim podacima;
 				returnDTO.add(reservDTO);
@@ -161,15 +161,15 @@ public class ReservationService {
 			//pomocne promenljive
 			ReservationDTO reservDTO = new ReservationDTO();
 			Apartment apartm = apartDao.findOne(r.getApartmentId());
-			Location locat = locatDao.findLocatByApartId(r.getApartmentId());
+//			Location locat = locatDao.findLocatByApartId(r.getApartmentId());
 			
-			if(apartm == null || locat == null) {
+			if(apartm == null /*|| locat == null*/) {
 				return null;
 			}
 			//Provera da li je rola usera Host
 			if(role == "HOST") {
 				//Provera da li stan pripada tom hostu koji je ulogovan.
-				if(!apartm.getHostId().equals(username)) {
+				if(!apartm.getHost().equals(username)) {
 					continue;
 				}
 			}
@@ -194,13 +194,13 @@ public class ReservationService {
 				reservDTO.setType(apartm.getType());
 			}
 			//Za lokaciju apartmana:
-			if(locat.getAddress()==null) {
-				reservDTO.setAddress("unknown");
-//					return Response.status(Response.Status.BAD_REQUEST).build();
-			}
-			else {
-				reservDTO.setAddress(locat.getAddress());
-			}
+//			if(locat.getAddress()==null) {
+//				reservDTO.setAddress("unknown");
+////					return Response.status(Response.Status.BAD_REQUEST).build();
+//			}
+//			else {
+//				reservDTO.setAddress(locat.getAddress());
+//			}
 			
 			//vraca se lista reservacija sa svim podacima;
 			returnDTO.add(reservDTO);

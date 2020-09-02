@@ -3,64 +3,52 @@ package beans;
 public class Location {
 
 	private String id;
-	private String apartmentId;
-	private double longitude;
-	private double latitude;
-	private String address;	
+	private String latitude;
+	private String longitude;
+	private Address address;
 
 	public Location() {
 		super();
 	}
-	
-	public Location(String id, String apartmentId, double longitude, double latitude, String address) {
+
+	public Location(String id, String latitude, String longitude, Address address) {
 		super();
 		this.id = id;
-		this.apartmentId = apartmentId;
-		this.longitude = longitude;
 		this.latitude = latitude;
+		this.longitude = longitude;
 		this.address = address;
-	}
-	
-	
-	public void setId(String i) {
-		id = i;
 	}
 
 	public String getId() {
 		return id;
 	}
-	
-	
-	public String getApartmentId() {
-		return apartmentId;
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	public void setApartmentId(String apartmentId) {
-		this.apartmentId = apartmentId;
-	}
-
-	public double getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(double longitude) {
-		this.longitude = longitude;
-	}
-
-	public double getLatitude() {
+	public String getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(double latitude) {
+	public void setLatitude(String latitude) {
 		this.latitude = latitude;
 	}
 
-	public String getAddress() {
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+	public Address getAddress() {
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public void setAddress(Address address) {
 		this.address = address;
 	}
-	
+
 }

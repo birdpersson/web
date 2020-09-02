@@ -5,67 +5,47 @@ import java.util.Date;
 
 public class Apartment {
 
+	public enum Type {
+		APARTMENT, ROOM
+	}
+
 	private String id;
-	private String hostId;	//ovo se ne menja jer je vlasnik isti;
-	private String guestId; //ovo se menja sa promenom gosta;
 	private Type type;
 	private int rooms;
 	private int guests;
 	private Location location;
+	private Date from;
+	private Date to;
 	private ArrayList<Date> dates;
 	private ArrayList<Date> availability;
-//	private Host host;
+	private String host;
 	private ArrayList<Review> reviews;
 	private ArrayList<String> images;
 	private int price;
 	private String checkin;
 	private String checkout;
-	private boolean status;
-	private ArrayList<Amenitie> amenities;
+	private boolean active;
+	private ArrayList<Amenity> amenities;
 	private ArrayList<Reservation> reservations;
-	
 
 	public Apartment() {
 		super();
 	}
-	
 
-	public Apartment(String id, String hostId, String guestId, Type type, Location location, ArrayList<Review> reviews,
-			ArrayList<Amenitie> amenities, ArrayList<Reservation> reservations) {
+	public Apartment(String id, Type type, int rooms, int guests, Location location, String host, int price,
+			String checkin, String checkout, boolean active) {
 		super();
 		this.id = id;
-		this.hostId = hostId;
-		this.guestId = guestId;
 		this.type = type;
+		this.rooms = rooms;
+		this.guests = guests;
 		this.location = location;
-		this.reviews = reviews;
-		this.amenities = amenities;
-		this.reservations = reservations;
+		this.host = host;
+		this.price = price;
+		this.checkin = checkin;
+		this.checkout = checkout;
+		this.active = active;
 	}
-
-//	public Apartment(String id, String hostId, String guestId, /* Type type,*/ int rooms, int guests, Location location, ArrayList<Date> dates,
-//			ArrayList<Date> availability,/* Host host,*/ ArrayList<Review> reviews, ArrayList<String> images, int price,
-//			String checkin, String checkout, boolean status, ArrayList<Amenities> amenities, ArrayList<Reservation> reservations) {
-//		super();
-//		this.id = id;
-//		this.hostId = hostId;
-//		this.guestId = guestId;
-//		//this.type = type;
-//		this.rooms = rooms;
-//		this.guests = guests;
-//		this.location = location;
-//		this.dates = dates;
-//		this.availability = availability;
-////		this.host = host;
-//		this.reviews = reviews;
-//		this.images = images;
-//		this.price = price;
-//		this.checkin = checkin;
-//		this.checkout = checkout;
-//		this.status = status;
-//		this.amenities = amenities;
-//		this.reservations = reservations;
-//	}
 
 	public String getId() {
 		return id;
@@ -73,23 +53,6 @@ public class Apartment {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-	
-
-	public String getHostId() {
-		return hostId;
-	}
-
-	public void setHostId(String hostId) {
-		this.hostId = hostId;
-	}
-
-	public String getGuestId() {
-		return guestId;
-	}
-
-	public void setGuestId(String guestId) {
-		this.guestId = guestId;
 	}
 
 	public Type getType() {
@@ -124,6 +87,22 @@ public class Apartment {
 		this.location = location;
 	}
 
+	public Date getFrom() {
+		return from;
+	}
+
+	public void setFrom(Date from) {
+		this.from = from;
+	}
+
+	public Date getTo() {
+		return to;
+	}
+
+	public void setTo(Date to) {
+		this.to = to;
+	}
+
 	public ArrayList<Date> getDates() {
 		return dates;
 	}
@@ -140,13 +119,13 @@ public class Apartment {
 		this.availability = availability;
 	}
 
-//	public Host getHost() {
-//		return host;
-//	}
-//
-//	public void setHost(Host host) {
-//		this.host = host;
-//	}
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
 
 	public ArrayList<Review> getReviews() {
 		return reviews;
@@ -188,19 +167,19 @@ public class Apartment {
 		this.checkout = checkout;
 	}
 
-	public boolean isStatus() {
-		return status;
+	public boolean isActive() {
+		return active;
 	}
 
-	public void setStatus(boolean status) {
-		this.status = status;
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
-	public ArrayList<Amenitie> getAmenities() {
+	public ArrayList<Amenity> getAmenities() {
 		return amenities;
 	}
 
-	public void setAmenities(ArrayList<Amenitie> amenities) {
+	public void setAmenities(ArrayList<Amenity> amenities) {
 		this.amenities = amenities;
 	}
 

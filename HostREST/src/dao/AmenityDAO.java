@@ -8,19 +8,19 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
-import beans.Amenitie;
+import beans.Amenity;
 
-public class AmenitieDAO {
-	private HashMap<String, Amenitie> amenities = new HashMap<String, Amenitie>(); 
+public class AmenityDAO {
+	private HashMap<String, Amenity> amenities = new HashMap<String, Amenity>(); 
 	
-	public AmenitieDAO() {
+	public AmenityDAO() {
 		
 	}
 	
 	/***
 	 * @param contextPath Putanja do aplikacije u Tomcatu. Mo�e se pristupiti samo iz servleta.
 	 */
-	public AmenitieDAO(String contextPath) {
+	public AmenityDAO(String contextPath) {
 		loadAmenities(contextPath);
 	}
 	
@@ -28,7 +28,7 @@ public class AmenitieDAO {
 	 * Vraca sve administratore.
 	 * @return
 	 */
-	public Collection<Amenitie> findAll(){
+	public Collection<Amenity> findAll(){
 		return amenities.values(); 
 	}
 	
@@ -36,7 +36,7 @@ public class AmenitieDAO {
 	 *  Vraca admina na osnovu njegovog id-a. 
 	 *  @return Admin sa id-em ako postoji, u suprotnom null
 	 */
-	public Amenitie findOne(String id) {
+	public Amenity findOne(String id) {
 		return amenities.containsKey(id) ? amenities.get(id) : null;
 	}
 
@@ -46,7 +46,7 @@ public class AmenitieDAO {
 	 * @param admin
 	 * @return Novi admin 
 	 */
-	public Amenitie save(Amenitie admin) {
+	public Amenity save(Amenity admin) {
 		Integer maxId= -1;
 		for(String id: amenities.keySet()) {
 			int idNum = Integer.parseInt(id);
@@ -60,9 +60,9 @@ public class AmenitieDAO {
 		return admin;
 	}
 	
-	public Amenitie update(String id, Amenitie updatedAmenitie) {
+	public Amenity update(String id, Amenity updatedAmenitie) {
 		
-		Amenitie oldAmenitie = findOne(id);
+		Amenity oldAmenitie = findOne(id);
 		
 		if(oldAmenitie == null) {
 			System.out.println("Usao u save admina u okviru update");
@@ -82,7 +82,7 @@ public class AmenitieDAO {
 	}
 	
 	
-	public Amenitie delete(String id) {
+	public Amenity delete(String id) {
 		//hosts.get(id).isLogicalyRemoved(true); za logicko brisanje...
 		return amenities.containsKey(id) ? amenities.remove(id) : null;
 	}
@@ -115,7 +115,7 @@ public class AmenitieDAO {
 					apartmentsIds = getListOfApartIds(st.nextToken().trim());
 					
 				}
-				amenities.put(id, new Amenitie(Amenitie.Type.valueOf(type), id, name, apartmentsIds));
+				amenities.put(id, new Amenity(Amenity.Type.valueOf(type), id, name, apartmentsIds));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -138,10 +138,10 @@ public class AmenitieDAO {
 		return returnArray;
 	}
 
-	public ArrayList<Amenitie> findAllByApartmentId(String id) {
-		Collection<Amenitie> allAmenities = findAll();
-		ArrayList<Amenitie> returnIds = new ArrayList<Amenitie>();
-		for(Amenitie a : allAmenities) {
+	public ArrayList<Amenity> findAllByApartmentId(String id) {
+		Collection<Amenity> allAmenities = findAll();
+		ArrayList<Amenity> returnIds = new ArrayList<Amenity>();
+		for(Amenity a : allAmenities) {
 			
 			ArrayList<String> apertmentIds = new ArrayList<String>();
 			apertmentIds = a.getApartmentId();
@@ -155,8 +155,8 @@ public class AmenitieDAO {
 		return returnIds;
 	}
 
-	public Amenitie addToApartmen(String id, String aprtId) {
-		Amenitie amenitieToUpdate = findOne(id);
+	public Amenity addToApartmen(String id, String aprtId) {
+		Amenity amenitieToUpdate = findOne(id);
 		if(amenitieToUpdate == null) {
 			System.out.println("Vrati error!");
 		}
