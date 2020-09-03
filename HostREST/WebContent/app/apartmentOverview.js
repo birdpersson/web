@@ -15,15 +15,19 @@ Vue.component('apartments', {
                     <div style='display:inline;' v-show='isFilter'>
                         <select style="padding:7px; margin-right: 10px" id='listOfTypes' v-model="filterQueryType">
                             <option disabled value="">Types</option>
-                            <option v-for='status in statuses'>{{status}}</option>
-                        </select>
-                        <select style="padding:7px; margin-right: 10px" id='listOfStatuses' v-model="filterQueryStatus">
-                            <option disabled value="">Status</option>
                             <option v-for='type in types'>{{type}}</option>
                         </select>
-                        <select v-if='!isGuest' style="padding:7px; margin-right: 10px" id='listOfAmenities' v-model="filterQueryAmanity">
+                        <select v-if='!isGuest' style="padding:7px; margin-right: 10px" id='listOfStatuses'v-model="filterQueryStatus" >
+                            <option disabled value="">Status</option>
+                            <option v-for='status in statuses'>{{status}}</option>
+                        </select>
+                        <select style="padding:7px; margin-right: 10px" id='listOfStatuses' v-model="choosenType">
+                            <option disabled value="">Type of amenity</option>
+                            <option v-for='amenType in typeOfAmenity' v-on:click='showAmenity'>{{amenType}}</option>
+                        </select>
+                        <select style="padding:7px; margin-right: 10px" id='listOfAmenities' v-model="filterQueryAmanity">
                             <option disabled value="">Amenities</option>
-                            <option v-for='amenity in amenities'>{{amenity}}</option>
+                            <option v-for='amenity in shownAmenities'>{{amenity}}</option>
                         </select>
                     </div>
                 </div>
@@ -70,16 +74,14 @@ Vue.component('apartments', {
                         <th>Apartment type</th>
                         <th>Apartment location</th>
                         <th>Rooms</th>
-                        <th>Date</th>
                         <th @click="sort('price')">Price <img style='display:inline;' v-if='currentSortDir == "asc"'
                                 src='img/up-arrow1.1.png'><img v-if='currentSortDir == "desc"'
                                 src='img/down-arrow1.1.png'></th>
                         <th>Availability</th>
                         <th>Status</th>
-                        <th>Amenities</th>
-                        <th v-if='isGuest'>Comments</th>
+                        <!-- <th v-if='isGuest'>Comments</th> -->
+                        <th v-if='isGuest'>Details</th>
                         <th v-if='isGuest'>Reserv</th>
-                        <!-- <th v-if='isGuest'>Add aparment</th> -->
                         <th v-if='!isGuest'>Edit</th>
                         <th v-if='!isGuest'>Delete</th>
                     </tr>
@@ -89,26 +91,18 @@ Vue.component('apartments', {
                         <td>{{apartment.type}}</td>
                         <td>{{apartment.location}}</td>
                         <td>{{apartment.rooms}}</td>
-                        <td>{{apartment.dates}}</td>
                         <td>{{apartment.price}}</td>
                         <td>{{apartment.availability}}</td>
                         <td>{{apartment.status}}</td>
-                        <td >
-                            <ul>
-                                <li style="list-style: none;display: inline;padding-right:2px;" v-for="amenity in apartment.amenities">{{amenity}}</li>
-                            </ul>
-                            <!-- <div class="dropdown">
-                                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Amenities </button>
-                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                      <p v-for="amenity in apartment.amenities" class="dropdown-item"> {{amenity}} </p> 
-                                  </div>
-                            </div> -->
+                        <!-- 
+                        <td v-if='isGuest'>
+                            <button v-on:click='showComments(apartment.id)'> Comments </button>
+                        </td> -->
+                        <td v-if='isGuest'>
+                            <button v-on:click='showDetails(apartment.id)'> Details </button>
                         </td>
                         <td v-if='isGuest'>
-                           <!-- <router-link to="/apartmentComments"> --><button v-on:click='showComments(apartment.id)'> Comments </button><!--</router-link>-->
-                        </td>
-                        <td v-if='isGuest'>
-                            <router-link to="/newReservation"><button> Reserv </button></router-link>
+                            <button v-on:click='makeReseravation(apartment.id)'> Reserv </button>
                         </td>
 
                         <td v-if='!isGuest'><button v-on:click='showMessage'> delete </button></td>
@@ -133,6 +127,13 @@ Vue.component('apartments', {
             <router-link to="/amenitiesOverview"> <button  class='classButton' v-if='isAdmin'>Sadrzaj apartmana</button></router-link>
         </div>
     </div>
+
+    <button class='classButton' v-on:click="showAllAmenities">AllAmenities</button>
+    <button class='classButton' v-on:click="showBase">base</button>
+    <button class='classButton' v-on:click="showFamily">family</button>
+    <button class='classButton' v-on:click="showDining">dining</button>
+    <button class='classButton' v-on:click="showFacilities">fac</button>
+    <button class='classButton'>shownAmenities</button>
 
     <div v-if='isGuest'>
             Kao Gost:<br>
@@ -203,7 +204,7 @@ Vue.component('apartments', {
                     availability: true,
                     price: 250,
                     status: 'aktivno',
-                    amenities:['frizider','parking'],
+                    amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Kitchen','Coffee maker'],
                 },
                 {
                     id: '2',
@@ -214,7 +215,7 @@ Vue.component('apartments', {
                     availability: true,
                     price: 100,
                     status: 'aktivno',
-                    amenities:['frizider','parking','TV'],
+                    amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
                 },
                 {
                     id: '3',
@@ -225,7 +226,7 @@ Vue.component('apartments', {
                     availability: true,
                     price: 150,
                     status: 'aktivno',
-                    amenities:['parking','klima','TV'],
+                    amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
                 },
                 {
                     id: '4',
@@ -236,7 +237,7 @@ Vue.component('apartments', {
                     availability: true,
                     price: 350,
                     status: 'neaktivno',
-                    amenities:['parking','klima','TV'],
+                    amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
                 },
             
                 {
@@ -248,7 +249,7 @@ Vue.component('apartments', {
                     availability: true,
                     price: 450,
                     status: 'neaktivno',
-                    amenities:['frizider','parking','klima','TV','ves masina','djakuzi'],
+                    amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
                 },
               
 
@@ -264,22 +265,56 @@ Vue.component('apartments', {
             filterQueryAmanity: '',
             types: ['ceo apartman', 'soba'],
             statuses:[' aktivno', 'neaktivno'],
-            amenities:['frizider','parking','klima','TV','ves masina','djakuzi'],
-
+            allAmenities:[], //svi amenties koji su u bazi
+            shownAmenities:[], // grupa amenities koja se prikazuje u padajucoj listi
+            amenities:{ //rasporedjeni allAmenities po grupama
+                base:[],
+                family:[],
+                dining:[],
+                fac:[],
+            },
+            typeOfAmenity:['base','family','dining','fac'], 
+            choosenType:'',
             isFilter:true,
             isSearch:true,
         }
     },
     methods: {
+        showAllAmenities(){
+            console.log('All amenities');
+            for(let i = 0; i< this.allAmenities.length; i++){
+                console.log(this.allAmenities[i].name);
+            }
+        },
+        showBase(){
+            console.log('Amenities.Base');
+            console.log('Amenities.Base.length: ' + this.amenities.base.length);
+            for(let i = 0; i< this.amenities.base.length; i++){
+                console.log(this.amenities.base[i].name);
+            }
+        },
+        showFamily(){},
+        showDining(){},
+        showFacilities(){},
+
+        showAmenity: function () {
+            alert('choosenType: ' + this.choosenType);
+            this.shownAmenities = this.amenities[this.choosenType];
+        },
         showMessage: function () {
             alert('Klikom na ovo dugme se brise odabrani stan!');
         },
 
         showComments: function(id){
-            // alert(`Id apartmana je ${id}!`);
-            this.$router.push(`/apartmentComments/${id}`);
+            this.$router.push(`/apartment/${id}/comments`);
         },
 
+        showDetails: function(id){
+            this.$router.push(`/apartment/${id}/details`);
+        },
+        makeReseravation: function(id){
+            this.$router.push(`/apartment/${id}/newReservation`);
+        },
         sort: function (s) {
             //if s == current sort, reverse
             if (s === this.currentSort) {
@@ -287,6 +322,25 @@ Vue.component('apartments', {
             }
             this.currentSort = s;
         },
+
+
+        arrangeAmenities(allAmenities){
+                alert('allAmenities.length: ' + this.allAmenities.length);
+                for(let i = 0; i< this.allAmenities.length; i++){
+                  if(this.allAmenities[i].type === 'Base'){
+                    this.amenities.base.push(this.allAmenities[i].name);
+                  }
+                  else if(this.allAmenities[i].type === 'Family' ){
+                    this.amenities.family.push(this.allAmenities[i].name);
+                  }
+                  else if(this.allAmenities[i].type === 'Dining'){
+                    this.amenities.dining.push(this.allAmenities[i].name);
+                  }
+                  else if(this.allAmenities[i].type === 'Facilities'){
+                    this.amenities.fac.push(this.allAmenities[i].name);
+                  }
+                }
+            }
 
     },
     computed: {
@@ -388,5 +442,13 @@ Vue.component('apartments', {
         } else {
             this.isGuest = true;
         }
+
+        axios
+        .get('rest/amenity')
+        .then(response => {
+            this.allAmenities = response.data;
+            this.arrangeAmenities(this.allAmenities);
+        })  
+
     },
 });

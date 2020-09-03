@@ -135,7 +135,7 @@ Vue.component('amenities-overview', {
     methods: {
         showAllAmenities:function(){
             axios
-            .get('rest/amenities/')
+            .get('rest/amenity/')
             .then(response => {
                 this.amenities=response.data;
             })
@@ -202,7 +202,7 @@ Vue.component('amenities-overview', {
             }
             else{
                 axios
-                .post('rest/amenities/', this.newAmenity)
+                .post('rest/amenity/', this.newAmenity)
                 .then(response => {
                     this.messages.successResponse = `<h4>Amenity was added successfuly!</h4>`;
                     this.newAmenity.name='';
@@ -226,7 +226,7 @@ Vue.component('amenities-overview', {
             }
             else{
                 axios
-                .put(`rest/amenities/${this.updatedAmenity.id}`, this.updatedAmenity)
+                .put(`rest/amenity/${this.updatedAmenity.id}`, this.updatedAmenity)
                 .then(response => {
                     this.messages.successResponse = `<h4>Amenity was updated successfuly!</h4>`;
                     this.updatedAmenity.name='';

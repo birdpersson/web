@@ -34,7 +34,7 @@ Vue.component('apartment-comments', {
                         {{comment.text}}  
                     </div>
                 </div>
-            </div> <!--comments-->
+            </div> <!--comments-->d
         </div> <!--isGuest-->
 
         <div v-if='isAdmin'>
