@@ -73,7 +73,6 @@ public class AmenityDAO {
 			//We don't change id of existing host just username, password, firstname and lastname.
 			oldAmenitie.setName(updatedAmenitie.getName());
 			oldAmenitie.setType(updatedAmenitie.getType());
-			oldAmenitie.setApartmentId(updatedAmenitie.getApartmentId());
 			
 			//We save and return old admin which is now updated.
 			return amenities.put(oldAmenitie.getId(), oldAmenitie);
@@ -99,7 +98,6 @@ public class AmenityDAO {
 			System.out.println(file.getCanonicalPath());
 			in = new BufferedReader(new FileReader(file));
 			String line, id = "";
-			ArrayList<String> apartmentsIds = new ArrayList<String>();
 			String name = "";
 			String type = "";
 			StringTokenizer st;
@@ -112,10 +110,9 @@ public class AmenityDAO {
 					id = st.nextToken().trim();
 					name = st.nextToken().trim();
 					type = st.nextToken().trim();
-					apartmentsIds = getListOfApartIds(st.nextToken().trim());
 					
 				}
-				amenities.put(id, new Amenity(Amenity.Type.valueOf(type), id, name, apartmentsIds));
+				amenities.put(id, new Amenity(Amenity.Type.valueOf(type), id, name));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -144,7 +141,7 @@ public class AmenityDAO {
 		for(Amenity a : allAmenities) {
 			
 			ArrayList<String> apertmentIds = new ArrayList<String>();
-			apertmentIds = a.getApartmentId();
+//			apertmentIds = a.getApartmentId();
 			
 			for(String apId : apertmentIds) {
 				if(apId.equals(id)) {
@@ -160,7 +157,7 @@ public class AmenityDAO {
 		if(amenitieToUpdate == null) {
 			System.out.println("Vrati error!");
 		}
-		amenitieToUpdate.getApartmentId().add(aprtId);
+//		amenitieToUpdate.getApartmentId().add(aprtId);
 		
 		return amenitieToUpdate;
 	}
