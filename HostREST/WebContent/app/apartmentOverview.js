@@ -72,12 +72,12 @@ Vue.component('apartments', {
                 <thead>
                     <tr>
                         <th>Apartment type</th>
-                        <th>Apartment location</th>
+                        <th>Apartment address</th>
                         <th>Rooms</th>
                         <th @click="sort('price')">Price <img style='display:inline;' v-if='currentSortDir == "asc"'
                                 src='img/up-arrow1.1.png'><img v-if='currentSortDir == "desc"'
                                 src='img/down-arrow1.1.png'></th>
-                        <th>Availability</th>
+                        <!-- <th>Availability</th> -->
                         <th>Status</th>
                         <!-- <th v-if='isGuest'>Comments</th> -->
                         <th v-if='isGuest'>Details</th>
@@ -89,10 +89,10 @@ Vue.component('apartments', {
                 <tbody>
                     <tr v-bind:key='apartments.id' v-for="apartment in filteredApartments">
                         <td>{{apartment.type}}</td>
-                        <td>{{apartment.location}}</td>
+                        <td>{{apartment.location.address.street}} - {{apartment.location.address.postalCode}} {{apartment.location.address.city}} </td>
                         <td>{{apartment.rooms}}</td>
                         <td>{{apartment.price}}</td>
-                        <td>{{apartment.availability}}</td>
+                        <!-- <td>{{apartment.availability}}</td> -->
                         <td>{{apartment.status}}</td>
                         <!-- 
                         <td v-if='isGuest'>
@@ -105,7 +105,7 @@ Vue.component('apartments', {
                             <button v-on:click='makeReseravation(apartment.id)'> Reserv </button>
                         </td>
 
-                        <td v-if='!isGuest'><button v-on:click='showMessage'> delete </button></td>
+                        <td v-if='!isGuest'><button v-on:click='showMessage'> Delete </button></td>
                         <td v-if='!isGuest'>
                             <router-link to="/apartmentNew"><button> Edit </button></router-link>
                         </td>
@@ -118,8 +118,8 @@ Vue.component('apartments', {
 
         <div id='options'>
             <!--Neaktivni stanovi i dodaj stan pripadaju hostu,
-                    Komentari i rezervacije hostu i adminu,
-                    dok sadrzaj apartmana samo adminu.-->
+                Komentari i rezervacije hostu i adminu,
+                dok sadrzaj apartmana samo adminu.-->
             <router-link to="/apartmentComments"> <button class='classButton' v-if='!isGuest' >Komentari</button></router-link>
             <router-link to="/apartInactiveOverview"> <button class='classButton' v-if='isHost'>Neaktivni stanovi</button></router-link>
             <router-link to="/apartmentNew"> <button class='classButton' v-if='isHost'>Dodaj stan</button></router-link>
@@ -127,13 +127,6 @@ Vue.component('apartments', {
             <router-link to="/amenitiesOverview"> <button  class='classButton' v-if='isAdmin'>Sadrzaj apartmana</button></router-link>
         </div>
     </div>
-
-    <button class='classButton' v-on:click="showAllAmenities">AllAmenities</button>
-    <button class='classButton' v-on:click="showBase">base</button>
-    <button class='classButton' v-on:click="showFamily">family</button>
-    <button class='classButton' v-on:click="showDining">dining</button>
-    <button class='classButton' v-on:click="showFacilities">fac</button>
-    <button class='classButton'>shownAmenities</button>
 
     <div v-if='isGuest'>
             Kao Gost:<br>
@@ -193,67 +186,67 @@ Vue.component('apartments', {
         //     private boolean status;
         //     private ArrayList<Amenitie> amenities;
         //     private ArrayList<Reservation> reservations;
-
-            apartments: [
-                {
-                    id: '1',
-                    type: 'ceo apartman',
-                    rooms: 4,
-                    location: 'Fiftieth street',
-                    dates: '01.01.2020',
-                    availability: true,
-                    price: 250,
-                    status: 'aktivno',
-                    amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Kitchen','Coffee maker'],
-                },
-                {
-                    id: '2',
-                    type: 'ceo apartman',
-                    rooms: 6,
-                    apartmentLocation: 'Main Boulevard 1',
-                    dates: '01.01.2020',
-                    availability: true,
-                    price: 100,
-                    status: 'aktivno',
-                    amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
-                },
-                {
-                    id: '3',
-                    type: 'soba',
-                    rooms: 1,
-                    location: 'Main Boulevard 2',
-                    dates: '01.01.2020',
-                    availability: true,
-                    price: 150,
-                    status: 'aktivno',
-                    amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
-                },
-                {
-                    id: '4',
-                    type: 'soba',
-                    rooms: 1,
-                    location: 'Main Boulevard 3',
-                    dates: '01.01.2020',
-                    availability: true,
-                    price: 350,
-                    status: 'neaktivno',
-                    amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
-                },
+            apartments:[],
+            // apartments: [
+            //     {
+            //         id: '1',
+            //         type: 'ceo apartman',
+            //         rooms: 4,
+            //         location: 'Fiftieth street',
+            //         dates: '01.01.2020',
+            //         availability: true,
+            //         price: 250,
+            //         status: 'aktivno',
+            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Kitchen','Coffee maker'],
+            //     },
+            //     {
+            //         id: '2',
+            //         type: 'ceo apartman',
+            //         rooms: 6,
+            //         apartmentLocation: 'Main Boulevard 1',
+            //         dates: '01.01.2020',
+            //         availability: true,
+            //         price: 100,
+            //         status: 'aktivno',
+            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
+            //     },
+            //     {
+            //         id: '3',
+            //         type: 'soba',
+            //         rooms: 1,
+            //         location: 'Main Boulevard 2',
+            //         dates: '01.01.2020',
+            //         availability: true,
+            //         price: 150,
+            //         status: 'aktivno',
+            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
+            //     },
+            //     {
+            //         id: '4',
+            //         type: 'soba',
+            //         rooms: 1,
+            //         location: 'Main Boulevard 3',
+            //         dates: '01.01.2020',
+            //         availability: true,
+            //         price: 350,
+            //         status: 'neaktivno',
+            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
+            //     },
             
-                {
-                    id: '5',
-                    type: 'ceo apartman',
-                    rooms: 8,
-                    location: 'Main Boulevard 2',
-                    dates: '01.01.2020',
-                    availability: true,
-                    price: 450,
-                    status: 'neaktivno',
-                    amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
-                },
+            //     {
+            //         id: '5',
+            //         type: 'ceo apartman',
+            //         rooms: 8,
+            //         location: 'Main Boulevard 2',
+            //         dates: '01.01.2020',
+            //         availability: true,
+            //         price: 450,
+            //         status: 'neaktivno',
+            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
+            //     },
               
 
-            ],
+            // ],
 
             //sortiranje:
             currentSort: 'name',
@@ -442,7 +435,12 @@ Vue.component('apartments', {
         } else {
             this.isGuest = true;
         }
-
+        axios
+        .get('rest/apartment')
+        .then(response => {
+            this.apartments = response.data;
+        })  
+        
         axios
         .get('rest/amenity')
         .then(response => {
