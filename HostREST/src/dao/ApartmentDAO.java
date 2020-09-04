@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import beans.Amenity;
 import beans.Apartment;
 import beans.Location;
 import beans.Period;
@@ -49,6 +50,7 @@ public class ApartmentDAO {
 		}
 		maxId++;
 		apartment.setId(maxId.toString());
+		apartment.setStatus("neaktivno");
 		String line = apartment.getId() + ";"
 				+ apartment.getType() + ";"
 				+ apartment.getRooms() + ";"
@@ -58,7 +60,7 @@ public class ApartmentDAO {
 				+ apartment.getPrice() + ";"
 				+ apartment.getCheckin() + ";"
 				+ apartment.getCheckout() + ";"
-				+ "neaktivno" + ";";
+				+ apartment.getStatus() + ";";
 		System.out.println(line);
 		BufferedWriter writer = null;
 		try {
@@ -67,6 +69,16 @@ public class ApartmentDAO {
 			PrintWriter out = new PrintWriter(writer);
 			out.println(line);
 			out.close();
+			for (Amenity amenity : apartment.getAmenities()) {
+				String line2 = apartment.getId() + ";" + amenity.getId();
+				System.out.println(line2);
+
+				File file2 = new File(contextPath + "/apartment_amenities.txt");
+				BufferedWriter writer2 = new BufferedWriter(new FileWriter(file2, true));
+				PrintWriter out2 = new PrintWriter(writer2);
+				out2.println(line2);
+				out2.close();
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return null;
@@ -171,7 +183,7 @@ public class ApartmentDAO {
 		availability.add(period);
 		return availability;
 	}
-
+	
 	public Collection<Apartment> findAllApartByHostId(String id) {
 		Collection<Apartment> allApartments = findAll();
 		Collection<Apartment> testApart = new ArrayList<Apartment>();
