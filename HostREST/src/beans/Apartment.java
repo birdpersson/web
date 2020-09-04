@@ -1,7 +1,6 @@
 package beans;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Apartment {
 
@@ -14,17 +13,15 @@ public class Apartment {
 	private int rooms;
 	private int guests;
 	private Location location;
-	private Date from;
-	private Date to;
-	private ArrayList<Date> dates;
-	private ArrayList<Date> availability;
+	private Period period;
+	private ArrayList<Period> availability;
 	private String host;
 	private ArrayList<Review> reviews;
 	private ArrayList<String> images;
 	private int price;
 	private String checkin;
 	private String checkout;
-	private boolean active;
+	private String status;
 	private ArrayList<Amenity> amenities;
 	private ArrayList<Reservation> reservations;
 
@@ -33,7 +30,7 @@ public class Apartment {
 	}
 
 	public Apartment(String id, Type type, int rooms, int guests, Location location, String host, int price,
-			String checkin, String checkout, boolean active) {
+			String checkin, String checkout, String status) {
 		super();
 		this.id = id;
 		this.type = type;
@@ -44,7 +41,7 @@ public class Apartment {
 		this.price = price;
 		this.checkin = checkin;
 		this.checkout = checkout;
-		this.active = active;
+		this.status = status;
 	}
 
 	public String getId() {
@@ -87,35 +84,19 @@ public class Apartment {
 		this.location = location;
 	}
 
-	public Date getFrom() {
-		return from;
+	public Period getPeriod() {
+		return period;
 	}
 
-	public void setFrom(Date from) {
-		this.from = from;
+	public void setPeriod(Period period) {
+		this.period = period;
 	}
 
-	public Date getTo() {
-		return to;
-	}
-
-	public void setTo(Date to) {
-		this.to = to;
-	}
-
-	public ArrayList<Date> getDates() {
-		return dates;
-	}
-
-	public void setDates(ArrayList<Date> dates) {
-		this.dates = dates;
-	}
-
-	public ArrayList<Date> getAvailability() {
+	public ArrayList<Period> getAvailability() {
 		return availability;
 	}
 
-	public void setAvailability(ArrayList<Date> availability) {
+	public void setAvailability(ArrayList<Period> availability) {
 		this.availability = availability;
 	}
 
@@ -167,12 +148,12 @@ public class Apartment {
 		this.checkout = checkout;
 	}
 
-	public boolean isActive() {
-		return active;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public ArrayList<Amenity> getAmenities() {

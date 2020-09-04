@@ -1,3 +1,0 @@
-host1;123;Darko;Darkovic;Muski;
-host2;456;Jelena;Jelenic;Zenski;
-host3;789;Anja;Anjic;Zenski;

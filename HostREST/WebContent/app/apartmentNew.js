@@ -16,16 +16,21 @@ Vue.component('new-apartment', {
 						postalCode: ''
 					}
 				},
-				from: null,
-				to: null,
+				period: {
+					to: null,
+					from: null
+				},
 				price: null,
 				checkin: '2 PM',
-				checkout: '10 AM'
+				checkout: '10 AM',
+				amenities: []
 			},
 
 			types: ['APARTMENT', 'ROOM'],
 			rooms: null,
 			guests: null,
+			images: null,
+			amenities: [],
 
 			dates: {
 				from: null,
@@ -73,7 +78,7 @@ Vue.component('new-apartment', {
 
 			<label>Location</label>
 			<input class='half-size' type="text" placeholder="Enter location latitude..."
-			v-model='apartment.location.latitude'> -
+				v-model='apartment.location.latitude'> -
 			<input class='half-size' type="text" placeholder="Enter location longitude..."
 				v-model='apartment.location.longitude'>
 
@@ -81,7 +86,7 @@ Vue.component('new-apartment', {
 				<label style="display:inline;">Address</label>
 				<input placeholder="Enter street" v-model='apartment.location.address.street'>
 				<input placeholder="Enter city" v-model='apartment.location.address.city'>
-				<input placeholder="Enter postal colde" v-model='apartment.location.address.postalCode'>	
+				<input placeholder="Enter postal colde" v-model='apartment.location.address.postalCode'>
 			</div>
 
 			<label>Price</label>
@@ -94,11 +99,25 @@ Vue.component('new-apartment', {
 			<label>Dates available</label>
 			<div class="row">
 				<div class="col">
-					<vuejsDatepicker placeholder="Select Checkin Date" v-model="dates.from" :highlighted="dates"></vuejsDatepicker>
+					<vuejsDatepicker placeholder="Select Checkin Date" v-model="dates.from" :highlighted="dates">
+					</vuejsDatepicker>
 				</div>
 				<div class="col">
-					<vuejsDatepicker placeholder="Select Checkout Date" v-model="dates.to" :highlighted="dates"></vuejsDatepicker>
+					<vuejsDatepicker placeholder="Select Checkout Date" v-model="dates.to" :highlighted="dates">
+					</vuejsDatepicker>
 				</div>
+			</div>
+
+			<label>Amenities</label>
+			<div>
+				<div v-for="amenity in amenities">
+					<input :value="amenity" v-model="apartment.amenities" type="checkbox"> {{amenity.name}}
+				</div>
+			</div>
+
+			<div>
+				<label>Images</label>
+				<input type="file" class="filestyle" multiple v-on:change="handleFileUploads()">	
 			</div>
 
 			<button class="btn btn-lg btn-success" v-on:click="create(apartment)">Save</button>
@@ -109,14 +128,20 @@ Vue.component('new-apartment', {
 	,
 	methods: {
 		create: function (apartment) {
-			this.apartment.from = this.dates.from.getTime();
-			this.apartment.to = this.dates.to.getTime();
+			// unselected dates will be disabled
+			this.apartment.period.to = this.dates.from.getTime();
+			this.apartment.period.from = this.dates.to.getTime();
 			console.log(apartment);
 			axios
 				.post('rest/apartment', apartment)
 				.then(Response => (console.log(Response)))
 		},
 		update: function (apartment) {
+
+		},
+		handleFileUploads() {
+		},
+		submitFiles: function () {
 
 		},
 		checkApartment: function () {
@@ -134,6 +159,9 @@ Vue.component('new-apartment', {
 		},
 	},
 	created() {
+		axios
+			.get('rest/amenity/all')
+			.then(Response => (this.amenities = Response.data));
 	},
 	mounted() {
 		this.rooms = this.range(1, 10);
