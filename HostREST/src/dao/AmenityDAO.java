@@ -115,7 +115,7 @@ public class AmenityDAO {
 				while (st.hasMoreTokens()) {
 					String apartmentId = st.nextToken().trim();
 					String amenityId = st.nextToken().trim();
-					if (apartmentId == id) {
+					if (apartmentId.equals(id)) {
 						returnAmenities.add(amenities.get(amenityId));
 					}
 				}
