@@ -89,7 +89,7 @@ Vue.component('apartments', {
                 <tbody>
                     <tr v-bind:key='apartments.id' v-for="apartment in filteredApartments">
                         <td>{{apartment.type}}</td>
-                        <!-- <td>{{apartment.location.address.street}} - {{apartment.location.address.postalCode}} {{apartment.location.address.city}} </td> -->
+                        <td>{{apartment.location.address.street}} - {{apartment.location.address.postalCode}} {{apartment.location.address.city}} </td>
                         <td>{{apartment.rooms}}</td>
                         <td>{{apartment.price}}</td>
                         <!-- <td>{{apartment.availability}}</td> -->
@@ -168,67 +168,67 @@ Vue.component('apartments', {
             isHost: false,
             isGuest: false,
 
-            // apartments:[],
-            apartments: [
-                {
-                    id: '1',
-                    type: 'ceo apartman',
-                    rooms: 4,
-                    location: 'Fiftieth street',
-                    dates: '01.01.2020',
-                    availability: true,
-                    price: 250,
-                    status: 'aktivno',
-                    amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Kitchen','Coffee maker'],
-                },
-                {
-                    id: '2',
-                    type: 'ceo apartman',
-                    rooms: 6,
-                    apartmentLocation: 'Main Boulevard 1',
-                    dates: '01.01.2020',
-                    availability: true,
-                    price: 100,
-                    status: 'aktivno',
-                    amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
-                },
-                {
-                    id: '3',
-                    type: 'soba',
-                    rooms: 1,
-                    location: 'Main Boulevard 2',
-                    dates: '01.01.2020',
-                    availability: true,
-                    price: 150,
-                    status: 'aktivno',
-                    amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
-                },
-                {
-                    id: '4',
-                    type: 'soba',
-                    rooms: 1,
-                    location: 'Main Boulevard 3',
-                    dates: '01.01.2020',
-                    availability: true,
-                    price: 350,
-                    status: 'neaktivno',
-                    amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
-                },
+            apartments:[],
+            // apartments: [
+            //     {
+            //         id: '1',
+            //         type: 'APARTMENT',
+            //         rooms: 4,
+            //         location: 'Fiftieth street',
+            //         dates: '01.01.2020',
+            //         availability: true,
+            //         price: 250,
+            //         status: 'aktivan',
+            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Kitchen','Coffee maker'],
+            //     },
+            //     {
+            //         id: '2',
+            //         type: 'APARTMENT',
+            //         rooms: 6,
+            //         apartmentLocation: 'Main Boulevard 1',
+            //         dates: '01.01.2020',
+            //         availability: true,
+            //         price: 100,
+            //         status: 'aktivan',
+            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
+            //     },
+            //     {
+            //         id: '3',
+            //         type: 'ROOM',
+            //         rooms: 1,
+            //         location: 'Main Boulevard 2',
+            //         dates: '01.01.2020',
+            //         availability: true,
+            //         price: 150,
+            //         status: 'aktivan',
+            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
+            //     },
+            //     {
+            //         id: '4',
+            //         type: 'ROOM',
+            //         rooms: 1,
+            //         location: 'Main Boulevard 3',
+            //         dates: '01.01.2020',
+            //         availability: true,
+            //         price: 350,
+            //         status: 'neaktivno',
+            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
+            //     },
             
-                {
-                    id: '5',
-                    type: 'ceo apartman',
-                    rooms: 8,
-                    location: 'Main Boulevard 2',
-                    dates: '01.01.2020',
-                    availability: true,
-                    price: 450,
-                    status: 'neaktivno',
-                    amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
-                },
+            //     {
+            //         id: '5',
+            //         type: 'APARTMENT',
+            //         rooms: 8,
+            //         location: 'Main Boulevard 2',
+            //         dates: '01.01.2020',
+            //         availability: true,
+            //         price: 450,
+            //         status: 'neaktivno',
+            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
+            //     },
               
 
-            ],
+            // ],
 
             //sortiranje:
             currentSort: 'price',
@@ -239,7 +239,7 @@ Vue.component('apartments', {
             filterQueryStatus: '',
             filterQueryAmanity: '',
             types: ['APARTMENT', 'ROOM'],
-            statuses:['true', 'false'],
+            statuses:['aktivan', 'neaktivno'],
             allAmenities:[], //svi amenties koji su u bazi
             shownAmenities:[], // grupa amenities koja se prikazuje u padajucoj listi
             amenities:{ //rasporedjeni allAmenities po grupama
@@ -300,6 +300,7 @@ Vue.component('apartments', {
 
 
         arrangeAmenities(allAmenities){
+                console.log('Amenities.Base.length: ' + this.amenities.base.length);
                 for(let i = 0; i< this.allAmenities.length; i++){
                   if(this.allAmenities[i].type === 'Base'){
                     this.amenities.base.push(this.allAmenities[i].name);
@@ -425,14 +426,14 @@ Vue.component('apartments', {
         } else {
             this.isGuest = true;
         }
-        // axios
-        // .get('rest/apartment')
-        // .then(response => {
-        //     this.apartments = response.data;
-        // })  
+        axios
+        .get('rest/apartment')
+        .then(response => {
+            this.apartments = response.data;
+        })  
         
         axios
-        .get('rest/amenity')
+        .get('rest/amenity/all')
         .then(response => {
             this.allAmenities = response.data;
             this.arrangeAmenities(this.allAmenities);

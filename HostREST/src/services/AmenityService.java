@@ -40,22 +40,6 @@ public class AmenityService {
 	}
 
 	@GET
-	@Path("/")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllAmenities(@Context HttpServletRequest request) {
-		String username = AuthService.getUsername(request);
-		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-		AmenityDAO daoAmenity = (AmenityDAO) ctx.getAttribute("amenityDAO");
-
-		if (userDao.findOne(username).getRole().toString().equals("ADMIN") ||
-			userDao.findOne(username).getRole().toString().equals("HOST")||
-			userDao.findOne(username).getRole().toString().equals("GUEST")) {
-			return Response.status(Response.Status.OK).entity(daoAmenity.findAll()).build();
-		}
-		return Response.status(Response.Status.FORBIDDEN).build();
-	}
-
-	@GET
 	@Path("/all")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllAmenities(@Context HttpServletRequest request) {
