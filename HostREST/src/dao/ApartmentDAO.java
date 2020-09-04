@@ -126,8 +126,8 @@ public class ApartmentDAO {
 					int price = Integer.parseInt(st.nextToken().trim());
 					String checkin = st.nextToken().trim();
 					String checkout = st.nextToken().trim();
-					String status = st.nextToken().trim();
-//					ArrayList<Amenity> amenities = new ArrayList<>();
+					String status = st.nextToken();
+//					ArrayList<Amenity> amenities = amenityDAO.findAllByApartmentId(contextPath, id);
 //					ArrayList<Reservation> reservations = new ArrayList<>();
 					apartments.put(id,
 							new Apartment(id, type, rooms, guests, location, host, price, checkin, checkout, status));
@@ -194,16 +194,5 @@ public class ApartmentDAO {
 		}
 		return testApart;
 	}
-
-//	public Collection<Apartment> findAllApartByGuestId(String id) {
-//		Collection<Apartment> allApartments = findAll();
-//		Collection<Apartment> testApart = new ArrayList<Apartment>();
-//		for (Apartment a : allApartments) {
-//			if (a.getGuest().equals(id)) {
-//				testApart.add(a);
-//			}
-//		}
-//		return testApart;
-//	}
 
 }
