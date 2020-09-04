@@ -1,35 +1,23 @@
 package beans;
 
-import java.util.ArrayList;
-
 public class Amenity {
 
 	public enum Type {
 		Base, Dining, Facilities, Family
 	}
 
-	private Type type;
 	private String id;
 	private String name;
-	private ArrayList<String> apartmentId;
+	private Type type;
 
 	public Amenity() {
 		super();
 	}
 
-	public Amenity(Type type, String id, String name, ArrayList<String> apartmentId) {
+	public Amenity(String id, String name, Type type) {
 		super();
-		this.type = type;
 		this.id = id;
 		this.name = name;
-		this.apartmentId = apartmentId;
-	}
-
-	public Type getType() {
-		return type;
-	}
-
-	public void setType(Type type) {
 		this.type = type;
 	}
 
@@ -49,12 +37,12 @@ public class Amenity {
 		this.name = name;
 	}
 
-	public ArrayList<String> getApartmentId() {
-		return apartmentId;
+	public Type getType() {
+		return type;
 	}
 
-	public void setApartmentId(ArrayList<String> apartmentId) {
-		this.apartmentId = apartmentId;
+	public void setType(Type type) {
+		this.type = type;
 	}
 
 }

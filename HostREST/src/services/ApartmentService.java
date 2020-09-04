@@ -9,19 +9,22 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import beans.Apartment;
+import dao.AmenityDAO;
 import dao.ApartmentDAO;
 import dao.LocationDAO;
+import dao.ReviewDAO;
 import dao.UserDAO;
 
 @Path("/apartment")
 public class ApartmentService {
-	
+
 	@Context
 	ServletContext ctx;
 
@@ -38,28 +41,30 @@ public class ApartmentService {
 //			String contextPath = ctx.getRealPath("");
 //			ctx.setAttribute("reservationDAO", new ReservationDAO(contextPath));
 //		}
-//		if (ctx.getAttribute("reviewDAO") == null) {
-//			String contextPath = ctx.getRealPath("");
-//			ctx.setAttribute("reviewDAO", new ReviewDAO(contextPath));
-//		}
-//		if (ctx.getAttribute("amenityDAO") == null) {
-//			String contextPath = ctx.getRealPath("");
-//			ctx.setAttribute("amenityDAO", new AmenityDAO(contextPath));
-//		}
+		if (ctx.getAttribute("reviewDAO") == null) {
+			String contextPath = ctx.getRealPath("");
+			ctx.setAttribute("reviewDAO", new ReviewDAO(contextPath));
+		}
+		if (ctx.getAttribute("amenityDAO") == null) {
+			String contextPath = ctx.getRealPath("");
+			ctx.setAttribute("amenityDAO", new AmenityDAO(contextPath));
+		}
 		if (ctx.getAttribute("locationDAO") == null) {
 			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("locationDAO", new LocationDAO(contextPath));
 		}
 		if (ctx.getAttribute("apartmentDAO") == null) {
 			String contextPath = ctx.getRealPath("");
-			ctx.setAttribute("apartmentDAO", new ApartmentDAO(contextPath, (LocationDAO) ctx.getAttribute("locationDAO")));
+			ctx.setAttribute("apartmentDAO",
+					new ApartmentDAO(contextPath, (LocationDAO) ctx.getAttribute("locationDAO"),
+							(AmenityDAO) ctx.getAttribute("amenityDAO"), (ReviewDAO) ctx.getAttribute("reviewDAO")));
 		}
 	}
 
 	@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Apartment> getApartments() {
+	public Collection<Apartment> getAllApartments() {
 		ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
 		Collection<Apartment> retApartment = apartmentDAO.findAll();
 
@@ -69,6 +74,14 @@ public class ApartmentService {
 //			a.setAmenities((ArrayList<Amenity>) daoAmen.findAllByApartmentId(a.getId()));
 //		}
 		return retApartment;
+	}
+
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Apartment getApartment(@PathParam("id") String id) {
+		ApartmentDAO daoApertment = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+		return daoApertment.findOne(id);
 	}
 
 	@POST

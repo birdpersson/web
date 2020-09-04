@@ -13,17 +13,21 @@ Vue.component('apartments', {
                 <div>
                    <link style='display:inline;'><img v-on:click='isFilter = !isFilter' src='img/filterIcon1.1.png' style="display:inline;"></link>
                     <div style='display:inline;' v-show='isFilter'>
-                        <select style="padding:7px; margin-right: 10px" id='listOfTypes' v-model="filterQueryType">
+                        <select v-if='isActive()' style="padding:7px; margin-right: 10px" id='listOfTypes' v-model="filterQueryType">
                             <option disabled value="">Types</option>
-                            <option v-for='status in statuses'>{{status}}</option>
-                        </select>
-                        <select style="padding:7px; margin-right: 10px" id='listOfStatuses' v-model="filterQueryStatus">
-                            <option disabled value="">Status</option>
                             <option v-for='type in types'>{{type}}</option>
                         </select>
-                        <select v-if='!isGuest' style="padding:7px; margin-right: 10px" id='listOfAmenities' v-model="filterQueryAmanity">
+                        <select v-if='!isGuest' style="padding:7px; margin-right: 10px" id='listOfStatuses'v-model="filterQueryStatus" >
+                            <option disabled value="">Status</option>
+                            <option v-for='status in statuses'>{{status}}</option>
+                        </select>
+                        <select v-if='isActive()' style="padding:7px; margin-right: 10px" id='listOfStatuses' v-model="choosenType">
+                            <option disabled value="">Type of amenity</option>
+                            <option v-for='amenType in typeOfAmenity' v-on:click='showAmenity'>{{amenType}}</option>
+                        </select>
+                        <select v-if='isActive()' style="padding:7px; margin-right: 10px" id='listOfAmenities' v-model="filterQueryAmanity">
                             <option disabled value="">Amenities</option>
-                            <option v-for='amenity in amenities'>{{amenity}}</option>
+                            <option v-for='amenity in shownAmenities'>{{amenity}}</option>
                         </select>
                     </div>
                 </div>
@@ -68,18 +72,16 @@ Vue.component('apartments', {
                 <thead>
                     <tr>
                         <th>Apartment type</th>
-                        <th>Apartment location</th>
+                        <th>Apartment address</th>
                         <th>Rooms</th>
-                        <th>Date</th>
                         <th @click="sort('price')">Price <img style='display:inline;' v-if='currentSortDir == "asc"'
                                 src='img/up-arrow1.1.png'><img v-if='currentSortDir == "desc"'
                                 src='img/down-arrow1.1.png'></th>
-                        <th>Availability</th>
+                        <!-- <th>Availability</th> -->
                         <th>Status</th>
-                        <th>Amenities</th>
-                        <th v-if='isGuest'>Comments</th>
+                        <!-- <th v-if='isGuest'>Comments</th> -->
+                        <th v-if='isGuest'>Details</th>
                         <th v-if='isGuest'>Reserv</th>
-                        <!-- <th v-if='isGuest'>Add aparment</th> -->
                         <th v-if='!isGuest'>Edit</th>
                         <th v-if='!isGuest'>Delete</th>
                     </tr>
@@ -87,31 +89,23 @@ Vue.component('apartments', {
                 <tbody>
                     <tr v-bind:key='apartments.id' v-for="apartment in filteredApartments">
                         <td>{{apartment.type}}</td>
-                        <td>{{apartment.location}}</td>
+                        <td>{{apartment.location.address.street}} - {{apartment.location.address.postalCode}} {{apartment.location.address.city}} </td>
                         <td>{{apartment.rooms}}</td>
-                        <td>{{apartment.dates}}</td>
                         <td>{{apartment.price}}</td>
-                        <td>{{apartment.availability}}</td>
+                        <!-- <td>{{apartment.availability}}</td> -->
                         <td>{{apartment.status}}</td>
-                        <td >
-                            <ul>
-                                <li style="list-style: none;display: inline;padding-right:2px;" v-for="amenity in apartment.amenities">{{amenity}}</li>
-                            </ul>
-                            <!-- <div class="dropdown">
-                                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Amenities </button>
-                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                      <p v-for="amenity in apartment.amenities" class="dropdown-item"> {{amenity}} </p> 
-                                  </div>
-                            </div> -->
+                        <!-- 
+                        <td v-if='isGuest'>
+                            <button v-on:click='showComments(apartment.id)'> Comments </button>
+                        </td> -->
+                        <td v-if='isGuest'>
+                            <button v-on:click='showDetails(apartment.id)'> Details </button>
                         </td>
                         <td v-if='isGuest'>
-                           <!-- <router-link to="/apartmentComments"> --><button v-on:click='showComments(apartment.id)'> Comments </button><!--</router-link>-->
-                        </td>
-                        <td v-if='isGuest'>
-                            <router-link to="/newReservation"><button> Reserv </button></router-link>
+                            <button v-on:click='makeReseravation(apartment.id)'> Reserv </button>
                         </td>
 
-                        <td v-if='!isGuest'><button v-on:click='showMessage'> delete </button></td>
+                        <td v-if='!isGuest'><button v-on:click='showMessage'> Delete </button></td>
                         <td v-if='!isGuest'>
                             <router-link to="/apartmentNew"><button> Edit </button></router-link>
                         </td>
@@ -124,8 +118,8 @@ Vue.component('apartments', {
 
         <div id='options'>
             <!--Neaktivni stanovi i dodaj stan pripadaju hostu,
-                    Komentari i rezervacije hostu i adminu,
-                    dok sadrzaj apartmana samo adminu.-->
+                Komentari i rezervacije hostu i adminu,
+                dok sadrzaj apartmana samo adminu.-->
             <router-link to="/apartmentComments"> <button class='classButton' v-if='!isGuest' >Komentari</button></router-link>
             <router-link to="/apartInactiveOverview"> <button class='classButton' v-if='isHost'>Neaktivni stanovi</button></router-link>
             <router-link to="/apartmentNew"> <button class='classButton' v-if='isHost'>Dodaj stan</button></router-link>
@@ -174,112 +168,111 @@ Vue.component('apartments', {
             isHost: false,
             isGuest: false,
 
-        //     private String id;
-        //     private String hostId;	//ovo se ne menja jer je vlasnik isti;
-        //     private String guestId; //ovo se menja sa promenom gosta;
-        //     private Type type;
-        //     private int rooms;
-        //     private int guests;
-        //     private Location location;
-        //     private ArrayList<Date> dates;
-        //     private ArrayList<Date> availability;
-        // //	private Host host;
-        //     private ArrayList<Review> reviews;
-        //     private ArrayList<String> images;
-        //     private int price;
-        //     private String checkin;
-        //     private String checkout;
-        //     private boolean status;
-        //     private ArrayList<Amenitie> amenities;
-        //     private ArrayList<Reservation> reservations;
-
-            apartments: [
-                {
-                    id: '1',
-                    type: 'ceo apartman',
-                    rooms: 4,
-                    location: 'Fiftieth street',
-                    dates: '01.01.2020',
-                    availability: true,
-                    price: 250,
-                    status: 'aktivno',
-                    amenities:['frizider','parking'],
-                },
-                {
-                    id: '2',
-                    type: 'ceo apartman',
-                    rooms: 6,
-                    apartmentLocation: 'Main Boulevard 1',
-                    dates: '01.01.2020',
-                    availability: true,
-                    price: 100,
-                    status: 'aktivno',
-                    amenities:['frizider','parking','TV'],
-                },
-                {
-                    id: '3',
-                    type: 'soba',
-                    rooms: 1,
-                    location: 'Main Boulevard 2',
-                    dates: '01.01.2020',
-                    availability: true,
-                    price: 150,
-                    status: 'aktivno',
-                    amenities:['parking','klima','TV'],
-                },
-                {
-                    id: '4',
-                    type: 'soba',
-                    rooms: 1,
-                    location: 'Main Boulevard 3',
-                    dates: '01.01.2020',
-                    availability: true,
-                    price: 350,
-                    status: 'neaktivno',
-                    amenities:['parking','klima','TV'],
-                },
+            apartments:[],
+            // apartments: [
+            //     {
+            //         id: '1',
+            //         type: 'APARTMENT',
+            //         rooms: 4,
+            //         location: 'Fiftieth street',
+            //         dates: '01.01.2020',
+            //         availability: true,
+            //         price: 250,
+            //         status: 'aktivan',
+            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Kitchen','Coffee maker'],
+            //     },
+            //     {
+            //         id: '2',
+            //         type: 'APARTMENT',
+            //         rooms: 6,
+            //         apartmentLocation: 'Main Boulevard 1',
+            //         dates: '01.01.2020',
+            //         availability: true,
+            //         price: 100,
+            //         status: 'aktivan',
+            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
+            //     },
+            //     {
+            //         id: '3',
+            //         type: 'ROOM',
+            //         rooms: 1,
+            //         location: 'Main Boulevard 2',
+            //         dates: '01.01.2020',
+            //         availability: true,
+            //         price: 150,
+            //         status: 'aktivan',
+            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
+            //     },
+            //     {
+            //         id: '4',
+            //         type: 'ROOM',
+            //         rooms: 1,
+            //         location: 'Main Boulevard 3',
+            //         dates: '01.01.2020',
+            //         availability: true,
+            //         price: 350,
+            //         status: 'neaktivno',
+            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
+            //     },
             
-                {
-                    id: '5',
-                    type: 'ceo apartman',
-                    rooms: 8,
-                    location: 'Main Boulevard 2',
-                    dates: '01.01.2020',
-                    availability: true,
-                    price: 450,
-                    status: 'neaktivno',
-                    amenities:['frizider','parking','klima','TV','ves masina','djakuzi'],
-                },
+            //     {
+            //         id: '5',
+            //         type: 'APARTMENT',
+            //         rooms: 8,
+            //         location: 'Main Boulevard 2',
+            //         dates: '01.01.2020',
+            //         availability: true,
+            //         price: 450,
+            //         status: 'neaktivno',
+            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
+            //     },
               
 
-            ],
+            // ],
 
             //sortiranje:
-            currentSort: 'name',
+            currentSort: 'price',
             currentSortDir: 'asc',
 
             //filtriranje:
             filterQueryType: '',
             filterQueryStatus: '',
             filterQueryAmanity: '',
-            types: ['ceo apartman', 'soba'],
-            statuses:[' aktivno', 'neaktivno'],
-            amenities:['frizider','parking','klima','TV','ves masina','djakuzi'],
-
+            types: ['APARTMENT', 'ROOM'],
+            statuses:['aktivan', 'neaktivno'],
+            allAmenities:[], //svi amenties koji su u bazi
+            shownAmenities:[], // grupa amenities koja se prikazuje u padajucoj listi
+            amenities:{ //rasporedjeni allAmenities po grupama
+                base:[],
+                family:[],
+                dining:[],
+                fac:[],
+            },
+            typeOfAmenity:['base','family','dining','fac'], 
+            choosenType:'',
             isFilter:true,
             isSearch:true,
         }
     },
     methods: {
+        showAmenity: function () {
+            alert('choosenType: ' + this.choosenType);
+            this.shownAmenities = this.amenities[this.choosenType];
+        },
         showMessage: function () {
             alert('Klikom na ovo dugme se brise odabrani stan!');
         },
 
         showComments: function(id){
-            // alert(`Id apartmana je ${id}!`);
-            this.$router.push(`/apartmentComments/${id}`);
+            this.$router.push(`/apartment/${id}/comments`);
         },
 
+        showDetails: function(id){
+            this.$router.push(`/apartment/${id}/details`);
+        },
+        makeReseravation: function(id){
+            this.$router.push(`/apartment/${id}/newReservation`);
+        },
         sort: function (s) {
             //if s == current sort, reverse
             if (s === this.currentSort) {
@@ -287,6 +280,33 @@ Vue.component('apartments', {
             }
             this.currentSort = s;
         },
+
+
+        arrangeAmenities(allAmenities){
+                console.log('Amenities.Base.length: ' + this.amenities.base.length);
+                for(let i = 0; i< this.allAmenities.length; i++){
+                  if(this.allAmenities[i].type === 'Base'){
+                    this.amenities.base.push(this.allAmenities[i].name);
+                  }
+                  else if(this.allAmenities[i].type === 'Family' ){
+                    this.amenities.family.push(this.allAmenities[i].name);
+                  }
+                  else if(this.allAmenities[i].type === 'Dining'){
+                    this.amenities.dining.push(this.allAmenities[i].name);
+                  }
+                  else if(this.allAmenities[i].type === 'Facilities'){
+                    this.amenities.fac.push(this.allAmenities[i].name);
+                  }
+                }
+        },
+        //Metoda koja hostu zabranjuje polja za filtraciju i sortiranje njegovih neaktivnih stanova.
+        isActive: function(){
+            if(this.user.role === "HOST" && this.filterQueryStatus === 'neaktivno'){
+                this.sort('');
+                return false;
+            }
+            return true;
+        }
 
     },
     computed: {
@@ -376,7 +396,8 @@ Vue.component('apartments', {
             }
 
             return filteredApartment;
-        }
+        },
+ 
     },
     created() {
         this.user.username = localStorage.getItem('user');
@@ -388,5 +409,18 @@ Vue.component('apartments', {
         } else {
             this.isGuest = true;
         }
+        axios
+        .get('rest/apartment')
+        .then(response => {
+            this.apartments = response.data;
+        })  
+        
+        axios
+        .get('rest/amenity/all')
+        .then(response => {
+            this.allAmenities = response.data;
+            this.arrangeAmenities(this.allAmenities);
+        })  
+
     },
 });

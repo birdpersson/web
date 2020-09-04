@@ -1,6 +1,7 @@
 package beans;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Apartment {
 
@@ -16,12 +17,12 @@ public class Apartment {
 	private Period period;
 	private ArrayList<Period> availability;
 	private String host;
-	private ArrayList<Review> reviews;
+	private Collection<Review> reviews;
 	private ArrayList<String> images;
 	private int price;
 	private String checkin;
 	private String checkout;
-	private boolean active;
+	private String status;
 	private ArrayList<Amenity> amenities;
 	private ArrayList<Reservation> reservations;
 
@@ -29,8 +30,9 @@ public class Apartment {
 		super();
 	}
 
-	public Apartment(String id, Type type, int rooms, int guests, Location location, String host, int price,
-			String checkin, String checkout, boolean active) {
+	public Apartment(String id, Type type, int rooms, int guests, Location location, String host,
+			Collection<Review> reviews, int price, String checkin, String checkout, String status,
+			ArrayList<Amenity> amenities) {
 		super();
 		this.id = id;
 		this.type = type;
@@ -38,10 +40,12 @@ public class Apartment {
 		this.guests = guests;
 		this.location = location;
 		this.host = host;
+		this.reviews = reviews;
 		this.price = price;
 		this.checkin = checkin;
 		this.checkout = checkout;
-		this.active = active;
+		this.status = status;
+		this.amenities = amenities;
 	}
 
 	public String getId() {
@@ -108,7 +112,7 @@ public class Apartment {
 		this.host = host;
 	}
 
-	public ArrayList<Review> getReviews() {
+	public Collection<Review> getReviews() {
 		return reviews;
 	}
 
@@ -148,12 +152,12 @@ public class Apartment {
 		this.checkout = checkout;
 	}
 
-	public boolean isActive() {
-		return active;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public ArrayList<Amenity> getAmenities() {

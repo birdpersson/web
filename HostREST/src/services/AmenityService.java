@@ -40,19 +40,14 @@ public class AmenityService {
 	}
 
 	@GET
-	@Path("/")
+	@Path("/all")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllAdmins(@Context HttpServletRequest request) {
-		String username = AuthService.getUsername(request);
-		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+	public Response getAllAmenities(@Context HttpServletRequest request) {
 		AmenityDAO daoAmenity = (AmenityDAO) ctx.getAttribute("amenityDAO");
-
-		if (userDao.findOne(username).getRole().toString().equals("ADMIN")) {
-			return Response.status(Response.Status.OK).entity(daoAmenity.findAll()).build();
-		}
-		return Response.status(Response.Status.FORBIDDEN).build();
+		return Response.status(Response.Status.OK).entity(daoAmenity.findAll()).build();
 	}
 
+	
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -66,7 +61,7 @@ public class AmenityService {
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response setAdmin(@Context HttpServletRequest request, Amenity amenity) {
+	public Response setAmenity(@Context HttpServletRequest request, Amenity amenity) {
 		String username = AuthService.getUsername(request);
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
 		AmenityDAO dao = (AmenityDAO) ctx.getAttribute("amenityDAO");
@@ -97,7 +92,7 @@ public class AmenityService {
 	@DELETE
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Amenity deleteHost(@PathParam("id") String id) {
+	public Amenity deleteAmenity(@PathParam("id") String id) {
 		AmenityDAO dao = (AmenityDAO) ctx.getAttribute("amenityDAO");
 		return dao.delete(id);
 	}
