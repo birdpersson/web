@@ -58,7 +58,7 @@ public class ApartmentDAO {
 				+ apartment.getPrice() + ";"
 				+ apartment.getCheckin() + ";"
 				+ apartment.getCheckout() + ";"
-				+ "false" + ";";
+				+ "neaktivno" + ";";
 		System.out.println(line);
 		BufferedWriter writer = null;
 		try {
@@ -114,11 +114,11 @@ public class ApartmentDAO {
 					int price = Integer.parseInt(st.nextToken().trim());
 					String checkin = st.nextToken().trim();
 					String checkout = st.nextToken().trim();
-					boolean active = Boolean.parseBoolean(st.nextToken().trim());
+					String status = st.nextToken().trim();
 //					ArrayList<Amenity> amenities = new ArrayList<>();
 //					ArrayList<Reservation> reservations = new ArrayList<>();
 					apartments.put(id,
-							new Apartment(id, type, rooms, guests, location, host, price, checkin, checkout, active));
+							new Apartment(id, type, rooms, guests, location, host, price, checkin, checkout, status));
 				}
 			}
 		} catch (Exception e) {

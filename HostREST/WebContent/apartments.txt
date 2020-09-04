@@ -1,1 +1,1 @@
-1;APARTMENT;2;4;1;host;60;5 PM;11 AM;true
+1;APARTMENT;2;4;1;host;60;5 PM;11 AM;neaktivno

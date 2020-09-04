@@ -21,7 +21,7 @@ public class Apartment {
 	private int price;
 	private String checkin;
 	private String checkout;
-	private boolean active;
+	private String status;
 	private ArrayList<Amenity> amenities;
 	private ArrayList<Reservation> reservations;
 
@@ -30,7 +30,7 @@ public class Apartment {
 	}
 
 	public Apartment(String id, Type type, int rooms, int guests, Location location, String host, int price,
-			String checkin, String checkout, boolean active) {
+			String checkin, String checkout, String status) {
 		super();
 		this.id = id;
 		this.type = type;
@@ -41,7 +41,7 @@ public class Apartment {
 		this.price = price;
 		this.checkin = checkin;
 		this.checkout = checkout;
-		this.active = active;
+		this.status = status;
 	}
 
 	public String getId() {
@@ -148,12 +148,12 @@ public class Apartment {
 		this.checkout = checkout;
 	}
 
-	public boolean isActive() {
-		return active;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public ArrayList<Amenity> getAmenities() {
