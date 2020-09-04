@@ -6,48 +6,52 @@ import java.util.Collection;
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import beans.Apartment;
 import beans.Review;
 import dao.ApartmentDAO;
-import dao.LocationDAO;
 import dao.ReviewDAO;
 import dao.UserDAO;
 
-
 @Path("/reviews")
 public class ReviewsServices {
-	
+
 	@Context
 	ServletContext ctx;
 
-	public ReviewsServices() {}
-	
+	public ReviewsServices() {
+		super();
+	}
+
 	@PostConstruct
-	// ctx polje je null u konstruktoru, mora se pozvati nakon konstruktora (@PostConstruct anotacija)
 	public void init() {
-		// Ovaj objekat se instancira vi�e puta u toku rada aplikacije
-		// Inicijalizacija treba da se obavi samo jednom
-		if(ctx.getAttribute("reviewDAO")==null){
-			String contextPath = ctx.getRealPath("");
-			ctx.setAttribute("reviewDAO", new ReviewDAO(contextPath));
-		}
-		
-		if (ctx.getAttribute("apartmentDAO") == null) {
-	    	String contextPath = ctx.getRealPath("");
-			ctx.setAttribute("apartmentDAO", new ApartmentDAO(contextPath, (LocationDAO) ctx.getAttribute("locationDAO")));
-		}
-		
 		if (ctx.getAttribute("userDAO") == null) {
 			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("userDAO", new UserDAO(contextPath));
 		}
+		if (ctx.getAttribute("reviewDAO") == null) {
+			String contextPath = ctx.getRealPath("");
+			ctx.setAttribute("reviewDAO", new ReviewDAO(contextPath));
+		}
+		if (ctx.getAttribute("apartmentDAO") == null) {
+			String contextPath = ctx.getRealPath("");
+			ctx.setAttribute("apartmentDAO",
+					new ApartmentDAO(contextPath, null, null));
+		}
+
 	}
-	
-	
-	//Vracanje svih komentara. (za admina i hosta)
+
 	@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -57,30 +61,28 @@ public class ReviewsServices {
 		ReviewDAO reviewDao = (ReviewDAO) ctx.getAttribute("reviewDAO");
 		ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
 		Collection<Review> retVal = new ArrayList<Review>();
-		
-		if(userDao.findOne(username).getRole().toString().equals("ADMIN")) {
+
+		if (userDao.findOne(username).getRole().toString().equals("ADMIN")) {
 			System.out.println("Usao u ADMIN");
 			return Response.status(Response.Status.OK).entity(reviewDao.findAll()).build();
 		}
-		
-		else if(userDao.findOne(username).getRole().toString().equals("HOST")) {
-			//Prvo pronalazimo sve stanove vezane za tog hosta...
+
+		else if (userDao.findOne(username).getRole().toString().equals("HOST")) {
+			// Prvo pronalazimo sve stanove vezane za tog hosta...
 			Collection<Apartment> hostsApart = apartmentDao.findAllApartByHostId(username);
 			System.out.println("Usao u HOST");
-			for(Apartment apar : hostsApart) {
-				//Prvo zatim pronalazimo sve komentare vezane za svaki stan tog hosta...
+			for (Apartment apar : hostsApart) {
+				// Prvo zatim pronalazimo sve komentare vezane za svaki stan tog hosta...
 				Collection<Review> reviewsByApar = reviewDao.findAllByApartmentId(apar.getId());
-				for(Review rev : reviewsByApar) {
+				for (Review rev : reviewsByApar) {
 					retVal.add(rev);
 				}
 			}
-			return Response.status(Response.Status.OK).entity(retVal).build(); 
+			return Response.status(Response.Status.OK).entity(retVal).build();
 		}
 		return Response.status(Response.Status.FORBIDDEN).build();
 	}
-	
-	
-	//Vracanje komentara spram id apartmana. (za guesta)
+
 	@GET
 	@Path("/apartment/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -88,14 +90,14 @@ public class ReviewsServices {
 		String username = AuthService.getUsername(request);
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
 		ReviewDAO dao = (ReviewDAO) ctx.getAttribute("reviewDAO");
-		
-		if(userDao.findOne(username).getRole().toString().equals("GUEST")) {
+
+		if (userDao.findOne(username).getRole().toString().equals("GUEST")) {
 
 			return Response.status(Response.Status.OK).entity(dao.findAllByApartmentId(id)).build();
 		}
 		return Response.status(Response.Status.FORBIDDEN).build();
 	}
-	
+
 //	//Vracanje komentara spram id hosta. (za hosta)
 //	@GET
 //	@Path("/apartmentHost")
@@ -129,7 +131,6 @@ public class ReviewsServices {
 //		ReviewDAO dao = (ReviewDAO) ctx.getAttribute("reviewDAO");
 //		return dao.findOne(id);
 //	}
-	//serverska metoda za dodavanje novog komentara (koristi je guset)
 	@POST
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -138,14 +139,14 @@ public class ReviewsServices {
 		String username = AuthService.getUsername(request);
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
 		ReviewDAO dao = (ReviewDAO) ctx.getAttribute("reviewDAO");
-		
-		if(userDao.findOne(username).getRole().toString().equals("GUEST")) {
+
+		if (userDao.findOne(username).getRole().toString().equals("GUEST")) {
 			return Response.status(Response.Status.OK).entity(dao.save(review)).build();
 		}
 		return Response.status(Response.Status.FORBIDDEN).build();
-	
+
 	}
-	//serverska metoda za izmenu (koristi je host za izmenu statusa)
+
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -154,15 +155,15 @@ public class ReviewsServices {
 		String username = AuthService.getUsername(request);
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
 		ReviewDAO dao = (ReviewDAO) ctx.getAttribute("reviewDAO");
-		
-		if(userDao.findOne(username).getRole().toString().equals("HOST")) {
-		
+
+		if (userDao.findOne(username).getRole().toString().equals("HOST")) {
+
 			return Response.status(Response.Status.OK).entity(dao.update(id, review)).build();
 		}
-		
+
 		return Response.status(Response.Status.FORBIDDEN).build();
 	}
-	
+
 	@DELETE
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -170,5 +171,5 @@ public class ReviewsServices {
 		ReviewDAO dao = (ReviewDAO) ctx.getAttribute("reviewDAO");
 		return dao.delete(id);
 	}
-	
+
 }

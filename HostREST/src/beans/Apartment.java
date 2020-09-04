@@ -30,7 +30,7 @@ public class Apartment {
 	}
 
 	public Apartment(String id, Type type, int rooms, int guests, Location location, String host, int price,
-			String checkin, String checkout, String status) {
+			String checkin, String checkout, String status, ArrayList<Amenity> amenities) {
 		super();
 		this.id = id;
 		this.type = type;
@@ -42,6 +42,7 @@ public class Apartment {
 		this.checkin = checkin;
 		this.checkout = checkout;
 		this.status = status;
+		this.amenities = amenities;
 	}
 
 	public String getId() {
