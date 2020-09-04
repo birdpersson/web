@@ -56,6 +56,15 @@ public class AmenityService {
 	}
 
 	@GET
+	@Path("/all")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllAmenities(@Context HttpServletRequest request) {
+		AmenityDAO daoAmenity = (AmenityDAO) ctx.getAttribute("amenityDAO");
+		return Response.status(Response.Status.OK).entity(daoAmenity.findAll()).build();
+	}
+
+	
+	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Amenity getAmenity(@PathParam("id") String id) {

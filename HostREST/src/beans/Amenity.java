@@ -1,7 +1,5 @@
 package beans;
 
-import java.util.ArrayList;
-
 public class Amenity {
 
 	public enum Type {
@@ -11,18 +9,16 @@ public class Amenity {
 	private Type type;
 	private String id;
 	private String name;
-	private ArrayList<String> apartmentId;
 
 	public Amenity() {
 		super();
 	}
 
-	public Amenity(Type type, String id, String name, ArrayList<String> apartmentId) {
+	public Amenity(Type type, String id, String name) {
 		super();
 		this.type = type;
 		this.id = id;
 		this.name = name;
-		this.apartmentId = apartmentId;
 	}
 
 	public Type getType() {
@@ -47,14 +43,6 @@ public class Amenity {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public ArrayList<String> getApartmentId() {
-		return apartmentId;
-	}
-
-	public void setApartmentId(ArrayList<String> apartmentId) {
-		this.apartmentId = apartmentId;
 	}
 
 }
