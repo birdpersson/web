@@ -16,6 +16,7 @@ import beans.Amenity;
 import beans.Apartment;
 import beans.Location;
 import beans.Period;
+import beans.Review;
 
 public class ApartmentDAO {
 
@@ -23,14 +24,16 @@ public class ApartmentDAO {
 	private Map<String, Period> periods = new HashMap<>();
 	private LocationDAO locationDAO;
 	private AmenityDAO amenityDAO;
+	private ReviewDAO reviewDAO;
 
 	public ApartmentDAO() {
 		super();
 	}
 
-	public ApartmentDAO(String contextPath, LocationDAO locationDAO, AmenityDAO amenityDAO) {
+	public ApartmentDAO(String contextPath, LocationDAO locationDAO, AmenityDAO amenityDAO, ReviewDAO reviewDAO) {
 		this.locationDAO = locationDAO;
 		this.amenityDAO = amenityDAO;
+		this.reviewDAO = reviewDAO;
 		loadApartments(contextPath);
 	}
 
@@ -123,16 +126,16 @@ public class ApartmentDAO {
 //					ArrayList<Date> dates = new ArrayList<>();
 //					ArrayList<Date> availability = new ArrayList<>();
 					String host = st.nextToken().trim();
-//					ArrayList<Review> reviews = new ArrayList<>();
+					Collection<Review> reviews = reviewDAO.findAllByApartmentId(id);
 //					ArrayList<String> images = new ArrayList<>();
 					int price = Integer.parseInt(st.nextToken().trim());
 					String checkin = st.nextToken().trim();
 					String checkout = st.nextToken().trim();
-					String status = st.nextToken();
+					String status = st.nextToken().trim();
 					ArrayList<Amenity> amenities = amenityDAO.findAllByApartmentId(contextPath, id);
 //					ArrayList<Reservation> reservations = new ArrayList<>();
-					apartments.put(id,
-							new Apartment(id, type, rooms, guests, location, host, price, checkin, checkout, status, amenities));
+					apartments.put(id, new Apartment(id, type, rooms, guests, location, host,
+							reviews, price, checkin, checkout, status, amenities));
 				}
 			}
 		} catch (Exception e) {
@@ -185,7 +188,7 @@ public class ApartmentDAO {
 		availability.add(period);
 		return availability;
 	}
-	
+
 	public Collection<Apartment> findAllApartByHostId(String id) {
 		Collection<Apartment> allApartments = findAll();
 		Collection<Apartment> testApart = new ArrayList<Apartment>();

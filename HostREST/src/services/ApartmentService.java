@@ -19,6 +19,7 @@ import beans.Apartment;
 import dao.AmenityDAO;
 import dao.ApartmentDAO;
 import dao.LocationDAO;
+import dao.ReviewDAO;
 import dao.UserDAO;
 
 @Path("/apartment")
@@ -40,10 +41,10 @@ public class ApartmentService {
 //			String contextPath = ctx.getRealPath("");
 //			ctx.setAttribute("reservationDAO", new ReservationDAO(contextPath));
 //		}
-//		if (ctx.getAttribute("reviewDAO") == null) {
-//			String contextPath = ctx.getRealPath("");
-//			ctx.setAttribute("reviewDAO", new ReviewDAO(contextPath));
-//		}
+		if (ctx.getAttribute("reviewDAO") == null) {
+			String contextPath = ctx.getRealPath("");
+			ctx.setAttribute("reviewDAO", new ReviewDAO(contextPath));
+		}
 		if (ctx.getAttribute("amenityDAO") == null) {
 			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("amenityDAO", new AmenityDAO(contextPath));
@@ -56,7 +57,7 @@ public class ApartmentService {
 			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("apartmentDAO",
 					new ApartmentDAO(contextPath, (LocationDAO) ctx.getAttribute("locationDAO"),
-							(AmenityDAO) ctx.getAttribute("amenityDAO")));
+							(AmenityDAO) ctx.getAttribute("amenityDAO"), (ReviewDAO) ctx.getAttribute("reviewDAO")));
 		}
 	}
 
