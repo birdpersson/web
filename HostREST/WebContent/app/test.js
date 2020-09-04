@@ -45,13 +45,13 @@ Vue.component("test", {
                 </a>
           </div>
         </header>
-        <div class="card-body" style="display: margin-left:10px;">
+        <div class="card-body" style="margin-left:10px;">
           <h3 class="card-title">Type: 
             <span style="font-size: 30px;">{{apartment.type}}</span >
           </h3>
       
           <h3 class="card-title">Address:
-            <span style="font-size: 30px;">{{apartment.location.address}} <small class="text-muted">(longitude:{{apartment.location.longitude}} latitude:{{apartment.location.latitude}})</small></span >
+            <span style="font-size: 30px;">{{apartment.location.address.street}} - {{apartment.location.address.postalCode}} {{apartment.location.address.city}}<small class="text-muted">(longitude:{{apartment.location.longitude}} latitude:{{apartment.location.latitude}})</small></span >
           </h3>
 
           <h3 class="card-title">Price:
@@ -139,145 +139,14 @@ Vue.component("test", {
 </div>`,
     data: function () {
         return {
-            apartment:{   
-                id: '1',
-                type: 'ceo apartman',
-                rooms: 4,
-                reviews:[
-                  {
-                    id:'1',
-                    guestId:'guesttt',
-                    apartmentId:'1',
-                    text:'Best ever! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.',
-                    star:5,
-                    visible:'true',
-                  },
-                  {
-                    id:'2',
-                    guestId:'NoobMaster69',
-                    apartmentId:'1',
-                    text:'Very good! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.',
-                    star:4,
-                    visible:'true',
-                  },
-                  {
-                    id:'3',
-                    guestId:'guest',
-                    apartmentId:'1',
-                    text:'Bad, very bad! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.',
-                    star:2,
-                    visible:'true',
-                  }
-                ],
-                img:['https://source.unsplash.com/RCAhiGJsUUE/1920x1080','https://source.unsplash.com/wfh8dDlNFOk/1920x1080','https://source.unsplash.com/O7fzqFEfLlo/1920x1080'],
-                // img:['https://source.unsplash.com/RCAhiGJsUUE/1920x1080'],
-                location:{
-                  id:'1',
-                  longitude:'12.256',
-                  latitude:'44.12',
-                  address:'Fiftieth street',
-                }, 
-                dates: '01.01.2020',
-                availability: true,
-                price: 250,
-                status: 'aktivno',
-                amenities:[
-                  {
-                    id:'1',
-                    name:'Wifi',
-                    type:'Base',
-                  },
-                  {
-                    id:'2',
-                    name:'Laptop friendly workspace',
-                    type:'Base',
-                  },
-                  {
-                    id:'3',
-                    name:'Cable TV',
-                    type:'Base',
-                  },
-                  {
-                    id:'4',
-                    name:'Washer',
-                    type:'Base',
-                  },
-                  {
-                    id:'5',
-                    name:'Air conditioning',
-                    type:'Base',
-                  },
-                  {
-                    id:'6',
-                    name:'TV',
-                    type:'Base',
-                  },
-
-                  {
-                    id:'7',
-                    name:'Crib',
-                    type:'Family',
-                  },
-                  {
-                    id:'8',
-                    name:'High chair',
-                    type:'Family',
-                  },
-                  {
-                    id:'9',
-                    name:"Pack'n Play",
-                    type:'Family',
-                  },
-                  {
-                    id:'10',
-                    name:'Room-darkening shades',
-                    type:'Family',
-                  },
-
-                  {
-                    id:'11',
-                    name:'Elevator',
-                    type:'Facilities',
-                  },
-                  {
-                    id:'12',
-                    name:'Paid parking off premises',
-                    type:'Facilities',
-                  },
-                  {
-                    id:'13',
-                    name:'Single level home',
-                    type:'Facilities',
-                  },
-                  {
-                    id:'14',
-                    name:'Free street parking',
-                    type:'Facilities',
-                  },
-
-                  {
-                    id:'15',
-                    name:'Kitchen',
-                    type:'Dining',
-                  },
-                  {
-                    id:'16',
-                    name:'Coffee maker',
-                    type:'Dining',
-                  },
-                  {
-                    id:'17',
-                    name:'Cooking basics',
-                    type:'Dining',
-                  },
-                  {
-                    id:'18',
-                    name:'Refrigerator',
-                    type:'Dining',
-                  },
-
-                ],
+            user: {
+              username: '',
+              role: ''
             },
+            isAdmin: false,
+            isHost: false,
+            isGuest: false,
+            apartment:null,
             amenities:{
                 base:[],
                 family:[],
@@ -291,6 +160,10 @@ Vue.component("test", {
       
     },
     computed: {
+      id() {
+        return this.$route.params.id; //preuzimam id apartmana na cijoj sam stranici za prikaz komentara
+      },
+
       getOtherImgs:function(){
         //Prva slika mora da se manuelno postavi, a ostale se dodaju preko v-for:
         imgs = this.apartment.img.slice(1);
@@ -301,8 +174,28 @@ Vue.component("test", {
         return imgs;
       }
     },
-    mounted(){
+    created() {
+      this.user.username = localStorage.getItem('user');
+      this.user.role = localStorage.getItem('role');
 
+      if (this.user.role == "ADMIN") {
+          this.isAdmin = true;
+          this.getComments();
+      } else if (this.user.role == "HOST") {
+          this.isHost = true;
+          this.getComments();
+      } else {
+          this.isGuest = true;
+          this.apartmentId = this.id;
+          alert('id:' + this.apartmentId)
+          axios
+          .get(`rest/apartment/${this.apartmentId}`)
+          .then(response => {
+              this.apartment=response.data;
+          })
+      }
+  },
+    mounted(){
       for(let i = 0; i< this.apartment.amenities.length; i++){
         if(this.apartment.amenities[i].type === 'Base'){
           this.amenities.base.push(this.apartment.amenities[i].name);

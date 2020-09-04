@@ -255,23 +255,6 @@ Vue.component('apartments', {
         }
     },
     methods: {
-        showAllAmenities(){
-            console.log('All amenities');
-            for(let i = 0; i< this.allAmenities.length; i++){
-                console.log(this.allAmenities[i].name);
-            }
-        },
-        showBase(){
-            console.log('Amenities.Base');
-            console.log('Amenities.Base.length: ' + this.amenities.base.length);
-            for(let i = 0; i< this.amenities.base.length; i++){
-                console.log(this.amenities.base[i].name);
-            }
-        },
-        showFamily(){},
-        showDining(){},
-        showFacilities(){},
-
         showAmenity: function () {
             alert('choosenType: ' + this.choosenType);
             this.shownAmenities = this.amenities[this.choosenType];

@@ -22,8 +22,6 @@ Vue.component("apartment-details", {
               <!-- Slide One - Set the background image for this slide in the line below  "{background-image:  'url(' + getImgUrl() + ')}"--> 
               <div class="carousel-item active"   :style="{'background-image': 'url(' + apartment.img[0] + ')'}">
                 <div class="carousel-caption d-none d-md-block">
-                  <!-- <h3 class="display-4">First Slide</h3> -->
-                  <!-- <p class="lead">This is a description for the first slide.</p> -->
                 </div>
               </div>
               <!-- Slide Two - Set the background image for this slide in the line below -->
@@ -45,17 +43,17 @@ Vue.component("apartment-details", {
                 </a>
           </div>
         </header>
-        <div class="card-body" style="display: margin-left:10px;">
+        <div class="card-body" style="margin-left:10px;">
           <h3 class="card-title">Type: 
             <span style="font-size: 30px;">{{apartment.type}}</span >
           </h3>
       
           <h3 class="card-title">Address:
-            <span style="font-size: 30px;">{{apartment.location.address}} <small class="text-muted">(longitude:{{apartment.location.longitude}} latitude:{{apartment.location.latitude}})</small></span >
+            <span style="font-size: 30px;">{{apartment.location.address.street}} - {{apartment.location.address.postalCode}} {{apartment.location.address.city}}<small class="text-muted">(longitude:{{apartment.location.longitude}} latitude:{{apartment.location.latitude}})</small></span >
           </h3>
 
           <h3 class="card-title">Price:
-            <span style="font-size: 30px;">{{apartment.price}}/ per day</span >
+            <span style="font-size: 30px;">{{apartment.price}}$/ per day</span >
           </h3>
 
           <h3 class="card-title">Rooms:
@@ -170,7 +168,6 @@ Vue.component("apartment-details", {
                   }
                 ],
                 img:['https://source.unsplash.com/RCAhiGJsUUE/1920x1080','https://source.unsplash.com/wfh8dDlNFOk/1920x1080','https://source.unsplash.com/O7fzqFEfLlo/1920x1080'],
-                // img:['https://source.unsplash.com/RCAhiGJsUUE/1920x1080'],
                 location:{
                   id:'1',
                   longitude:'12.256',
@@ -300,6 +297,22 @@ Vue.component("apartment-details", {
         }
         return imgs;
       }
+    },
+    created() {
+      this.user.username = localStorage.getItem('user');
+      this.user.role = localStorage.getItem('role');
+      if (this.user.role == "ADMIN") {
+          this.isAdmin = true;
+      } else if (this.user.role == "HOST") {
+          this.isHost = true;
+      } else {
+          this.isGuest = true;
+      }
+      axios
+      .get('rest/apartment')
+      .then(response => {
+          this.apartments = response.data;
+      }) 
     },
     mounted(){
 
