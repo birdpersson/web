@@ -22,13 +22,15 @@ public class ApartmentDAO {
 	private Map<String, Apartment> apartments = new HashMap<>();
 	private Map<String, Period> periods = new HashMap<>();
 	private LocationDAO locationDAO;
+	private AmenityDAO amenityDAO;
 
 	public ApartmentDAO() {
 		super();
 	}
 
-	public ApartmentDAO(String contextPath, LocationDAO locationDAO) {
+	public ApartmentDAO(String contextPath, LocationDAO locationDAO, AmenityDAO amenityDAO) {
 		this.locationDAO = locationDAO;
+		this.amenityDAO = amenityDAO;
 		loadApartments(contextPath);
 	}
 
@@ -127,10 +129,10 @@ public class ApartmentDAO {
 					String checkin = st.nextToken().trim();
 					String checkout = st.nextToken().trim();
 					String status = st.nextToken();
-//					ArrayList<Amenity> amenities = amenityDAO.findAllByApartmentId(contextPath, id);
+					ArrayList<Amenity> amenities = amenityDAO.findAllByApartmentId(contextPath, id);
 //					ArrayList<Reservation> reservations = new ArrayList<>();
 					apartments.put(id,
-							new Apartment(id, type, rooms, guests, location, host, price, checkin, checkout, status));
+							new Apartment(id, type, rooms, guests, location, host, price, checkin, checkout, status, amenities));
 				}
 			}
 		} catch (Exception e) {
