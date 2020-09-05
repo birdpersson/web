@@ -246,6 +246,7 @@ Vue.component('apartments', {
         showMessage: function () {
             alert('Klikom na ovo dugme se brise odabrani stan!');
         },
+
         showComments: function(id){
             this.$router.push(`/apartment/${id}/comments`);
         },
@@ -263,6 +264,7 @@ Vue.component('apartments', {
             }
             this.currentSort = s;
         },
+
 
         arrangeAmenities(allAmenities){
                 for(let i = 0; i< this.allAmenities.length; i++){
