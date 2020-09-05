@@ -15,17 +15,16 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import beans.Amenity;
 import beans.Apartment;
-import beans.User;
 import dao.AmenityDAO;
 import dao.ApartmentDAO;
 import dao.LocationDAO;
+import dao.ReviewDAO;
 import dao.UserDAO;
 
 @Path("/apartment")
 public class ApartmentService {
-	
+
 	@Context
 	ServletContext ctx;
 
@@ -42,21 +41,23 @@ public class ApartmentService {
 //			String contextPath = ctx.getRealPath("");
 //			ctx.setAttribute("reservationDAO", new ReservationDAO(contextPath));
 //		}
-//		if (ctx.getAttribute("reviewDAO") == null) {
-//			String contextPath = ctx.getRealPath("");
-//			ctx.setAttribute("reviewDAO", new ReviewDAO(contextPath));
-//		}
-//		if (ctx.getAttribute("amenityDAO") == null) {
-//			String contextPath = ctx.getRealPath("");
-//			ctx.setAttribute("amenityDAO", new AmenityDAO(contextPath));
-//		}
+		if (ctx.getAttribute("reviewDAO") == null) {
+			String contextPath = ctx.getRealPath("");
+			ctx.setAttribute("reviewDAO", new ReviewDAO(contextPath));
+		}
+		if (ctx.getAttribute("amenityDAO") == null) {
+			String contextPath = ctx.getRealPath("");
+			ctx.setAttribute("amenityDAO", new AmenityDAO(contextPath));
+		}
 		if (ctx.getAttribute("locationDAO") == null) {
 			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("locationDAO", new LocationDAO(contextPath));
 		}
 		if (ctx.getAttribute("apartmentDAO") == null) {
 			String contextPath = ctx.getRealPath("");
-			ctx.setAttribute("apartmentDAO", new ApartmentDAO(contextPath, (LocationDAO) ctx.getAttribute("locationDAO")));
+			ctx.setAttribute("apartmentDAO",
+					new ApartmentDAO(contextPath, (LocationDAO) ctx.getAttribute("locationDAO"),
+							(AmenityDAO) ctx.getAttribute("amenityDAO"), (ReviewDAO) ctx.getAttribute("reviewDAO")));
 		}
 	}
 
@@ -74,7 +75,7 @@ public class ApartmentService {
 //		}
 		return retApartment;
 	}
-	
+
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)

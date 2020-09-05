@@ -6,26 +6,18 @@ public class Amenity {
 		Base, Dining, Facilities, Family
 	}
 
-	private Type type;
 	private String id;
 	private String name;
+	private Type type;
 
 	public Amenity() {
 		super();
 	}
 
-	public Amenity(Type type, String id, String name) {
+	public Amenity(String id, String name, Type type) {
 		super();
-		this.type = type;
 		this.id = id;
 		this.name = name;
-	}
-
-	public Type getType() {
-		return type;
-	}
-
-	public void setType(Type type) {
 		this.type = type;
 	}
 
@@ -43,6 +35,14 @@ public class Amenity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
 	}
 
 }

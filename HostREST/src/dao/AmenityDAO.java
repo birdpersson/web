@@ -6,51 +6,35 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import beans.Amenity;
 
 public class AmenityDAO {
-	private HashMap<String, Amenity> amenities = new HashMap<String, Amenity>(); 
-	
+	private Map<String, Amenity> amenities = new HashMap<>();
+
 	public AmenityDAO() {
-		
+		super();
 	}
-	
-	/***
-	 * @param contextPath Putanja do aplikacije u Tomcatu. Mo�e se pristupiti samo iz servleta.
-	 */
+
 	public AmenityDAO(String contextPath) {
 		loadAmenities(contextPath);
 	}
-	
-	/***
-	 * Vraca sve administratore.
-	 * @return
-	 */
-	public Collection<Amenity> findAll(){
-		return amenities.values(); 
+
+	public Collection<Amenity> findAll() {
+		return amenities.values();
 	}
-	
-	/***
-	 *  Vraca admina na osnovu njegovog id-a. 
-	 *  @return Admin sa id-em ako postoji, u suprotnom null
-	 */
+
 	public Amenity findOne(String id) {
 		return amenities.containsKey(id) ? amenities.get(id) : null;
 	}
 
-	
-	/***
-	 * Dodaje admina u mapu admina. Id novog admina ce biti postavljen na maxPostojeciId + 1.
-	 * @param admin
-	 * @return Novi admin 
-	 */
 	public Amenity save(Amenity admin) {
-		Integer maxId= -1;
-		for(String id: amenities.keySet()) {
+		Integer maxId = -1;
+		for (String id : amenities.keySet()) {
 			int idNum = Integer.parseInt(id);
-			if(idNum > maxId) {
+			if (idNum > maxId) {
 				maxId = idNum;
 			}
 		}
@@ -59,47 +43,38 @@ public class AmenityDAO {
 		amenities.put(admin.getId(), admin);
 		return admin;
 	}
-	
+
 	public Amenity update(String id, Amenity updatedAmenitie) {
-		
+
 		Amenity oldAmenitie = findOne(id);
-		
-		if(oldAmenitie == null) {
+
+		if (oldAmenitie == null) {
 			System.out.println("Usao u save admina u okviru update");
 			return save(updatedAmenitie);
-		}
-		else {
-			
-			//We don't change id of existing host just username, password, firstname and lastname.
+		} else {
+
+			// We don't change id of existing host just username, password, firstname and
+			// lastname.
 			oldAmenitie.setName(updatedAmenitie.getName());
 			oldAmenitie.setType(updatedAmenitie.getType());
-			
-			//We save and return old admin which is now updated.
+
+			// We save and return old admin which is now updated.
 			return amenities.put(oldAmenitie.getId(), oldAmenitie);
 		}
-		
+
 	}
-	
-	
+
 	public Amenity delete(String id) {
-		//hosts.get(id).isLogicalyRemoved(true); za logicko brisanje...
+		// hosts.get(id).isLogicalyRemoved(true); za logicko brisanje...
 		return amenities.containsKey(id) ? amenities.remove(id) : null;
 	}
-	
-	/**
-	 * Ucitava korisnike iz WebContent/users.txt fajla i dodaje ih u mapu {@link #hosts}.
-	 * Kljuc je id proizovda.
-	 * @param contextPath Putanja do aplikacije u Tomcatu
-	 */
+
 	private void loadAmenities(String contextPath) {
 		BufferedReader in = null;
 		try {
 			File file = new File(contextPath + "/amenities.txt");
-			System.out.println(file.getCanonicalPath());
 			in = new BufferedReader(new FileReader(file));
-			String line, id = "";
-			String name = "";
-			String type = "";
+			String line;
 			StringTokenizer st;
 			while ((line = in.readLine()) != null) {
 				line = line.trim();
@@ -107,59 +82,67 @@ public class AmenityDAO {
 					continue;
 				st = new StringTokenizer(line, ";");
 				while (st.hasMoreTokens()) {
-					id = st.nextToken().trim();
-					name = st.nextToken().trim();
-					type = st.nextToken().trim();
-					
+					String id = st.nextToken().trim();
+					String name = st.nextToken().trim();
+					String type = st.nextToken().trim();
+					amenities.put(id, new Amenity(id, name, Amenity.Type.valueOf(type)));
 				}
-				amenities.put(id, new Amenity(Amenity.Type.valueOf(type), id, name));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if ( in != null ) {
+			if (in != null) {
 				try {
 					in.close();
-				}
-				catch (Exception e) { }
+				} catch (Exception e) { }
 			}
 		}
 	}
 
-	private ArrayList<String> getListOfApartIds(String trim) {
-		ArrayList<String> returnArray = new ArrayList<String>();
-		String[] ids = trim.split(",");
-		for(int i = 0 ; i<ids.length; i++ ) {
-			returnArray.add(ids[i].trim());
-		}
-		return returnArray;
-	}
-
-	public ArrayList<Amenity> findAllByApartmentId(String id) {
-		Collection<Amenity> allAmenities = findAll();
-		ArrayList<Amenity> returnIds = new ArrayList<Amenity>();
-		for(Amenity a : allAmenities) {
-			
-			ArrayList<String> apertmentIds = new ArrayList<String>();
-//			apertmentIds = a.getApartmentId();
-			
-			for(String apId : apertmentIds) {
-				if(apId.equals(id)) {
-					returnIds.add(a);
+	public ArrayList<Amenity> findAllByApartmentId(String contextPath, String id) {
+		ArrayList<Amenity> returnAmenities = new ArrayList<>();
+		BufferedReader in = null;
+		try {
+			File file = new File(contextPath + "/apartment_amenities.txt");
+			in = new BufferedReader(new FileReader(file));
+			String line;
+			StringTokenizer st;
+			while ((line = in.readLine()) != null) {
+				line = line.trim();
+				if (line.equals("") || line.indexOf('#') == 0)
+					continue;
+				st = new StringTokenizer(line, ";");
+				while (st.hasMoreTokens()) {
+					String apartmentId = st.nextToken().trim();
+					String amenityId = st.nextToken().trim();
+					if (apartmentId.equals(id)) {
+						returnAmenities.add(amenities.get(amenityId));
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (Exception e) {
+					return null;
 				}
 			}
 		}
-		return returnIds;
+		return returnAmenities;
 	}
 
 	public Amenity addToApartmen(String id, String aprtId) {
 		Amenity amenitieToUpdate = findOne(id);
-		if(amenitieToUpdate == null) {
+		if (amenitieToUpdate == null) {
 			System.out.println("Vrati error!");
 		}
 //		amenitieToUpdate.getApartmentId().add(aprtId);
-		
+
 		return amenitieToUpdate;
 	}
-	
+
 }
