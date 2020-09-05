@@ -1,19 +1,17 @@
 package beans;
 
-import java.util.Date;
-
 public class Period {
 
 	private String id;
 	private String apartmentId;
-	private Date to;
-	private Date from;
+	private long to;
+	private long from;
 
 	public Period() {
 		super();
 	}
 
-	public Period(String id, String apartmentId, Date to, Date from) {
+	public Period(String id, String apartmentId, long to, long from) {
 		super();
 		this.id = id;
 		this.apartmentId = apartmentId;
@@ -37,19 +35,19 @@ public class Period {
 		this.apartmentId = apartmentId;
 	}
 
-	public Date getTo() {
+	public long getTo() {
 		return to;
 	}
 
-	public void setTo(Date to) {
+	public void setTo(long to) {
 		this.to = to;
 	}
 
-	public Date getFrom() {
+	public long getFrom() {
 		return from;
 	}
 
-	public void setFrom(Date from) {
+	public void setFrom(long from) {
 		this.from = from;
 	}
 
