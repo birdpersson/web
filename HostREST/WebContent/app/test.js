@@ -1,14 +1,14 @@
 Vue.component("test", {
     template: `<div id="apartment-details">
-    <div class="container" id='page-title'>
-        <h1 style="margin-top:10px;color:#35424a;">Apartment <span id='titleEffect'>Details</span></h1>
-        <hr style='background:#e8491d;height:1px;'>
-    </div>
- <!--Reviews-->
+  <div class="container" id='page-title'>
+      <h1 style="margin-top:10px;color:#35424a;">Apartment <span id='titleEffect'>Details</span></h1>
+      <hr style='background:#e8491d;height:1px;'>
+  </div>
+ 
   <div id="test3" class="container">
     <div class="col-lg-12">
 
-      <div class="card mt-4">
+      <!-- <div class="card mt-4"> -->
       <div>
         <!-- <p>{{apartment.images[0]}}</p> -->
       <!--SLIDBAR-->
@@ -28,8 +28,6 @@ Vue.component("test", {
               <!-- Slide Two - Set the background image for this slide in the line below -->
             <div class="carousel-item" v-for="img in getOtherImgs" :style="{'background-image': 'url(' + img + ')'}">
                 <div class="carousel-caption d-none d-md-block">
-                  <!-- <h3 class="display-4">Second Slide</h3>
-                  <p class="lead">This is a description for the second slide.</p> -->
                 </div>
               </div> 
     
@@ -43,26 +41,29 @@ Vue.component("test", {
                   <span class="sr-only">Next</span>
                 </a>
           </div>
-        </header> 
-        <div class="card-body" style="margin-left:10px;">
+        </header>
+        <div class="card-body">
+          <div class="card-header">
+              <h4>Details</h4>
+          </div>
           <h3 class="card-title">Type: 
-            <span style="font-size: 30px;">{{apartment.type}}</span >
+            <span style="font-size: 25px;">{{apartment.type}}</span >
           </h3>
       
           <h3 class="card-title">Address:
-            <span style="font-size: 30px;">{{apartment.location.address.street}} - {{apartment.location.address.postalCode}} {{apartment.location.address.city}}</span >
+            <span style="font-size: 25px;">{{apartment.location.address.street}} - {{apartment.location.address.postalCode}} {{apartment.location.address.city}}</span >
           </h3>
 
           <h3 class="card-title">Location:
-            <span style="font-size: 30px;">longitude: {{apartment.location.longitude}} - latitude: {{apartment.location.latitude}}</span >
+            <span style="font-size: 25px;">longitude: {{apartment.location.longitude}} - latitude: {{apartment.location.latitude}}</span >
           </h3>
 
           <h3 class="card-title">Price:
-            <span style="font-size: 30px;">{{apartment.price}} $/per day</span >
+            <span style="font-size: 25px;">{{apartment.price}} $/per day</span >
           </h3>
 
           <h3 class="card-title">Rooms:
-            <span style="font-size: 30px;">{{apartment.rooms}}</span >
+            <span style="font-size: 25px;">{{apartment.rooms}}</span >
           </h3>
           
         </div>
@@ -71,8 +72,10 @@ Vue.component("test", {
 
        <!-- Amenities Row -->
       <div id='amenities' class='container'>
-        <h3 class="my-4">Amenities</h3>
-
+        <!-- <h3 class="my-4">Amenities</h3> -->
+        <div class="card-header">
+            <h4>Amenities</h4>
+        </div>
         <div class="row">
 
           <div class="col-md-3 col-sm-6 mb-4">
@@ -107,10 +110,9 @@ Vue.component("test", {
         <!-- /.row -->
       </div>
 
-      <h3 class="my-4">Reviews</h3>
       <div class="card card-outline-secondary my-4">
         <div class="card-header">
-          Apartment Reviews
+          <h4>Apartment Reviews</h4>
         </div>
         <div class="card-body" v-for="review in apartment.reviews">
           <div style="margin-bottom: 10px;" id='star-rating'>
@@ -137,9 +139,9 @@ Vue.component("test", {
     </div>
 
     </div>
-    <!-- /.container -->
-  </div>  
-</div>`,
+    
+  </div>  <!-- /.test3 -->
+</div> <!--apartment details-->`,
     data: function () {
         return {
             user: {
@@ -149,7 +151,29 @@ Vue.component("test", {
             isAdmin: false,
             isHost: false,
             isGuest: false,
-            apartment:[],
+            apartment: {
+              type: null,
+              rooms: null,
+              guests: null,
+              location: {
+                latitude: '',
+                longitude: '',
+                address: {
+                  street: '',
+                  city: '',
+                  postalCode: ''
+                }
+              },
+              period: {
+                to: null,
+                from: null
+              },
+              images:[],
+              price: null,
+              checkin: '',
+              checkout: '',
+              amenities: []
+            },
             amenities:{
                 base:[],
                 family:[],
@@ -168,6 +192,22 @@ Vue.component("test", {
             this.apartment.images = img;
           }
       },
+      arrangeAmenities(){
+        for(let i = 0; i< this.apartment.amenities.length; i++){
+          if(this.apartment.amenities[i].type === 'Base'){
+            this.amenities.base.push(this.apartment.amenities[i].name);
+          }
+          else if(this.apartment.amenities[i].type === 'Family' ){
+            this.amenities.family.push(this.apartment.amenities[i].name);
+          }
+          else if(this.apartment.amenities[i].type === 'Dining'){
+            this.amenities.dining.push(this.apartment.amenities[i].name);
+          }
+          else if(this.apartment.amenities[i].type === 'Facilities'){
+            this.amenities.fac.push(this.apartment.amenities[i].name);
+          }
+        }
+      }
     },
     computed: {
       id() {
@@ -191,37 +231,22 @@ Vue.component("test", {
       this.user.role = localStorage.getItem('role');
 
       if (this.user.role == "ADMIN") {
-          this.isAdmin = true;
-          this.getComments();
+          this.isAdmin = true; 
       } else if (this.user.role == "HOST") {
           this.isHost = true;
-          this.getComments();
       } else {
           this.isGuest = true;
-          this.apartmentId = this.id;
-          axios
-          .get(`rest/apartment/${this.apartmentId}`)
-          .then(response => {
-              this.apartment = response.data;
-              this.getFirstImg();
-          })
       }
+
+      this.apartmentId = this.id;
+      axios
+      .get(`rest/apartment/${this.apartmentId}`)
+      .then(response => {
+          this.apartment = response.data;
+          this.getFirstImg();
+          this.arrangeAmenities();
+      })
   },
-    // mounted(){
-    //   for(let i = 0; i< this.apartment.amenities.length; i++){
-    //     if(this.apartment.amenities[i].type === 'Base'){
-    //       this.amenities.base.push(this.apartment.amenities[i].name);
-    //     }
-    //     else if(this.apartment.amenities[i].type === 'Family' ){
-    //       this.amenities.family.push(this.apartment.amenities[i].name);
-    //     }
-    //     else if(this.apartment.amenities[i].type === 'Dining'){
-    //       this.amenities.dining.push(this.apartment.amenities[i].name);
-    //     }
-    //     else if(this.apartment.amenities[i].type === 'Facilities'){
-    //       this.amenities.fac.push(this.apartment.amenities[i].name);
-    //     }
-    //   }
-    // }
+  
 })
 
