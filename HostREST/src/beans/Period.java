@@ -4,19 +4,19 @@ public class Period {
 
 	private String id;
 	private String apartmentId;
-	private long to;
 	private long from;
+	private long to;
 
 	public Period() {
 		super();
 	}
 
-	public Period(String id, String apartmentId, long to, long from) {
+	public Period(String id, String apartmentId, long from, long to) {
 		super();
 		this.id = id;
 		this.apartmentId = apartmentId;
-		this.to = to;
 		this.from = from;
+		this.to = to;
 	}
 
 	public String getId() {
@@ -35,20 +35,20 @@ public class Period {
 		this.apartmentId = apartmentId;
 	}
 
-	public long getTo() {
-		return to;
-	}
-
-	public void setTo(long to) {
-		this.to = to;
-	}
-
 	public long getFrom() {
 		return from;
 	}
 
 	public void setFrom(long from) {
 		this.from = from;
+	}
+
+	public long getTo() {
+		return to;
+	}
+
+	public void setTo(long to) {
+		this.to = to;
 	}
 
 }

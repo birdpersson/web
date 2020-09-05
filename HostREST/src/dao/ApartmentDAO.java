@@ -61,11 +61,13 @@ public class ApartmentDAO {
 				+ apartment.getRooms() + ";"
 				+ apartment.getGuests() + ";"
 				+ locationDAO.save(contextPath, apartment.getLocation()).getId() + ";"
+				+ apartment.getTo() + ";"
+				+ apartment.getFrom() + ";"
 				+ apartment.getHost() + ";"
 				+ apartment.getPrice() + ";"
 				+ apartment.getCheckin() + ";"
 				+ apartment.getCheckout() + ";"
-				+ apartment.getStatus() + ";";
+				+ apartment.getStatus();
 		System.out.println(line);
 		BufferedWriter writer = null;
 		try {
@@ -96,11 +98,6 @@ public class ApartmentDAO {
 				}
 			}
 		}
-		Period period = apartment.getPeriod();
-		period.setApartmentId(apartment.getId());
-		ArrayList<Period> availability = disableDates(contextPath, period);
-		apartment.setAvailability(availability);
-
 		apartments.put(apartment.getId(), apartment);
 		return apartment;
 	}
@@ -123,6 +120,8 @@ public class ApartmentDAO {
 					int rooms = Integer.parseInt(st.nextToken().trim());
 					int guests = Integer.parseInt(st.nextToken().trim());
 					Location location = locationDAO.findOne(st.nextToken().trim());
+					long to = Long.parseLong(st.nextToken().trim());
+					long from = Long.parseLong(st.nextToken().trim());
 					ArrayList<Period> availability = loadDates(contextPath, id);
 					String host = st.nextToken().trim();
 					Collection<Review> reviews = reviewDAO.findAllByApartmentId(id);
@@ -133,7 +132,7 @@ public class ApartmentDAO {
 					String status = st.nextToken().trim();
 					ArrayList<Amenity> amenities = amenityDAO.findAllByApartmentId(contextPath, id);
 //					ArrayList<Reservation> reservations = new ArrayList<>();
-					apartments.put(id, new Apartment(id, type, rooms, guests, location, availability,
+					apartments.put(id, new Apartment(id, type, rooms, guests, location, to, from, availability,
 							host, reviews, price, checkin, checkout, status, amenities));
 				}
 			}
@@ -164,10 +163,10 @@ public class ApartmentDAO {
 				while (st.hasMoreTokens()) {
 					String periodId = st.nextToken().trim();
 					String apartmentId = st.nextToken().trim();
-					long to = Long.parseLong(st.nextToken().trim());
 					long from = Long.parseLong(st.nextToken().trim());
+					long to = Long.parseLong(st.nextToken().trim());
 					if (apartmentId.equals(id)) {
-						availability.add(new Period(periodId, apartmentId, to, from));
+						availability.add(new Period(periodId, apartmentId, from, to));
 					}
 				}
 			}
