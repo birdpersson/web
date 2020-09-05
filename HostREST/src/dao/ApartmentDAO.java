@@ -202,7 +202,7 @@ public class ApartmentDAO {
 		String line = period.getId() + ";"
 				+ period.getApartmentId() + ";"
 				+ period.getTo() + ";"
-				+ period.getFrom() + ";";
+				+ period.getFrom();
 		System.out.println(line);
 		BufferedWriter writer = null;
 		try {
