@@ -30,8 +30,9 @@ public class Apartment {
 		super();
 	}
 
-	public Apartment(String id, Type type, int rooms, int guests, Location location, String host,
-			Collection<Review> reviews, int price, String checkin, String checkout, String status,
+	public Apartment(String id, Type type, int rooms, int guests, Location location,
+			ArrayList<Period> availability, String host, Collection<Review> reviews,
+			int price, String checkin, String checkout, String status,
 			ArrayList<Amenity> amenities) {
 		super();
 		this.id = id;
@@ -39,6 +40,7 @@ public class Apartment {
 		this.rooms = rooms;
 		this.guests = guests;
 		this.location = location;
+		this.availability = availability;
 		this.host = host;
 		this.reviews = reviews;
 		this.price = price;
@@ -116,7 +118,7 @@ public class Apartment {
 		return reviews;
 	}
 
-	public void setReviews(ArrayList<Review> reviews) {
+	public void setReviews(Collection<Review> reviews) {
 		this.reviews = reviews;
 	}
 

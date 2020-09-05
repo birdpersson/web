@@ -123,8 +123,7 @@ public class ApartmentDAO {
 					int rooms = Integer.parseInt(st.nextToken().trim());
 					int guests = Integer.parseInt(st.nextToken().trim());
 					Location location = locationDAO.findOne(st.nextToken().trim());
-//					ArrayList<Date> dates = new ArrayList<>();
-//					ArrayList<Date> availability = new ArrayList<>();
+					ArrayList<Period> availability = loadDates(contextPath, id);
 					String host = st.nextToken().trim();
 					Collection<Review> reviews = reviewDAO.findAllByApartmentId(id);
 //					ArrayList<String> images = new ArrayList<>();
@@ -134,8 +133,8 @@ public class ApartmentDAO {
 					String status = st.nextToken().trim();
 					ArrayList<Amenity> amenities = amenityDAO.findAllByApartmentId(contextPath, id);
 //					ArrayList<Reservation> reservations = new ArrayList<>();
-					apartments.put(id, new Apartment(id, type, rooms, guests, location, host,
-							reviews, price, checkin, checkout, status, amenities));
+					apartments.put(id, new Apartment(id, type, rooms, guests, location, availability,
+							host, reviews, price, checkin, checkout, status, amenities));
 				}
 			}
 		} catch (Exception e) {
@@ -147,6 +146,46 @@ public class ApartmentDAO {
 				} catch (Exception e) { }
 			}
 		}
+	}
+
+	private ArrayList<Period> loadDates(String contextPath, String id) {
+		ArrayList<Period> availability = new ArrayList<>();
+		BufferedReader in = null;
+		try {
+			File file = new File(contextPath + "/availability.txt");
+			in = new BufferedReader(new FileReader(file));
+			String line;
+			StringTokenizer st;
+			while ((line = in.readLine()) != null) {
+				line = line.trim();
+				if (line.equals("") || line.indexOf('#') == 0)
+					continue;
+				st = new StringTokenizer(line, ";");
+				while (st.hasMoreTokens()) {
+					String periodId = st.nextToken().trim();
+					String apartmentId = st.nextToken().trim();
+					long to = Long.parseLong(st.nextToken().trim());
+					long from = Long.parseLong(st.nextToken().trim());
+					if (apartmentId.equals(id)) {
+						availability.add(new Period(periodId, apartmentId, to, from));
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (Exception e) {
+					return null;
+				}
+			}
+		}
+
+		
+		return availability;
 	}
 
 	public ArrayList<Period> disableDates(String contextPath, Period period) {
