@@ -33,8 +33,8 @@ public class Apartment {
 	}
 
 	public Apartment(String id, Type type, int rooms, int guests, Location location, long to, long from,
-			ArrayList<Period> availability, String host, Collection<Review> reviews, int price, String checkin,
-			String checkout, String status, ArrayList<Amenity> amenities) {
+			ArrayList<Period> availability, String host, Collection<Review> reviews, ArrayList<String> images,
+			int price, String checkin, String checkout, String status, ArrayList<Amenity> amenities) {
 		super();
 		this.id = id;
 		this.type = type;
@@ -46,6 +46,7 @@ public class Apartment {
 		this.availability = availability;
 		this.host = host;
 		this.reviews = reviews;
+		this.images = images;
 		this.price = price;
 		this.checkin = checkin;
 		this.checkout = checkout;
