@@ -1,5 +1,6 @@
 Vue.component('new-reservation', {
-    template: `<div id="new-Reservation">
+    template: `
+<div id="new-Reservation">
     <div class="container" id='page-title'>
         <h1 style="margin-top:10px;color:#35424a;">Create new <span id='titleEffect'>Reservation</span></h1>
         <hr style='background:#e8491d;height:1px;'>
@@ -8,20 +9,10 @@ Vue.component('new-reservation', {
     <div id='main' class='container'>
         <div v-if='isGuest'>
             <div class="card-body">
-                <div class="card-header">
-                    <h4>FOR</h4>
-                </div>
                 <h3 class="card-title">
                     <label for="">Type: </label>
                     <span style="font-size: 25px;">{{apartment.type}}</span>
                 </h3>
-
-                <!-- OBRISATI -->
-                <h3 class="card-title">
-                    <label for="">Price per day (samo za test): </label>
-                    <span style="font-size: 25px;">{{apartment.price}}</span>
-                </h3>
-
                 <h3 class="card-title">
                     <label for="">Address: </label>
                     <span style="font-size: 25px;">{{apartment.location.address.street}} -
@@ -32,25 +23,26 @@ Vue.component('new-reservation', {
                 <label>Select Checkin Date:</label>
                 <div>
                     <vuejsDatepicker :inline="true" :disabled-dates="disabledDates" :highlighted="dates"
-                        v-model="dates.from">
+                        v-model="dates.from" v-on:input="calculatePrice()">
                     </vuejsDatepicker>
                 </div>
 
                 <label>Number of nights:</label>
-                <select style="padding:7px; margin-right: 10px" id='NoOfNights' v-model="newReservation.night"
+                <select style="padding:7px; margin-right: 10px" id='NoOfNights' v-model="reservation.night"
                     v-on:click="calculatePrice()">
                     <option disabled value="">No. of nights</option>
                     <option v-for='night in nights'>{{night}}</option>
                 </select>
                 <label for="">Price:</label>
-                <h4>{{newReservation.price}}$ </h4>
+                <h4>{{reservation.price}}$ </h4>
                 <label>Message:</label>
-                <textarea v-model='newReservation.message' placeholder="Enter message..."></textarea>
+                <textarea v-model='reservation.message' placeholder="Enter message..."></textarea>
                 <button class="btn btn-lg btn-success" v-on:click='sendReservation'> Send </button>
             </div>
         </div>
     </div>
-</div>`,
+</div>
+`,
     data: function () {
         return {
             user: {
@@ -61,11 +53,11 @@ Vue.component('new-reservation', {
             isHost: false,
             isGuest: false,
 
-            //Nova rezervaciju koja se pravi
-            newReservation: {
+            reservation: {
                 apartmentId: null,
                 guestId: null,
-                date: null,
+                from: null,
+                to: null,
                 night: null,
                 price: null,
                 confirmation: false,
@@ -89,6 +81,7 @@ Vue.component('new-reservation', {
                 to: null,
                 from: null,
                 price: null,
+                availability: []
             },
 
             disabledDates: {
@@ -101,7 +94,8 @@ Vue.component('new-reservation', {
             nights: null,
             dates: {
                 from: null,
-                to: null
+                to: null,
+                includeDisabled: true
             }
         }
     },
@@ -111,18 +105,21 @@ Vue.component('new-reservation', {
             this.apartment = data;
             this.disabledDates.to = new Date(this.apartment.to);
             this.disabledDates.from = new Date(this.apartment.from);
+            
+            if (this.availability != null) {
+                for (let i = 0; i < availability.length; i++) {
+                    //implement availability
+
+                    dates.push(this.disabledDates.range);
+                    //cutting corners
+                }
+            }
         },
         sendReservation() {
-            alert(` 
-                    ApartId: ${this.newReservation.apartmentId}\n
-                    GuestId: ${this.newReservation.guestId}\n
-                    Night:  ${this.newReservation.night}\n
-                    Date: ${this.newReservation.date}\n
-                    Price:  ${this.newReservation.price}\n
-                    Confirmation:  ${this.newReservation.confirmation}\n
-                    Message: ${this.newReservation.message}\n
-                    Status: ${this.newReservation.status}\n
-                   `);
+            this.reservation.from = this.dates.from.getTime();
+            this.reservation.to = this.dates.to.getTime();
+            console.log(this.reservation);
+            //axios post
         },
 
         // pomocna metoda za ogranicen odabir dana:
@@ -136,18 +133,16 @@ Vue.component('new-reservation', {
 
         //Metoda za automatsko racunanje cene rezervacija spram cene apartmana * broj nocenja
         calculatePrice: function () {
-            this.newReservation.price = this.newReservation.night * this.apartment.price;
-            this.dates.to = new Date (this.dates.from.getTime() + this.newReservation.night * 1000 * 60 * 60 * 24);
+            this.reservation.price = this.reservation.night * this.apartment.price;
+            this.dates.to = new Date(this.dates.from.getTime() + this.reservation.night * 1000 * 60 * 60 * 24);
         },
-
 
         insertReservData: function () {
             // dodaje se u rezervaciju id apartmana za koji se pravi rezervacija
-            this.newReservation.apartmentId = this.apartmentId;
+            this.reservation.apartmentId = this.apartmentId;
             // dodaje se u rezervaciju id gusta koji pravi rezervaciju
-            this.newReservation.guestId = this.user.username;
+            this.reservation.guestId = this.user.username;
         },
-
 
         getApartmentData: function () {
             axios
@@ -190,7 +185,7 @@ Vue.component('new-reservation', {
     },
     mounted() {
         //dodaje se opseg dana za izbor trajanja odmora
-        this.nights = this.range(1, 30);
+        this.nights = this.range(1, 28);
 
         axios
             .get('rest/apartment/' + this.$route.params.id)
