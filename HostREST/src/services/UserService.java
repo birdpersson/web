@@ -5,7 +5,9 @@ import java.util.Collection;
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -44,6 +46,20 @@ public class UserService {
 			UserDAO userDAO = (UserDAO) ctx.getAttribute("userDAO");
 			User user = userDAO.findOne(username);
 			return Response.status(Response.Status.OK).entity(user).build();
+		}
+		return Response.status(Response.Status.FORBIDDEN).build();
+	}
+
+	@PUT
+	@Path("profile/{username}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response editProfile(@Context HttpServletRequest request,
+			@PathParam("username") String username, User user) {
+		if (AuthService.getUsername(request).equals(username)) {
+			UserDAO userDAO = (UserDAO) ctx.getAttribute("userDAO");
+			User newUser = userDAO.update(ctx.getRealPath(""), user);
+			return Response.status(Response.Status.CREATED).entity(newUser).build();
 		}
 		return Response.status(Response.Status.FORBIDDEN).build();
 	}
