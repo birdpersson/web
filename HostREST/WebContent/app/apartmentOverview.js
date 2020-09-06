@@ -21,7 +21,7 @@ Vue.component('apartments', {
                             <option disabled value="">Status</option>
                             <option v-for='status in statuses'>{{status}}</option>
                         </select>
-                        <select v-if='isActive()' style="padding:7px; margin-right: 10px" id='listOfStatuses' v-model="choosenType">
+                        <select v-if='isActive()' style="padding:7px; margin-right: 10px" id='typeOfAmenities' v-model="choosenType">
                             <option disabled value="">Type of amenity</option>
                             <option v-for='amenType in typeOfAmenity' v-on:click='showAmenity'>{{amenType}}</option>
                         </select>
@@ -74,13 +74,12 @@ Vue.component('apartments', {
                         <th>Apartment type</th>
                         <th>Apartment address</th>
                         <th>Rooms</th>
-                        <th @click="sort('price')">Price <img style='display:inline;' v-if='currentSortDir == "asc"'
-                                src='img/up-arrow1.1.png'><img v-if='currentSortDir == "desc"'
-                                src='img/down-arrow1.1.png'></th>
-                        <!-- <th>Availability</th> -->
+                        <th @click="sort('price')"> Price 
+                            <img style='display:inline;' v-if='currentSortDir == "asc"' src='img/up-arrow1.1.png'>
+                            <img v-if='currentSortDir == "desc"' src='img/down-arrow1.1.png'>
+                        </th>
                         <th>Status</th>
-                        <!-- <th v-if='isGuest'>Comments</th> -->
-                        <th v-if='isGuest'>Details</th>
+                        <th>Details</th>
                         <th v-if='isGuest'>Reserv</th>
                         <th v-if='!isGuest'>Edit</th>
                         <th v-if='!isGuest'>Delete</th>
@@ -92,29 +91,17 @@ Vue.component('apartments', {
                         <td>{{apartment.location.address.street}} - {{apartment.location.address.postalCode}} {{apartment.location.address.city}} </td>
                         <td>{{apartment.rooms}}</td>
                         <td>{{apartment.price}}</td>
-                        <!-- <td>{{apartment.availability}}</td> -->
                         <td>{{apartment.status}}</td>
-                        <!-- 
-                        <td v-if='isGuest'>
-                            <button v-on:click='showComments(apartment.id)'> Comments </button>
-                        </td> -->
-                        <td v-if='isGuest'>
-                            <button v-on:click='showDetails(apartment.id)'> Details </button>
-                        </td>
-                        <td v-if='isGuest'>
-                            <button v-on:click='makeReseravation(apartment.id)'> Reserv </button>
-                        </td>
-
-                        <td v-if='!isGuest'><button v-on:click='showMessage'> Delete </button></td>
-                        <td v-if='!isGuest'>
-                            <router-link to="/apartmentNew"><button> Edit </button></router-link>
-                        </td>
+                        <td> <button class="btn-primary" v-on:click='showDetails(apartment.id)'> Details </button> </td>
+                        <td v-if='isGuest'> <button class="btn-primary" v-on:click='makeReseravation(apartment.id)'> Reserv </button> </td>
+                        <td v-if='!isGuest'> <router-link  to="/apartmentNew"><button class="btn-primary"> Edit </button></router-link> </td>
+                        <td v-if='!isGuest'> <button class="btn-danger" v-on:click='showMessage'> Delete </button> </td>
+                       
                     </tr>
                 </tbody>
             </table>
 
             <router-link v-if='isGuest' to="/reservations"><button class="classButton btn btn-warning">List of reservations</button></router-link>
-        <!-- </div> IsGuest -->
 
         <div id='options'>
             <!--Neaktivni stanovi i dodaj stan pripadaju hostu,
@@ -155,8 +142,6 @@ Vue.component('apartments', {
             ○ Brišem sve postojeće apartmane<br>
 
         </div>
-        <br>
-        <br>
 </div>`,
     data: function () {
         return {
@@ -256,7 +241,6 @@ Vue.component('apartments', {
     },
     methods: {
         showAmenity: function () {
-            alert('choosenType: ' + this.choosenType);
             this.shownAmenities = this.amenities[this.choosenType];
         },
         showMessage: function () {
@@ -283,7 +267,6 @@ Vue.component('apartments', {
 
 
         arrangeAmenities(allAmenities){
-                console.log('Amenities.Base.length: ' + this.amenities.base.length);
                 for(let i = 0; i< this.allAmenities.length; i++){
                   if(this.allAmenities[i].type === 'Base'){
                     this.amenities.base.push(this.allAmenities[i].name);

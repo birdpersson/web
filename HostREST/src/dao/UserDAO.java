@@ -75,6 +75,74 @@ public class UserDAO {
 		return user;
 	}
 
+	@SuppressWarnings("unused")
+	public User update(String contextPath, User user) {
+		String text = "";
+		BufferedReader in = null;
+		try {
+			File file = new File(contextPath + "/users.txt");
+			in = new BufferedReader(new FileReader(file));
+			String line;
+			StringTokenizer st;
+			while ((line = in.readLine()) != null) {
+				line = line.trim();
+				if (line.equals("") || line.indexOf('#') == 0)
+					continue;
+				st = new StringTokenizer(line, ";");
+				while (st.hasMoreTokens()) {
+					String username = st.nextToken().trim();
+					String password = st.nextToken().trim();
+					String firstname = st.nextToken().trim();
+					String lastname = st.nextToken().trim();
+					String gender = st.nextToken().trim();
+					String role = st.nextToken().trim();
+					if (user.getUsername().equals(username)) {
+						text += username + ";"
+								+ user.getPassword() + ";"
+								+ user.getFirstname() + ";"
+								+ user.getLastname() + ";"
+								+ user.getGender() + ";"
+								+ role + "\r\n";
+					} else {
+						text += line + "\r\n";
+					}
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (Exception e) {
+					return null;
+				}
+			}
+		}
+		BufferedWriter writer = null;
+		try {
+			File file = new File(contextPath + "/users.txt");
+			writer = new BufferedWriter(new FileWriter(file, false));
+			PrintWriter out = new PrintWriter(writer);
+			out.println(text);
+			out.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		} finally {
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) {
+					return null;
+				}
+			}
+		}
+		loadUsers(contextPath);
+		return user;
+	}
+
 	private void loadUsers(String contextPath) {
 		BufferedReader in = null;
 		try {

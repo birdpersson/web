@@ -1,0 +1,4 @@
+1;images/1/apartment1.jpg
+1;images/1/apartment2.jpg
+2;images/2/apartment1.jpg
+2;images/2/yu2vtpkf2lv41.jpg

@@ -7,47 +7,59 @@ Vue.component('profile-update', {
             <hr style='background:#e8491d;height:1px;'>
         </div>
         <div class="container">
-
+            <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
+            <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
+            <hr>
+            <h4>Data change</h4>
+            <hr>
             <fieldset class="form-group">
-                <label>Korisnicko ime</label>
+                <label>Username</label>
                 <input type="text" class="form-control" v-model="profile.username" disabled />
             </fieldset>
 
+            <div v-if='messages.errorFirstName' id='testError' class="alert alert-danger" v-html="messages.errorFirstName"></div>
             <fieldset class="form-group">
-                <label>Ime</label>
+                <label>First name</label>
                 <input type="text" class="form-control" v-model="profile.firstname" />
             </fieldset>
 
+            <div v-if='messages.errorLastName' class="alert alert-danger" v-html="messages.errorLastName"></div>
             <fieldset class="form-group">
-                <label>Prezime</label>
+                <label>Last name</label>
                 <input type="text" class="form-control" v-model="profile.lastname" />
             </fieldset>
 
-            <fieldset class="form-group">
-                <label>Adresa</label>
-                <input type="text" class="form-control" v-model="profile.gender" />
-            </fieldset>
-
-            <fieldset class="form-group">
-                <label>Grad</label>
-                <input type="text" class="form-control" v-model="profile.role" />
-            </fieldset>
+            <div class="form-label-group">
+                <label>Gender</label>
+                <br>
+                <input type="radio" v-model="profile.gender" required value="Male"> Male
+                <input type="radio" v-model="profile.gender" required value="Female"> Female
+                <input type="radio" v-model="profile.gender" required value="Other"> Other
+                <br>
+                <br>
+            </div>
 
             <hr>
-
+            <h4>Password change</h4>
+            <hr>
+            <div v-if='messages.errorNotEqualOldPassword' class="alert alert-danger" v-html="messages.errorNotEqualOldPassword"></div>
+            <div v-if='messages.errorOldPass' class="alert alert-danger" v-html="messages.errorOldPass"></div>
             <fieldset class="form-group">
-                <label>Sifra</label>
-                <input type="text" class="form-control" v-model="profile.newPassword" />
+                <label>Old password</label>
+                <input type="text" class="form-control" v-model="changedPassword.oldPassword" placeholder="Enter old password" />
             </fieldset>
 
+            <div v-if='messages.errorNewPass' class="alert alert-danger" v-html="messages.errorNewPass"></div>
             <fieldset class="form-group">
-                <label>Nova Sifra</label>
-                <input type="text" class="form-control" v-model="profile.newPassword" />
+                <label>New password</label>
+                <input type="text" class="form-control" v-model="changedPassword.newPassword" placeholder="Enter new password" />
             </fieldset>
 
+            <div v-if='messages.errorNotEqualNewPassword' class="alert alert-danger" v-html="messages.errorNotEqualNewPassword"></div>
+            <div v-if='messages.errorRepNewPass' class="alert alert-danger" v-html="messages.errorRepNewPass"></div>
             <fieldset class="form-group">
-                <label>Potvrda sifre</label>
-                <input type="text" class="form-control" v-model="profile.newPasswordRepeat" />
+                <label>Repeat new password</label>
+                <input type="text" class="form-control" v-model="changedPassword.newPasswordRepeat" placeholder="Repeat your new password"  />
             </fieldset>
 
             <button type="button" class="btn btn-lg btn-success" v-on:click='updatePacijentProfile'> Save </button>
@@ -61,23 +73,138 @@ Vue.component('profile-update', {
                 role: ''
             },
             profile: {
-                username: 'tttesttt',
-                password: 'test12345',
-                firstname: 'Test',
-                lastname: 'Testovic',
-                gender: 'M',
-                role: 'admin',
+                username: '',
+                password: '',
+                firstname: '',
+                lastname: '',
+                gender: '',
+                role: '',
+            },
+            changedPassword:{
+                oldPassword:'',
                 newPassword: '',
                 newPasswordRepeat: '',
-
             },
             isAdmin: false,
             isHost: false,
-            isGuest: false
+            isGuest: false,
+
+            messages:{
+                errorFirstName:'',
+                errorLastName:'',
+                errorOldPass:'',
+                errorNewPass:'',
+                errorRepNewPass:'',
+                errorNotEqualOldPassword:'',
+                errorNotEqualNewPassword:'',
+                errorResponse:'',
+                successResponse:'',
+            }
         }
     },
     methods: {
 
+        updatePacijentProfile: function(){
+            // First name i last name se u paru gledaju da li su popunjeni
+            // Ako su oba prazna u isto vreme ce za oba izbaciti error
+            if(this.profile.firstname=='' && this.profile.lastname!=''){
+                this.messages.errorFirstName =  `<h4>First name of user can't be empty!</h4>`;
+                setTimeout(()=>this.messages.errorFirstName='',3000);
+            }
+            else if(this.profile.firstname!='' && this.profile.lastname==''){
+                this.messages.errorLastName =  `<h4>Last name of user can't be empty!</h4>`;
+                setTimeout(()=>this.messages.errorLastName='',3000);
+            }
+            else if(this.profile.firstname=='' && this.profile.lastname==''){
+                this.messages.errorFirstName =  `<h4>First name of user can't be empty!</h4>`;
+                this.messages.errorLastName =  `<h4>Last name of user can't be empty!</h4>`;
+                setTimeout(()=>this.messages.errorFirstName='',3000);
+                setTimeout(()=>this.messages.errorLastName='',3000);
+               
+            }
+            //Password check
+            //Ako je unet old password, a nije uneto jedno od polja newPassword ili newPassword reapeat unosi se error
+            else if(this.changedPassword.oldPassword !== '' && this.changedPassword.newPassword !== '' && this.changedPassword.newPasswordRepeat === ''){
+                this.messages.errorRepNewPass =  `<h4>You need to repeat your new password!</h4>`;
+                setTimeout(()=>this.messages.errorRepNewPass='',3000);
+            }
+
+            //Ako je unet old password, a nije uneto jedno od polja newPassword ili newPassword reapeat unosi se error
+            else if(this.changedPassword.oldPassword !== '' && this.changedPassword.newPassword === '' && this.changedPassword.newPasswordRepeat !== ''){
+                this.messages.errorNewPass =  `<h4>You need to enter your new password!</h4>`;
+                setTimeout(()=>this.messages.errorNewPass='',3000);
+            }
+
+            //Ako je unet old password, a nije uneto jedno od polja newPassword ili newPassword reapeat unosi se error
+            else if(this.changedPassword.oldPassword !== '' && this.changedPassword.newPassword === '' && this.changedPassword.newPasswordRepeat === ''){
+                this.messages.errorNewPass =  `<h4>You need to enter your new password!</h4>`;
+                this.messages.errorRepNewPass =  `<h4>You need to repeat your new password!</h4>`;
+                setTimeout(()=>this.messages.errorNewPass='',3000);
+                setTimeout(()=>this.messages.errorRepNewPass='',3000);
+            }
+            
+            //Ako nije unet old password, a jesu novi ispisuje se error
+            else if(this.changedPassword.oldPassword === '' && this.changedPassword.newPassword !== '' && this.changedPassword.newPasswordRepeat !== ''){
+                this.messages.errorOldPass =  `<h4>You need to enter your old password first!</h4>`;
+                setTimeout(()=>this.messages.errorOldPass='',3000);
+            }
+
+            //Ako su uneta sva 3 passworda, nema errora za prazna polja, ali se proverava validnost samog unosa
+            else if(this.changedPassword.oldPassword !== '' && this.changedPassword.newPassword !== '' && this.changedPassword.newPasswordRepeat !== ''){
+                //Provera da li je stara sifra dobro uneta
+                if(this.profile.password !== this.changedPassword.oldPassword){
+                    this.messages.errorNotEqualOldPassword =  `<h4>Your old password is incorrect! Please try again...</h4>`;
+                    setTimeout(()=>this.messages.errorNotEqualOldPassword ='',3000);
+                }
+                else{
+                    //Provera da li se nove sifre poklapaju
+                    if(this.changedPassword.newPassword !== this.changedPassword.newPasswordRepeat){
+                        this.messages.errorNotEqualNewPassword =  `<h4>Your passwords don't match! Please try again...</h4>`;
+                        setTimeout(()=>this.messages.errorNotEqualNewPassword='',3000);
+                    }
+                    else{
+                        //ako je stara sifra dobro uneta, a nove se poklapaju,
+                        //stara sifra se menja novom.
+                        this.profile.password = this.changedPassword.newPassword;
+                        
+                        axios.put(`rest/profile/${this.user.username}`,this.profile).then(Response => {
+                            this.messages.successResponse = `<h4>Your profile was edited successfully!</h4>`;
+                            setTimeout(() => this.messages.successResponse='', 5000);
+        
+                            this.getUserProfile();
+        
+                        })
+                        .catch(error => {
+                            if(error.response.status === 500 || error.response.status === 404){
+                                this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
+                                setTimeout(() => this.messages.errorResponse='', 5000);
+                            }
+                        });
+                        
+                    }
+                }
+            }
+            else{
+                axios.put(`rest/profile/${this.user.username}`,this.profile).then(Response => {
+                    this.messages.successResponse = `<h4>Your profile was edited successfully!</h4>`;
+                    setTimeout(() => this.messages.successResponse='', 5000);
+
+                    this.getUserProfile();
+
+                })
+                .catch(error => {
+                    if(error.response.status === 500 || error.response.status === 404){
+                        this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
+                        setTimeout(() => this.messages.errorResponse='', 5000);
+                    }
+                });
+            }
+        },
+        getUserProfile:function(){
+            axios.get(`rest/profile/${this.user.username}`).then(Response => {
+                this.profile = Response.data;
+            })
+        }
     },
     created() {
         this.user.username = localStorage.getItem('user');
@@ -89,5 +216,7 @@ Vue.component('profile-update', {
         } else {
             this.isGuest = true;
         }
+        this.getUserProfile();
+
     },
 });

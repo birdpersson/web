@@ -16,10 +16,8 @@ Vue.component('new-apartment', {
 						postalCode: ''
 					}
 				},
-				period: {
-					to: null,
-					from: null
-				},
+				to: null,
+				from: null,
 				price: null,
 				checkin: '2 PM',
 				checkout: '10 AM',
@@ -38,9 +36,7 @@ Vue.component('new-apartment', {
 			},
 
 			disabledDates: {
-				ranges: [],
-				to: null,
-				from: null
+				to: null
 			},
 
 			highlighted: {
@@ -99,11 +95,11 @@ Vue.component('new-apartment', {
 			<label>Dates available</label>
 			<div class="row">
 				<div class="col">
-					<vuejsDatepicker placeholder="Select Checkin Date" v-model="dates.from" :highlighted="dates">
+					<vuejsDatepicker placeholder="Select Checkin Date" v-model="dates.from" :highlighted="dates" :disabled-dates="disabledDates">
 					</vuejsDatepicker>
 				</div>
 				<div class="col">
-					<vuejsDatepicker placeholder="Select Checkout Date" v-model="dates.to" :highlighted="dates">
+					<vuejsDatepicker placeholder="Select Checkout Date" v-model="dates.to" :highlighted="dates" :disabled-dates="disabledDates">
 					</vuejsDatepicker>
 				</div>
 			</div>
@@ -129,9 +125,9 @@ Vue.component('new-apartment', {
 	methods: {
 		create: function (apartment) {
 			// unselected dates will be disabled
-			this.apartment.period.to = this.dates.from.getTime();
-			this.apartment.period.from = this.dates.to.getTime();
-			console.log(apartment);
+			this.apartment.to = this.dates.from.getTime();
+			this.apartment.from = this.dates.to.getTime() + 1000 * 60 * 60 * 24;
+			// console.log(apartment);
 			axios
 				.post('rest/apartment', apartment)
 				.then(Response => (console.log(Response)))
@@ -166,9 +162,13 @@ Vue.component('new-apartment', {
 	mounted() {
 		this.rooms = this.range(1, 10);
 		this.guests = this.range(1, 15);
+
+		let to = new Date();
+		to.setDate(to.getDate() - 1)
+
+		this.disabledDates.to = to;
 	},
 	components: {
 		vuejsDatepicker
 	}
 });
-

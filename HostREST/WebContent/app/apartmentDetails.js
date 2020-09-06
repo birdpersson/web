@@ -40,7 +40,7 @@ Vue.component("apartment-details", {
             <a v-if='isOtherImgs' class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
                   <span class="carousel-control-next-icon" aria-hidden="true"></span>
                   <span class="sr-only">Next</span>
-                </a>
+            </a>
           </div>
         </header>
         <div class="card-body" style="margin-left:10px;">
