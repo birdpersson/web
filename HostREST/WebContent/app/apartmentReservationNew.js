@@ -1,6 +1,5 @@
 Vue.component('new-reservation', {
-    template: `
-<div id="new-Reservation">
+    template: `<div id="new-Reservation">
     <div class="container" id='page-title'>
         <h1 style="margin-top:10px;color:#35424a;">Create new <span id='titleEffect'>Reservation</span></h1>
         <hr style='background:#e8491d;height:1px;'>
@@ -32,14 +31,16 @@ Vue.component('new-reservation', {
 
                 <label>Select Checkin Date:</label>
                 <div>
-					<vuejsDatepicker :inline="true" :disabled-dates="disabledDates">
-					</vuejsDatepicker>
-				</div>
+                    <vuejsDatepicker :inline="true" :disabled-dates="disabledDates" :highlighted="dates"
+                        v-model="dates.from">
+                    </vuejsDatepicker>
+                </div>
 
                 <label>Number of nights:</label>
-                <select style="padding:7px; margin-right: 10px" id='NoOfNights' v-model="newReservation.night">
+                <select style="padding:7px; margin-right: 10px" id='NoOfNights' v-model="newReservation.night"
+                    v-on:click="calculatePrice()">
                     <option disabled value="">No. of nights</option>
-                    <option v-for='night in nights' v-on:click="calculatePrice()">{{night}}</option>
+                    <option v-for='night in nights'>{{night}}</option>
                 </select>
                 <label for="">Price:</label>
                 <h4>{{newReservation.price}}$ </h4>
@@ -48,9 +49,7 @@ Vue.component('new-reservation', {
                 <button class="btn btn-lg btn-success" v-on:click='sendReservation'> Send </button>
             </div>
         </div>
-        <!--isGuest-->
     </div>
-    <!--main-->
 </div>`,
     data: function () {
         return {
@@ -74,8 +73,6 @@ Vue.component('new-reservation', {
                 status: "Created"
             },
 
-            nights: null, //max broj nocenja koje se moze odabrati.
-            //Apartman za koji se rezrvacija pravi iciji se podaci prikazuju i koriste;
             apartment: {
                 type: null,
                 rooms: null,
@@ -95,12 +92,17 @@ Vue.component('new-reservation', {
             },
 
             disabledDates: {
+                ranges: [],
                 to: null,
                 from: null,
-                ranges: []
+            },
+
+            night: null,
+            nights: null,
+            dates: {
+                from: null,
+                to: null
             }
-
-
         }
     },
     methods: {
@@ -135,6 +137,7 @@ Vue.component('new-reservation', {
         //Metoda za automatsko racunanje cene rezervacija spram cene apartmana * broj nocenja
         calculatePrice: function () {
             this.newReservation.price = this.newReservation.night * this.apartment.price;
+            this.dates.to = new Date (this.dates.from.getTime() + this.newReservation.night * 1000 * 60 * 60 * 24);
         },
 
 
