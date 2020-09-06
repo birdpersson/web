@@ -14,6 +14,8 @@ public class Apartment {
 	private int rooms;
 	private int guests;
 	private Location location;
+	private long to;
+	private long from;
 	private Period period;
 	private ArrayList<Period> availability;
 	private String host;
@@ -30,19 +32,21 @@ public class Apartment {
 		super();
 	}
 
-	public Apartment(String id, Type type, int rooms, int guests, Location location,
-			ArrayList<Period> availability, String host, Collection<Review> reviews,
-			int price, String checkin, String checkout, String status,
-			ArrayList<Amenity> amenities) {
+	public Apartment(String id, Type type, int rooms, int guests, Location location, long to, long from,
+			ArrayList<Period> availability, String host, Collection<Review> reviews, ArrayList<String> images,
+			int price, String checkin, String checkout, String status, ArrayList<Amenity> amenities) {
 		super();
 		this.id = id;
 		this.type = type;
 		this.rooms = rooms;
 		this.guests = guests;
 		this.location = location;
+		this.to = to;
+		this.from = from;
 		this.availability = availability;
 		this.host = host;
 		this.reviews = reviews;
+		this.images = images;
 		this.price = price;
 		this.checkin = checkin;
 		this.checkout = checkout;
@@ -88,6 +92,22 @@ public class Apartment {
 
 	public void setLocation(Location location) {
 		this.location = location;
+	}
+
+	public long getTo() {
+		return to;
+	}
+
+	public void setTo(long to) {
+		this.to = to;
+	}
+
+	public long getFrom() {
+		return from;
+	}
+
+	public void setFrom(long from) {
+		this.from = from;
 	}
 
 	public Period getPeriod() {

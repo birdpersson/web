@@ -61,11 +61,13 @@ public class ApartmentDAO {
 				+ apartment.getRooms() + ";"
 				+ apartment.getGuests() + ";"
 				+ locationDAO.save(contextPath, apartment.getLocation()).getId() + ";"
+				+ apartment.getTo() + ";"
+				+ apartment.getFrom() + ";"
 				+ apartment.getHost() + ";"
 				+ apartment.getPrice() + ";"
 				+ apartment.getCheckin() + ";"
 				+ apartment.getCheckout() + ";"
-				+ apartment.getStatus() + ";";
+				+ apartment.getStatus();
 		System.out.println(line);
 		BufferedWriter writer = null;
 		try {
@@ -96,11 +98,6 @@ public class ApartmentDAO {
 				}
 			}
 		}
-		Period period = apartment.getPeriod();
-		period.setApartmentId(apartment.getId());
-		ArrayList<Period> availability = disableDates(contextPath, period);
-		apartment.setAvailability(availability);
-
 		apartments.put(apartment.getId(), apartment);
 		return apartment;
 	}
@@ -123,18 +120,20 @@ public class ApartmentDAO {
 					int rooms = Integer.parseInt(st.nextToken().trim());
 					int guests = Integer.parseInt(st.nextToken().trim());
 					Location location = locationDAO.findOne(st.nextToken().trim());
+					long to = Long.parseLong(st.nextToken().trim());
+					long from = Long.parseLong(st.nextToken().trim());
 					ArrayList<Period> availability = loadDates(contextPath, id);
 					String host = st.nextToken().trim();
 					Collection<Review> reviews = reviewDAO.findAllByApartmentId(id);
-//					ArrayList<String> images = new ArrayList<>();
+					ArrayList<String> images = loadImages(contextPath, id);
 					int price = Integer.parseInt(st.nextToken().trim());
 					String checkin = st.nextToken().trim();
 					String checkout = st.nextToken().trim();
 					String status = st.nextToken().trim();
 					ArrayList<Amenity> amenities = amenityDAO.findAllByApartmentId(contextPath, id);
 //					ArrayList<Reservation> reservations = new ArrayList<>();
-					apartments.put(id, new Apartment(id, type, rooms, guests, location, availability,
-							host, reviews, price, checkin, checkout, status, amenities));
+					apartments.put(id, new Apartment(id, type, rooms, guests, location, to, from, availability,
+							host, reviews, images, price, checkin, checkout, status, amenities));
 				}
 			}
 		} catch (Exception e) {
@@ -146,6 +145,42 @@ public class ApartmentDAO {
 				} catch (Exception e) { }
 			}
 		}
+	}
+
+	private ArrayList<String> loadImages(String contextPath, String id) {
+		ArrayList<String> images = new ArrayList<>();
+		BufferedReader in = null;
+		try {
+			File file = new File(contextPath + "/images.txt");
+			in = new BufferedReader(new FileReader(file));
+			String line;
+			StringTokenizer st;
+			while ((line = in.readLine()) != null) {
+				line = line.trim();
+				if (line.equals("") || line.indexOf('#') == 0)
+					continue;
+				st = new StringTokenizer(line, ";");
+				while (st.hasMoreTokens()) {
+					String apartmentId = st.nextToken().trim();
+					String image = st.nextToken().trim();
+					if (apartmentId.equals(id)) {
+						images.add(image);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (Exception e) {
+					return null;
+				}
+			}
+		}
+		return images;
 	}
 
 	private ArrayList<Period> loadDates(String contextPath, String id) {
@@ -164,10 +199,10 @@ public class ApartmentDAO {
 				while (st.hasMoreTokens()) {
 					String periodId = st.nextToken().trim();
 					String apartmentId = st.nextToken().trim();
-					long to = Long.parseLong(st.nextToken().trim());
 					long from = Long.parseLong(st.nextToken().trim());
+					long to = Long.parseLong(st.nextToken().trim());
 					if (apartmentId.equals(id)) {
-						availability.add(new Period(periodId, apartmentId, to, from));
+						availability.add(new Period(periodId, apartmentId, from, to));
 					}
 				}
 			}

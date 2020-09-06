@@ -12,53 +12,45 @@ Vue.component('new-reservation', {
                 <div class="card-header">
                     <h4>FOR</h4>
                 </div>
-                <h3 class="card-title"> 
-                    <label for="">Type: </label> 
-                    <span style="font-size: 25px;">{{apartment.type}}</span >
+                <h3 class="card-title">
+                    <label for="">Type: </label>
+                    <span style="font-size: 25px;">{{apartment.type}}</span>
                 </h3>
 
                 <!-- OBRISATI -->
-                <h3 class="card-title"> 
-                    <label for="">Price per day (samo za test): </label> 
-                    <span style="font-size: 25px;">{{apartment.price}}</span >
-                </h3>
-            
                 <h3 class="card-title">
-                    <label for="">Address: </label> 
-                    <span style="font-size: 25px;">{{apartment.location.address.street}} - {{apartment.location.address.postalCode}} {{apartment.location.address.city}}</span >
+                    <label for="">Price per day (samo za test): </label>
+                    <span style="font-size: 25px;">{{apartment.price}}</span>
+                </h3>
+
+                <h3 class="card-title">
+                    <label for="">Address: </label>
+                    <span style="font-size: 25px;">{{apartment.location.address.street}} -
+                        {{apartment.location.address.postalCode}} {{apartment.location.address.city}}</span>
                 </h3>
                 <hr style='background:#e8491d;height:1px;'>
-            
-                    <label>Day of begining:</label>
-                    mora se menjati
-                    <input type="date">
-                    <label>Number of nights:</label>
-                    <select style="padding:7px; margin-right: 10px" id='NoOfNights' v-model="newReservation.night">
-                        <option disabled value="">No. of nights</option>
-                        <option v-for='night in nights' v-on:click="calculatePrice()">{{night}}</option>
-                    </select>
-                    <label for="">Price:</label>
-                    <h4>{{newReservation.price}}$ </h4>
-                    <label>Message:</label>
-                    <textarea v-model='newReservation.message' placeholder="Enter message..."></textarea>
-                    <button class="btn btn-lg btn-success" v-on:click='sendReservation'> Send </button>
+
+                <label>Select Checkin Date:</label>
+                <div>
+					<vuejsDatepicker :inline="true" :disabled-dates="disabledDates">
+					</vuejsDatepicker>
+				</div>
+
+                <label>Number of nights:</label>
+                <select style="padding:7px; margin-right: 10px" id='NoOfNights' v-model="newReservation.night">
+                    <option disabled value="">No. of nights</option>
+                    <option v-for='night in nights' v-on:click="calculatePrice()">{{night}}</option>
+                </select>
+                <label for="">Price:</label>
+                <h4>{{newReservation.price}}$ </h4>
+                <label>Message:</label>
+                <textarea v-model='newReservation.message' placeholder="Enter message..."></textarea>
+                <button class="btn btn-lg btn-success" v-on:click='sendReservation'> Send </button>
             </div>
-        </div> <!--isGuest-->
-    </div> <!--main-->
-    OBRISATI!<br>
-    Kreiranje rezervacije<br>
-    ● Kao Gost, ja jedini mogu da izvršim kreiranje rezervacije:<br>
-    ○ Rezervaciju apartmana obavljam po sledećem postupku<br>
-    ■ Odaberem apartman koji hoću da rezervišem, a zatim mi se omogućava<br>
-    pregled datuma kad je dostupan<br>
-    ■ Biram datum početka rezervacije i unosim broj noćenja<br>
-    ■ Unosim poruku namenjenu domaćinu<br>
-    ■ Klikom na dugme šalje se zahtev za kreiranje rezervacije na server<br>
-    (potrebno je izvršiti i proveru raspoloživosti apartmana)<br>
-    ■ Ukoliko je sve u redu kreira se rezervacija sa statusom KREIRANA<br>
-    ■ Ukoliko provera nije prošla Gostu se ispisuje poruka da rezervaciju nije<br>
-    moguće izvršiti za navedene datume<br>
-    <br>
+        </div>
+        <!--isGuest-->
+    </div>
+    <!--main-->
 </div>`,
     data: function () {
         return {
@@ -71,8 +63,8 @@ Vue.component('new-reservation', {
             isGuest: false,
 
             //Nova rezervaciju koja se pravi
-            newReservation:{
-                apartmentId:null,
+            newReservation: {
+                apartmentId: null,
                 guestId: null,
                 date: null,
                 night: null,
@@ -82,26 +74,43 @@ Vue.component('new-reservation', {
                 status: "Created"
             },
 
-            nights:null, //max broj nocenja koje se moze odabrati.
+            nights: null, //max broj nocenja koje se moze odabrati.
             //Apartman za koji se rezrvacija pravi iciji se podaci prikazuju i koriste;
             apartment: {
                 type: null,
                 rooms: null,
-                price: null,
+                guests: null,
                 location: {
-                  latitude: '',
-                  longitude: '',
-                  address: {
-                    street: '',
-                    city: '',
-                    postalCode: ''
-                  }
-                }
-              },
+                    latitude: '',
+                    longitude: '',
+                    address: {
+                        street: '',
+                        city: '',
+                        postalCode: ''
+                    }
+                },
+                to: null,
+                from: null,
+                price: null,
+            },
+
+            disabledDates: {
+                to: null,
+                from: null,
+                ranges: []
+            }
+
+
         }
     },
     methods: {
-        sendReservation(){
+        setApartment: function (data) {
+            console.log(data);
+            this.apartment = data;
+            this.disabledDates.to = new Date(this.apartment.to);
+            this.disabledDates.from = new Date(this.apartment.from);
+        },
+        sendReservation() {
             alert(` 
                     ApartId: ${this.newReservation.apartmentId}\n
                     GuestId: ${this.newReservation.guestId}\n
@@ -115,43 +124,48 @@ Vue.component('new-reservation', {
         },
 
         // pomocna metoda za ogranicen odabir dana:
-        range:function(start=1, end){
-            var ans=[];
-            for(let i = start; i<=end; i++){
+        range: function (start = 1, end) {
+            var ans = [];
+            for (let i = start; i <= end; i++) {
                 ans.push(i);
             }
             return ans;
         },
-        
+
         //Metoda za automatsko racunanje cene rezervacija spram cene apartmana * broj nocenja
-        calculatePrice:function(){
+        calculatePrice: function () {
             this.newReservation.price = this.newReservation.night * this.apartment.price;
         },
 
-        
-        insertReservData:function(){
+
+        insertReservData: function () {
             // dodaje se u rezervaciju id apartmana za koji se pravi rezervacija
-            this.newReservation.apartmentId =  this.apartmentId;
+            this.newReservation.apartmentId = this.apartmentId;
             // dodaje se u rezervaciju id gusta koji pravi rezervaciju
             this.newReservation.guestId = this.user.username;
         },
 
-        
-        getApartmentData:function(){
+
+        getApartmentData: function () {
             axios
-            .get(`rest/apartment/${this.apartmentId}`)
-            .then(response => {
-                this.apartment.type = response.data.type;
-                this.apartment.rooms = response.data.rooms;
-                this.apartment.price = response.data.price;
-                this.apartment.location = response.data.location;
-            })
+                .get(`rest/apartment/${this.apartmentId}`)
+                .then(response => {
+                    this.apartment.type = response.data.type;
+                    this.apartment.rooms = response.data.rooms;
+                    this.apartment.price = response.data.price;
+                    this.apartment.location = response.data.location;
+                    this.disabledDates.to = response.data.to;
+                    this.disabledDates.from = response.data.from;
+                })
         }
 
     },
+    components: {
+        vuejsDatepicker
+    },
     computed: {
         id() {
-          return this.$route.params.id; //preuzimam id apartmana na cijoj sam stranici za prikaz komentara
+            return this.$route.params.id; //preuzimam id apartmana na cijoj sam stranici za prikaz komentara
         },
     },
     created() {
@@ -164,15 +178,19 @@ Vue.component('new-reservation', {
         } else {
             this.isGuest = true;
             //preuzima se id apartmana iz url-a
-            this.apartmentId = this.id; 
-            
+            this.apartmentId = this.id;
+
             this.insertReservData();
-            this.getApartmentData();
+            // this.getApartmentData();
         }
 
     },
-    mounted(){
+    mounted() {
         //dodaje se opseg dana za izbor trajanja odmora
-        this.nights = this.range(1,30);
+        this.nights = this.range(1, 30);
+
+        axios
+            .get('rest/apartment/' + this.$route.params.id)
+            .then(Response => (this.setApartment(Response.data)));
     }
 });
