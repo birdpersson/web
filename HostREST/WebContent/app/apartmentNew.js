@@ -36,7 +36,7 @@ Vue.component('new-apartment', {
 			},
 
 			disabledDates: {
-				to: new Date()
+				to: null
 			},
 
 			highlighted: {
@@ -126,8 +126,8 @@ Vue.component('new-apartment', {
 		create: function (apartment) {
 			// unselected dates will be disabled
 			this.apartment.to = this.dates.from.getTime();
-			this.apartment.from = this.dates.to.getTime();
-			console.log(apartment);
+			this.apartment.from = this.dates.to.getTime() + 1000 * 60 * 60 * 24;
+			// console.log(apartment);
 			axios
 				.post('rest/apartment', apartment)
 				.then(Response => (console.log(Response)))
@@ -162,9 +162,13 @@ Vue.component('new-apartment', {
 	mounted() {
 		this.rooms = this.range(1, 10);
 		this.guests = this.range(1, 15);
+
+		let to = new Date();
+		to.setDate(to.getDate() - 1)
+
+		this.disabledDates.to = to;
 	},
 	components: {
 		vuejsDatepicker
 	}
 });
-
