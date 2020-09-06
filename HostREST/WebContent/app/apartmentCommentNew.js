@@ -85,7 +85,7 @@ Vue.component('new-comment', {
                 axios
                 .post('rest/reviews/', this.review)
                 .then(response => {
-                    this.messages.successResponse = `<h4>Your review was sent successfuly! Thank you for your feedback!</h4>`;
+                    this.messages.successResponse = `<h4>Your review was sent successfully! Thank you for your feedback!</h4>`;
                     this.review.text='';
                     this.review.star=null;
                     setTimeout(() => this.messages.successResponse='', 5000);

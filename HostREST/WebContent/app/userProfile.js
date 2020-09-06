@@ -10,28 +10,29 @@ Vue.component('profile', {
             <form>
                 <ul id="services" class="list-group">
                     <li class="list-group-item">
-                        <h4>Korisnicko ime</h4>
-                        <p>{{profile.username}}</p>
+                        <h5 style="color:#e8491d;">Username:</h5>
+                        <h4>{{profile.username}}</h4>
                     </li>
                     <li class="list-group-item">
-                        <h4>Ime</h4>
-                        <p>{{profile.firstname}}</p>
+                        <h5 style="color:#e8491d">First name:</h5>
+                        <h4>{{profile.firstname}}</h4>
                     </li>
 
                     <li class="list-group-item">
-                        <h4>Prezime</h4>
-                        <p>{{profile.lastname}}</p>
+                        <h5 style="color:#e8491d">Last name:</h5>
+                        <h4>{{profile.lastname}}</h4>
                     </li>
 
                     <li class="list-group-item">
-                        <h4>Pol</h4>
-                        <p>{{profile.gender}}</p>
+                        <h5 style="color:#e8491d">Gender:</h5>
+                        <h4>{{profile.gender}}</h4>
                     </li>
 
                     <li class="list-group-item">
-                        <h4>Uloga</h4>
-                        <p>{{profile.role}}</p>
+                        <h5 style="color:#e8491d">Password:</h5>
+                        <h4>{{profile.password}}</h4>
                     </li>
+
                 </ul>
 
                 <div id='buttonUpdate'>
@@ -69,9 +70,9 @@ Vue.component('profile', {
             this.profile.lastname = data.lastname;
             this.profile.gender = data.gender;
 
-            if (this.data.role == "ADMIN") {
+            if (this.user.role == "ADMIN") {
                 this.isAdmin = true;
-            } else if (this.data.role == "HOST") {
+            } else if (this.user.role == "HOST") {
                 this.isHost = true;
             } else {
                 this.isGuest = true;
