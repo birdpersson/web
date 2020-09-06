@@ -204,7 +204,7 @@ Vue.component('amenities-overview', {
                 axios
                 .post('rest/amenity/', this.newAmenity)
                 .then(response => {
-                    this.messages.successResponse = `<h4>Amenity was added successfuly!</h4>`;
+                    this.messages.successResponse = `<h4>Amenity was added successfully!</h4>`;
                     this.newAmenity.name='';
                     this.newAmenity.type='';
                     this.showAllAmenities();

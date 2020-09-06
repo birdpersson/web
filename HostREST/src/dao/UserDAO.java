@@ -102,9 +102,9 @@ public class UserDAO {
 								+ user.getFirstname() + ";"
 								+ user.getLastname() + ";"
 								+ user.getGender() + ";"
-								+ role + "\n";
+								+ role + "\r\n";
 					} else {
-						text += line + "\n";
+						text += line + "\r\n";
 					}
 				}
 			}
