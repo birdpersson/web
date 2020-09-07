@@ -1,7 +1,5 @@
 package beans;
 
-import java.util.Date;
-
 public class Reservation {
 
 	public enum Status {
@@ -11,26 +9,26 @@ public class Reservation {
 	private String id;
 	private String apartmentId;
 	private String guestId;
-	private Date date;
+	private long from;
+	private long to;
 	private int night;
-	private int price; // apartment.price * night;
+	private int price;
 	private String confirmation;
 	private String message;
 	private Status status;
-//	private Apartment apartment; //get ReservationByApartmentId()
-//	private Guest guest;
 
 	public Reservation() {
 		super();
 	}
 
-	public Reservation(String id, String apartmentId, String guestId, Date date, int night, int price,
+	public Reservation(String id, String apartmentId, String guestId, long from, long to, int night, int price,
 			String confirmation, String message, Status status) {
 		super();
 		this.id = id;
 		this.apartmentId = apartmentId;
 		this.guestId = guestId;
-		this.date = date;
+		this.from = from;
+		this.to = to;
 		this.night = night;
 		this.price = price;
 		this.confirmation = confirmation;
@@ -62,12 +60,20 @@ public class Reservation {
 		this.guestId = guestId;
 	}
 
-	public Date getDate() {
-		return date;
+	public long getFrom() {
+		return from;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setFrom(long from) {
+		this.from = from;
+	}
+
+	public long getTo() {
+		return to;
+	}
+
+	public void setTo(long to) {
+		this.to = to;
 	}
 
 	public int getNight() {
@@ -109,21 +115,5 @@ public class Reservation {
 	public void setStatus(Status status) {
 		this.status = status;
 	}
-
-//	public Guest getGuest() {
-//	return guest;
-//}
-//
-//public void setGuest(Guest guest) {
-//	this.guest = guest;
-//}
-
-//	public Apartment getApartment() {
-//	return apartment;
-//}
-//
-//public void setApartment(Apartment apartment) {
-//	this.apartment = apartment;
-//}
 
 }

@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -86,7 +85,7 @@ public class ReservationService {
 				reservDTO.setId(r.getId());
 				reservDTO.setApartmentId(r.getApartmentId());
 				reservDTO.setGuestId(r.getGuestId());
-				reservDTO.setDate(r.getDate());
+//				reservDTO.setDate(r.getDate());
 				reservDTO.setNight(r.getNight());
 				reservDTO.setPrice(r.getPrice());
 				reservDTO.setConfirmation(r.getConfirmation());
@@ -181,7 +180,7 @@ public class ReservationService {
 			reservDTO.setId(r.getId());
 			reservDTO.setApartmentId(r.getApartmentId());
 			reservDTO.setGuestId(r.getGuestId());
-			reservDTO.setDate(r.getDate());
+//			reservDTO.setDate(r.getDate());
 			reservDTO.setNight(r.getNight());
 			reservDTO.setPrice(r.getPrice());
 			reservDTO.setConfirmation(r.getConfirmation());
@@ -219,34 +218,33 @@ public class ReservationService {
 		return dao.save(reservation);
 	}
 
-	@PUT
-	@Path("/{id}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateReservation(@Context HttpServletRequest request, @PathParam("id") String id,
-			Reservation reservation) {
-		String username = AuthService.getUsername(request);
-		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
+//	@PUT
+//	@Path("/{id}")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Response updateReservation(@Context HttpServletRequest request, @PathParam("id") String id,
+//			Reservation reservation) {
+//		String username = AuthService.getUsername(request);
+//		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+//		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
+//
+//		if (userDao.findOne(username).getRole().toString().equals("GUEST")
+//				|| userDao.findOne(username).getRole().toString().equals("HOST")) {
+//			return Response.status(Response.Status.OK).entity(dao.update(id, reservation)).build();
+//		}
+//		return Response.status(Response.Status.FORBIDDEN).build();
+//	}
 
-		if (userDao.findOne(username).getRole().toString().equals("GUEST")
-				|| userDao.findOne(username).getRole().toString().equals("HOST")) {
-			return Response.status(Response.Status.OK).entity(dao.update(id, reservation)).build();
-		}
-		return Response.status(Response.Status.FORBIDDEN).build();
-	}
-
-	@DELETE
-	@Path("/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Reservation deleteReservation(@PathParam("id") String id) {
-		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
-		return dao.delete(id);
-	}
+//	@DELETE
+//	@Path("/{id}")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Reservation deleteReservation(@PathParam("id") String id) {
+//		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
+//		return dao.delete(id);
+//	}
 
 	@PUT
 	@Path("/{id}/changeStatus/{status}")
-
 	@Produces(MediaType.APPLICATION_JSON)
 	public Reservation updateReservation(@PathParam("id") String id, @PathParam("status") String status) {
 		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
