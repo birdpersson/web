@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -44,15 +45,9 @@ public class ReservationDAO {
 		maxId++;
 		reservation.setId(maxId.toString());
 		reservation.setStatus(Reservation.Status.valueOf("Created"));
-		String line = reservation.getId() + ";"
-				+ reservation.getApartmentId() + ";"
-				+ reservation.getGuestId() + ";"
-				+ reservation.getFrom() + ";"
-				+ reservation.getTo() + ";"
-				+ reservation.getNight() + ";"
-				+ reservation.getPrice() + ";"
-				+ reservation.getConfirmation() + ";"
-				+ reservation.getMessage() + ";"
+		String line = reservation.getId() + ";" + reservation.getApartmentId() + ";" + reservation.getGuestId() + ";"
+				+ reservation.getFrom() + ";" + reservation.getTo() + ";" + reservation.getNight() + ";"
+				+ reservation.getPrice() + ";" + reservation.getConfirmation() + ";" + reservation.getMessage() + ";"
 				+ reservation.getStatus().toString();
 		System.out.println(line);
 		BufferedWriter writer = null;
@@ -107,10 +102,10 @@ public class ReservationDAO {
 					int price = Integer.parseInt(st.nextToken().trim());
 					String confirmation = st.nextToken().trim();
 					String message = st.nextToken().trim();
-					Reservation.Status status = Reservation.Status.valueOf(st.nextToken().trim());
+					String status = st.nextToken().trim();
 
-					reservations.put(id, new Reservation(id, apartmentId, guestId,
-							from, to, night, price, confirmation, message, status));
+					reservations.put(id, new Reservation(id, apartmentId, from, to,
+							night, price, message, guestId, Reservation.Status.valueOf(status), confirmation));
 				}
 			}
 		} catch (Exception e) {
@@ -119,9 +114,16 @@ public class ReservationDAO {
 			if (in != null) {
 				try {
 					in.close();
-				} catch (Exception e) { }
+				} catch (Exception e) {
+				}
 			}
 		}
+	}
+
+	public List<Reservation> loadDates(String contextPath, String id) {
+		List<Reservation> availability = new ArrayList<>();
+
+		return availability;
 	}
 
 	public Collection<Reservation> findAllByGuestId(String id) {
