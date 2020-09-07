@@ -130,7 +130,7 @@ Vue.component('new-apartment', {
 			// console.log(apartment);
 			axios
 				.post('rest/apartment', apartment)
-				.then(Response => (console.log(Response)))
+				.then(Response => (console.log(Response)));
 		},
 		update: function (apartment) {
 
