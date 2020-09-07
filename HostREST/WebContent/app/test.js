@@ -7,12 +7,10 @@ Vue.component("test", {
         <div class="col-md-8 col-lg-6">
           <div class="login d-flex alignlogin d-flex align-items-center py-5">
             <div class="container">
-              <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
-              <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
               <div class="row">
                 <div class="col-md-9 col-lg-8 mx-auto">
                   <h3 class="login-heading mb-4">Create Account TEST</h3>
-                  <div class="alert alert-danger" v-if="error">Username already exists</div>
+                  <div class="alert alert-danger" v-if="error" v-html="messages.errorResponse"></div>
 
                   <form class="form-signin">
                     <div v-if='messages.errorUsername' class="alert alert-danger" v-html="messages.errorUsername"></div>
@@ -185,10 +183,10 @@ Vue.component("test", {
     
 
 		signupFailed: function () {
-      // this.error = true;
-      // setTimeout(()=>this.error=false,3000);
-      this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
-      setTimeout(() => this.messages.errorResponse='', 5000);
+      this.error = true;
+      setTimeout(()=>this.error=false,5000);
+      this.messages.errorResponse= `<h4>Username already exists!</h4>`;
+      // setTimeout(() => this.messages.errorResponse='', 5000);
     },
     
 
@@ -220,10 +218,10 @@ Vue.component("test", {
 			localStorage.removeItem('role');
 			localStorage.removeItem('user');
 
-      // this.error = true;
-      // setTimeout(()=>this.error=false,3000);
-      this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
-      setTimeout(() => this.messages.errorResponse='', 5000);
+      this.error = true;
+      setTimeout(()=>this.error=false,5000);
+      this.messages.errorResponse= `<h4>Username already exists!</h4>`;
+      // setTimeout(() => this.messages.errorResponse='', 5000);
     }
     
 
