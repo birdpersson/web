@@ -1,16 +1,13 @@
 Vue.component("apartment-details", {
-    template: `<div id="apartment-details">
-    <div class="container" id='page-title'>
-        <h1 style="margin-top:10px;color:#35424a;">Apartment <span id='titleEffect'>Details</span></h1>
-        <hr style='background:#e8491d;height:1px;'>
-    </div>
- <!--Reviews-->
+  template: `<div id="apartment-details">
+  <div class="container" id='page-title'>
+      <h1 style="margin-top:10px;color:#35424a;">Apartment <span id='titleEffect'>Details</span></h1>
+      <hr style='background:#e8491d;height:1px;'>
+  </div>
+ 
   <div id="test3" class="container">
     <div class="col-lg-12">
-
-      <!-- <div class="card mt-4"> -->
-      <div>
-      <!--SLIDBAR-->
+      <div id='slidebar'>
         <header class="container">
           <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
@@ -19,55 +16,60 @@ Vue.component("apartment-details", {
               <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
             </ol>
             <div class="carousel-inner"  role="listbox">
-              <!-- Slide One - Set the background image for this slide in the line below  "{background-image:  'url(' + getImgUrl() + ')}"--> 
-              <div class="carousel-item active"   :style="{'background-image': 'url(' + apartment.img[0] + ')'}">
-                <div class="carousel-caption d-none d-md-block">
-                </div>
+              <!-- Slide One - Set the background image for this slide in the line below  "{background-image:  'url(' + getImgUrl() + ')}"-->
+             <div class="carousel-item active"   :style="{'background-image': 'url(' + this.apartment.images[0] + ')'}">
+                <!-- <div class="carousel-caption d-none d-md-block">
+                </div> -->
               </div>
               <!-- Slide Two - Set the background image for this slide in the line below -->
-              <div class="carousel-item" v-for="img in getOtherImgs" :style="{'background-image': 'url(' + img + ')'}">
-                <div class="carousel-caption d-none d-md-block">
-                  <h3 class="display-4">Second Slide</h3>
-                  <p class="lead">This is a description for the second slide.</p>
-                </div>
+            <div class="carousel-item" v-for="img in getOtherImgs" :style="{'background-image': 'url(' + img + ')'}">
+                <!-- <div class="carousel-caption d-none d-md-block">
+                </div> -->
               </div> 
     
             </div>
             <a v-if='isOtherImgs' class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                  <span class="sr-only">Previous</span>
-                </a>
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+            </a>
             <a v-if='isOtherImgs' class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                  <span class="sr-only">Next</span>
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Next</span>
             </a>
           </div>
         </header>
-        <div class="card-body" style="margin-left:10px;">
+        <div class="card-body">
+          <div class="card-header">
+              <h4>Details</h4>
+          </div>
           <h3 class="card-title">Type: 
-            <span style="font-size: 30px;">{{apartment.type}}</span >
+            <span style="font-size: 25px;">{{apartment.type}}</span >
           </h3>
       
           <h3 class="card-title">Address:
-            <span style="font-size: 30px;">{{apartment.location.address.street}} - {{apartment.location.address.postalCode}} {{apartment.location.address.city}}<small class="text-muted">(longitude:{{apartment.location.longitude}} latitude:{{apartment.location.latitude}})</small></span >
+            <span style="font-size: 25px;">{{apartment.location.address.street}} - {{apartment.location.address.postalCode}} {{apartment.location.address.city}}</span >
+          </h3>
+
+          <h3 class="card-title">Location:
+            <span style="font-size: 25px;">longitude: {{apartment.location.longitude}} - latitude: {{apartment.location.latitude}}</span >
           </h3>
 
           <h3 class="card-title">Price:
-            <span style="font-size: 30px;">{{apartment.price}}$/ per day</span >
+            <span style="font-size: 25px;">{{apartment.price}} $/per day</span >
           </h3>
 
           <h3 class="card-title">Rooms:
-            <span style="font-size: 30px;">{{apartment.rooms}}</span >
+            <span style="font-size: 25px;">{{apartment.rooms}}</span >
           </h3>
           
         </div>
-      </div>
-      <!-- /.card -->
+      </div><!-- /.card -->
 
        <!-- Amenities Row -->
       <div id='amenities' class='container'>
-        <h3 class="my-4">Amenities</h3>
-
+        <div class="card-header">
+            <h4>Amenities</h4>
+        </div>
         <div class="row">
 
           <div class="col-md-3 col-sm-6 mb-4">
@@ -102,10 +104,9 @@ Vue.component("apartment-details", {
         <!-- /.row -->
       </div>
 
-      <h3 class="my-4">Reviews</h3>
       <div class="card card-outline-secondary my-4">
         <div class="card-header">
-          Apartment Reviews
+          <h4>Apartment Reviews</h4>
         </div>
         <div class="card-body" v-for="review in apartment.reviews">
           <div style="margin-bottom: 10px;" id='star-rating'>
@@ -132,148 +133,40 @@ Vue.component("apartment-details", {
     </div>
 
     </div>
-    <!-- /.container -->
-  </div>  
-</div>`,
+    
+  </div>  <!-- /.test3 -->
+</div> <!--apartment details-->`,
     data: function () {
         return {
-            apartment:{   
-                id: '1',
-                type: 'ceo apartman',
-                rooms: 4,
-                reviews:[
-                  {
-                    id:'1',
-                    guestId:'guesttt',
-                    apartmentId:'1',
-                    text:'Best ever! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.',
-                    star:5,
-                    visible:'true',
-                  },
-                  {
-                    id:'2',
-                    guestId:'NoobMaster69',
-                    apartmentId:'1',
-                    text:'Very good! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.',
-                    star:4,
-                    visible:'true',
-                  },
-                  {
-                    id:'3',
-                    guestId:'guest',
-                    apartmentId:'1',
-                    text:'Bad, very bad! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.',
-                    star:2,
-                    visible:'true',
-                  }
-                ],
-                img:['https://source.unsplash.com/RCAhiGJsUUE/1920x1080','https://source.unsplash.com/wfh8dDlNFOk/1920x1080','https://source.unsplash.com/O7fzqFEfLlo/1920x1080'],
-                location:{
-                  id:'1',
-                  longitude:'12.256',
-                  latitude:'44.12',
-                  address:'Fiftieth street',
-                }, 
-                dates: '01.01.2020',
-                availability: true,
-                price: 250,
-                status: 'aktivno',
-                amenities:[
-                  {
-                    id:'1',
-                    name:'Wifi',
-                    type:'Base',
-                  },
-                  {
-                    id:'2',
-                    name:'Laptop friendly workspace',
-                    type:'Base',
-                  },
-                  {
-                    id:'3',
-                    name:'Cable TV',
-                    type:'Base',
-                  },
-                  {
-                    id:'4',
-                    name:'Washer',
-                    type:'Base',
-                  },
-                  {
-                    id:'5',
-                    name:'Air conditioning',
-                    type:'Base',
-                  },
-                  {
-                    id:'6',
-                    name:'TV',
-                    type:'Base',
-                  },
-
-                  {
-                    id:'7',
-                    name:'Crib',
-                    type:'Family',
-                  },
-                  {
-                    id:'8',
-                    name:'High chair',
-                    type:'Family',
-                  },
-                  {
-                    id:'9',
-                    name:"Pack'n Play",
-                    type:'Family',
-                  },
-                  {
-                    id:'10',
-                    name:'Room-darkening shades',
-                    type:'Family',
-                  },
-
-                  {
-                    id:'11',
-                    name:'Elevator',
-                    type:'Facilities',
-                  },
-                  {
-                    id:'12',
-                    name:'Paid parking off premises',
-                    type:'Facilities',
-                  },
-                  {
-                    id:'13',
-                    name:'Single level home',
-                    type:'Facilities',
-                  },
-                  {
-                    id:'14',
-                    name:'Free street parking',
-                    type:'Facilities',
-                  },
-
-                  {
-                    id:'15',
-                    name:'Kitchen',
-                    type:'Dining',
-                  },
-                  {
-                    id:'16',
-                    name:'Coffee maker',
-                    type:'Dining',
-                  },
-                  {
-                    id:'17',
-                    name:'Cooking basics',
-                    type:'Dining',
-                  },
-                  {
-                    id:'18',
-                    name:'Refrigerator',
-                    type:'Dining',
-                  },
-
-                ],
+            user: {
+              username: '',
+              role: ''
+            },
+            isAdmin: false,
+            isHost: false,
+            isGuest: false,
+            apartment: {
+              type: null,
+              rooms: null,
+              guests: null,
+              location: {
+                latitude: '',
+                longitude: '',
+                address: {
+                  street: '',
+                  city: '',
+                  postalCode: ''
+                }
+              },
+              period: {
+                to: null,
+                from: null
+              },
+              images:[],
+              price: null,
+              checkin: '',
+              checkout: '',
+              amenities: []
             },
             amenities:{
                 base:[],
@@ -285,51 +178,70 @@ Vue.component("apartment-details", {
         }
     },
     methods: {
-      
+      getFirstImg(){
+        //provera da li ima slika za dati stan
+        if(this.apartment.images == null){
+          img = ['./img/No_Image_Available.png'];
+          // ako nema smesti noimage sliku
+            this.apartment.images = img;
+          }
+      },
+      arrangeAmenities(){
+        for(let i = 0; i< this.apartment.amenities.length; i++){
+          if(this.apartment.amenities[i].type === 'Base'){
+            this.amenities.base.push(this.apartment.amenities[i].name);
+          }
+          else if(this.apartment.amenities[i].type === 'Family' ){
+            this.amenities.family.push(this.apartment.amenities[i].name);
+          }
+          else if(this.apartment.amenities[i].type === 'Dining'){
+            this.amenities.dining.push(this.apartment.amenities[i].name);
+          }
+          else if(this.apartment.amenities[i].type === 'Facilities'){
+            this.amenities.fac.push(this.apartment.amenities[i].name);
+          }
+        }
+      }
     },
     computed: {
+      id() {
+        return this.$route.params.id; //preuzimam id apartmana na cijoj sam stranici za prikaz komentara
+      },
+
       getOtherImgs:function(){
         //Prva slika mora da se manuelno postavi, a ostale se dodaju preko v-for:
-        imgs = this.apartment.img.slice(1);
+        imgs = this.apartment.images.slice(1);
         //Ako ima samo jednu sliku onda se sklanjaju strelice < > za kretanje kroz slike. 
         if(imgs.length === 0){
           this.isOtherImgs = false;
         }
+        //vec je true, ali za svaki slucaj
+        this.isOtherImgs = true;
         return imgs;
+        
       }
     },
     created() {
       this.user.username = localStorage.getItem('user');
       this.user.role = localStorage.getItem('role');
+
       if (this.user.role == "ADMIN") {
-          this.isAdmin = true;
+          this.isAdmin = true; 
       } else if (this.user.role == "HOST") {
           this.isHost = true;
       } else {
           this.isGuest = true;
       }
-      axios
-      .get('rest/apartment')
-      .then(response => {
-          this.apartments = response.data;
-      }) 
-    },
-    mounted(){
 
-      for(let i = 0; i< this.apartment.amenities.length; i++){
-        if(this.apartment.amenities[i].type === 'Base'){
-          this.amenities.base.push(this.apartment.amenities[i].name);
-        }
-        else if(this.apartment.amenities[i].type === 'Family' ){
-          this.amenities.family.push(this.apartment.amenities[i].name);
-        }
-        else if(this.apartment.amenities[i].type === 'Dining'){
-          this.amenities.dining.push(this.apartment.amenities[i].name);
-        }
-        else if(this.apartment.amenities[i].type === 'Facilities'){
-          this.amenities.fac.push(this.apartment.amenities[i].name);
-        }
-      }
-    }
+      this.apartmentId = this.id;
+      axios
+      .get(`rest/apartment/${this.apartmentId}`)
+      .then(response => {
+          this.apartment = response.data;
+          this.getFirstImg();
+          this.arrangeAmenities();
+      })
+  },
+  
 })
 

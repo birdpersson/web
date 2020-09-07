@@ -7,11 +7,7 @@ Vue.component("test", {
  
   <div id="test3" class="container">
     <div class="col-lg-12">
-
-      <!-- <div class="card mt-4"> -->
-      <div>
-        <!-- <p>{{apartment.images[0]}}</p> -->
-      <!--SLIDBAR-->
+      <div id='slidebar'>
         <header class="container">
           <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
@@ -22,24 +18,26 @@ Vue.component("test", {
             <div class="carousel-inner"  role="listbox">
               <!-- Slide One - Set the background image for this slide in the line below  "{background-image:  'url(' + getImgUrl() + ')}"-->
              <div class="carousel-item active"   :style="{'background-image': 'url(' + this.apartment.images[0] + ')'}">
-                <div class="carousel-caption d-none d-md-block">
-                </div>
+                <!-- <div class="carousel-caption d-none d-md-block">
+                </div> -->
               </div>
               <!-- Slide Two - Set the background image for this slide in the line below -->
             <div class="carousel-item" v-for="img in getOtherImgs" :style="{'background-image': 'url(' + img + ')'}">
-                <div class="carousel-caption d-none d-md-block">
-                </div>
+            <div class="carousel-caption d-none d-md-block">
+            <h3 class="display-4">Second Slide</h3>
+            <p class="lead">This is a description for the second slide.</p>
+          </div>
               </div> 
     
             </div>
             <a v-if='isOtherImgs' class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                  <span class="sr-only">Previous</span>
-                </a>
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+            </a>
             <a v-if='isOtherImgs' class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                  <span class="sr-only">Next</span>
-                </a>
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Next</span>
+            </a>
           </div>
         </header>
         <div class="card-body">
@@ -67,12 +65,10 @@ Vue.component("test", {
           </h3>
           
         </div>
-      </div>
-      <!-- /.card -->
+      </div><!-- /.card -->
 
        <!-- Amenities Row -->
       <div id='amenities' class='container'>
-        <!-- <h3 class="my-4">Amenities</h3> -->
         <div class="card-header">
             <h4>Amenities</h4>
         </div>
@@ -221,9 +217,10 @@ Vue.component("test", {
         if(imgs.length === 0){
           this.isOtherImgs = false;
         }
-        // else{?
+        //vec je true, ali za svaki slucaj
+        this.isOtherImgs = true;
         return imgs;
-        // }
+        
       }
     },
     created() {
@@ -250,3 +247,11 @@ Vue.component("test", {
   
 })
 
+
+// <!-- Slide Two - Set the background image for this slide in the line below -->
+// <div class="carousel-item" v-for="img in getOtherImgs" :style="{'background-image': 'url(' + img + ')'}">
+//   <div class="carousel-caption d-none d-md-block">
+//     <h3 class="display-4">Second Slide</h3>
+//     <p class="lead">This is a description for the second slide.</p>
+//   </div>
+// </div> 
