@@ -61,8 +61,7 @@ Vue.component('new-reservation', {
                 night: null,
                 price: null,
                 confirmation: false,
-                message: "",
-                status: "Created"
+                message: ""
             },
 
             apartment: {
@@ -105,7 +104,7 @@ Vue.component('new-reservation', {
             this.apartment = data;
             this.disabledDates.to = new Date(this.apartment.to);
             this.disabledDates.from = new Date(this.apartment.from);
-            
+
             if (this.availability != null) {
                 for (let i = 0; i < availability.length; i++) {
                     //implement availability
@@ -119,7 +118,9 @@ Vue.component('new-reservation', {
             this.reservation.from = this.dates.from.getTime();
             this.reservation.to = this.dates.to.getTime();
             console.log(this.reservation);
-            //axios post
+            axios
+                .post('rest/reservation', this.reservation)
+                .then(Response => (console.log(Response)));
         },
 
         // pomocna metoda za ogranicen odabir dana:

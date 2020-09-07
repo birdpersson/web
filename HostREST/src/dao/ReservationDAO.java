@@ -1,8 +1,11 @@
 package dao;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,7 +33,7 @@ public class ReservationDAO {
 		return reservations.containsKey(id) ? reservations.get(id) : null;
 	}
 
-	public Reservation save(Reservation test) {
+	public Reservation save(String contextPath, Reservation reservation) {
 		Integer maxId = -1;
 		for (String id : reservations.keySet()) {
 			int idNum = Integer.parseInt(id);
@@ -39,9 +42,40 @@ public class ReservationDAO {
 			}
 		}
 		maxId++;
-		test.setId(maxId.toString());
-		reservations.put(test.getId(), test);
-		return test;
+		reservation.setId(maxId.toString());
+		reservation.setStatus(Reservation.Status.valueOf("Created"));
+		String line = reservation.getId() + ";"
+				+ reservation.getApartmentId() + ";"
+				+ reservation.getGuestId() + ";"
+				+ reservation.getFrom() + ";"
+				+ reservation.getTo() + ";"
+				+ reservation.getNight() + ";"
+				+ reservation.getPrice() + ";"
+				+ reservation.getConfirmation() + ";"
+				+ reservation.getMessage() + ";"
+				+ reservation.getStatus().toString();
+		System.out.println(line);
+		BufferedWriter writer = null;
+		try {
+			File file = new File(contextPath + "/reservations.txt");
+			writer = new BufferedWriter(new FileWriter(file, true));
+			PrintWriter out = new PrintWriter(writer);
+			out.println(line);
+			out.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		} finally {
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) {
+					return null;
+				}
+			}
+		}
+		reservations.put(reservation.getId(), reservation);
+		return reservation;
 	}
 
 	public Reservation changeStatus(String id, String status) {

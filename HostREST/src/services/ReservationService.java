@@ -26,7 +26,7 @@ import dao.LocationDAO;
 import dao.ReservationDAO;
 import dao.UserDAO;
 
-@Path("/reservations")
+@Path("/reservation")
 public class ReservationService {
 	@Context
 	ServletContext ctx;
@@ -56,6 +56,26 @@ public class ReservationService {
 		}
 	}
 
+	@POST
+	@Path("/")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addReservation(@Context HttpServletRequest request, Reservation reservation) {
+		if (!AuthService.getUsername(request).equals(reservation.getGuestId())) {
+			return Response.status(Response.Status.FORBIDDEN).build();
+		}
+		String username = AuthService.getUsername(request);
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+		if (!userDao.findOne(username).getRole().toString().equals("GUEST")) {
+			return Response.status(Response.Status.FORBIDDEN).build();
+		}
+		ReservationDAO reservationDao = (ReservationDAO) ctx.getAttribute("reservationDAO");
+		Reservation newReservation = reservationDao.save(ctx.getRealPath(""), reservation);
+
+		// TODO: check dates
+		return Response.status(Response.Status.CREATED).entity(newReservation).build();
+	}
+
 	@GET
 	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -65,7 +85,7 @@ public class ReservationService {
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
 		ReservationDAO reservDao = (ReservationDAO) ctx.getAttribute("reservationDAO");
 		ApartmentDAO apartDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
-		LocationDAO locatDao = (LocationDAO) ctx.getAttribute("locationDAO");
+//		LocationDAO locatDao = (LocationDAO) ctx.getAttribute("locationDAO");
 		Collection<ReservationDTO> returnDTO = new ArrayList<ReservationDTO>();
 
 		if (!userDao.findOne(username).getRole().toString().equals("GUEST")) {
@@ -154,7 +174,7 @@ public class ReservationService {
 
 	public Collection<ReservationDTO> getReservationsDTO(Collection<Reservation> allReservations, String username,
 			String role) {
-		LocationDAO locatDao = (LocationDAO) ctx.getAttribute("locationDAO");
+//		LocationDAO locatDao = (LocationDAO) ctx.getAttribute("locationDAO");
 		ApartmentDAO apartDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
 		Collection<ReservationDTO> returnDTO = new ArrayList<ReservationDTO>();
 
@@ -207,15 +227,6 @@ public class ReservationService {
 			returnDTO.add(reservDTO);
 		}
 		return returnDTO;
-	}
-
-	@POST
-	@Path("/")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Reservation setReservation(Reservation reservation) {
-		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
-		return dao.save(reservation);
 	}
 
 //	@PUT

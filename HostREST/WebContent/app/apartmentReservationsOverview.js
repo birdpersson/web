@@ -184,7 +184,7 @@ Vue.component('reservations', {
         },
         getReservations:function(){
             axios
-            .get(`rest/reservations/`)
+            .get(`rest/reservation/`)
             .then(response => {
                 this.reservations=response.data;
             })
@@ -203,7 +203,7 @@ Vue.component('reservations', {
                 this.updatedReserv.status = 'Canceled';
 
                 axios
-                .put(`rest/reservations/${this.updatedReserv.id}`,this.updatedReserv)
+                .put(`rest/reservation/${this.updatedReserv.id}`,this.updatedReserv)
                 .then(response => {
                     this.getReservations();
                     this.messages.successResponse = `<h4>You successfuly canceled reservation!</h4>`;
@@ -233,7 +233,7 @@ Vue.component('reservations', {
                 this.updatedReserv.status = 'Accepted';
 
                 axios
-                .put(`rest/reservations/${this.updatedReserv.id}`,this.updatedReserv)
+                .put(`rest/reservation/${this.updatedReserv.id}`,this.updatedReserv)
                 .then(response => {
                     this.getReservations();
                     this.messages.successResponse = `<h4>You successfuly accepted reservation!</h4>`;
@@ -268,7 +268,7 @@ Vue.component('reservations', {
                 this.updatedReserv.status = 'Rejected';
 
                 axios
-                .put(`rest/reservations/${this.updatedReserv.id}`,this.updatedReserv)
+                .put(`rest/reservation/${this.updatedReserv.id}`,this.updatedReserv)
                 .then(response => {
                     this.getReservations();
                     this.messages.successResponse = `<h4>You successfuly rejected reservation!</h4>`;
@@ -302,7 +302,7 @@ Vue.component('reservations', {
                 this.updatedReserv.status = 'Completed';
 
                 axios
-                .put(`rest/reservations/${this.updatedReserv.id}`,this.updatedReserv)
+                .put(`rest/reservation/${this.updatedReserv.id}`,this.updatedReserv)
                 .then(response => {
                     this.getReservations();
                     this.messages.successResponse = `<h4>You successfuly completed reservation!</h4>`;
@@ -376,7 +376,7 @@ Vue.component('reservations', {
         },
         search:function(){
             axios
-            .get(`rest/reservations/search?username=${this.searchedQuery}`)
+            .get(`rest/reservation/search?username=${this.searchedQuery}`)
             .then(response => {
                 this.reservations=response.data;
             })
