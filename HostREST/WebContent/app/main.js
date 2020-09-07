@@ -23,7 +23,8 @@ const Test = { template: '<test></test>' }
 const routes = [
 	{ path: '/', component: HomeFront},  //stranica pre logina
 	{ path: '/login', component: Login },
-	{ path: '/signup', component: Signup },
+	// { path: '/signup', component: Signup },
+	{ path: '/signup', component: Test},
 	{ path: '/homepage', component: Homepage },
 	{ path: '/profile', component: Profile },
 	{ path: '/patient/update', component: ProfileUpdate },
@@ -39,7 +40,6 @@ const routes = [
 	{ path: '/amenitiesNew', component: NewAmenities },
 	{ path: '/apartInactiveOverview', component: ApartInactiveOverview },
 	{ path: '/apartmentNew', component: NewApartment },
-	// { path: '/apartment/:id/details', component: Test},
 	{ path: '/apartment/:id/details', component: ApartmentDetails},
 
 	{ path: '/test', component: Test },

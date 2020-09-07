@@ -23,7 +23,7 @@ Vue.component("signup", {
 					<div class="container">
 						<div class="row">
 							<div class="col-md-9 col-lg-8 mx-auto">
-								<h3 class="login-heading mb-4">Create Account</h3>
+								<h3 class="login-heading mb-4">Create Account ORIGINAL</h3>
 								<div class="alert alert-danger" v-if="error">Username already exists</div>
 
 								<form class="form-signin">

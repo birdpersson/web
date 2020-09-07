@@ -1,253 +1,243 @@
 Vue.component("test", {
-    template: `<div id="apartment-details">
-  <div class="container" id='page-title'>
-      <h1 style="margin-top:10px;color:#35424a;">Apartment <span id='titleEffect'>Details</span></h1>
-      <hr style='background:#e8491d;height:1px;'>
-  </div>
- 
-  <div id="test3" class="container">
-    <div class="col-lg-12">
-      <div id='slidebar'>
-        <header class="container">
-          <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-              <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-              <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-              <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-            </ol>
-            <div class="carousel-inner"  role="listbox">
-              <!-- Slide One - Set the background image for this slide in the line below  "{background-image:  'url(' + getImgUrl() + ')}"-->
-             <div class="carousel-item active"   :style="{'background-image': 'url(' + this.apartment.images[0] + ')'}">
-                <!-- <div class="carousel-caption d-none d-md-block">
-                </div> -->
+  template: `
+  <div id="signup">
+    <div class="container-fluid">
+      <div class="row no-gutter">
+
+        <div class="col-md-8 col-lg-6">
+          <div class="login d-flex alignlogin d-flex align-items-center py-5">
+            <div class="container">
+              <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
+              <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
+              <div class="row">
+                <div class="col-md-9 col-lg-8 mx-auto">
+                  <h3 class="login-heading mb-4">Create Account TEST</h3>
+                  <div class="alert alert-danger" v-if="error">Username already exists</div>
+
+                  <form class="form-signin">
+                    <div v-if='messages.errorUsername' class="alert alert-danger" v-html="messages.errorUsername"></div>
+                    <div class="form-label-group">
+                      <b>Choose a username</b>
+                      <input v-model="user.username" class="form-control" placeholder="Username" required autofocus>
+                      <br>
+                    </div>
+                    
+                    <div v-if='messages.errorFirstName' id='testError' class="alert alert-danger" v-html="messages.errorFirstName"></div>
+                    <div class="form-label-group">
+                      <b>What is your first name?</b>
+                      <input v-model="user.firstname" class="form-control" placeholder="First Name" required autofocus>
+                      <br>
+                    </div>
+
+                    <div v-if='messages.errorLastName' class="alert alert-danger" v-html="messages.errorLastName"></div>
+                    <div class="form-label-group">
+                      <b>What is your last name?</b>
+                      <input v-model="user.lastname" class="form-control" placeholder="Last Name" required autofocus>
+                      <br>
+                    </div>
+
+                    <div v-if='messages.errorGender' class="alert alert-danger" v-html="messages.errorGender"></div>
+                    <div class="form-label-group">
+                      <b>What is your Gender?</b>
+                      <br>
+                      <input type="radio" v-model="user.gender" required value="Male"> Male
+                      <input type="radio" v-model="user.gender" required value="Female"> Female
+                      <input type="radio" v-model="user.gender" required value="Other"> Other
+                      <br>
+                      <br>
+                    </div>
+
+                    <div v-if='messages.errorNewPass' class="alert alert-danger" v-html="messages.errorNewPass"></div>
+                    <div class="form-label-group">
+                      <b>Create a password</b>
+                      <input v-model="user.password" type="password" class="form-control" placeholder="Password" required>
+                      <br>
+                    </div>
+
+                    <div v-if='messages.errorNotEqualNewPassword' class="alert alert-danger" v-html="messages.errorNotEqualNewPassword"></div>
+                    <div v-if='messages.errorRepNewPass' class="alert alert-danger" v-html="messages.errorRepNewPass"></div>
+                    <div class="form-label-group">
+                      <b>Confirm your password</b>
+                      <input v-model="user.password2" type="password" class="form-control" placeholder="Password" required>
+                      <br>
+                    </div>
+
+                    <button type="button"
+                      class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2"
+                      v-on:click='signup(user)'>Sign up</button>
+                    Have an account? <router-link to='/login' class="medum" exact>Log in</router-link>.
+                  </form>
+                </div>
               </div>
-              <!-- Slide Two - Set the background image for this slide in the line below -->
-            <div class="carousel-item" v-for="img in getOtherImgs" :style="{'background-image': 'url(' + img + ')'}">
-            <div class="carousel-caption d-none d-md-block">
-            <h3 class="display-4">Second Slide</h3>
-            <p class="lead">This is a description for the second slide.</p>
-          </div>
-              </div> 
-    
             </div>
-            <a v-if='isOtherImgs' class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="sr-only">Previous</span>
-            </a>
-            <a v-if='isOtherImgs' class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="sr-only">Next</span>
-            </a>
           </div>
-        </header>
-        <div class="card-body">
-          <div class="card-header">
-              <h4>Details</h4>
-          </div>
-          <h3 class="card-title">Type: 
-            <span style="font-size: 25px;">{{apartment.type}}</span >
-          </h3>
-      
-          <h3 class="card-title">Address:
-            <span style="font-size: 25px;">{{apartment.location.address.street}} - {{apartment.location.address.postalCode}} {{apartment.location.address.city}}</span >
-          </h3>
-
-          <h3 class="card-title">Location:
-            <span style="font-size: 25px;">longitude: {{apartment.location.longitude}} - latitude: {{apartment.location.latitude}}</span >
-          </h3>
-
-          <h3 class="card-title">Price:
-            <span style="font-size: 25px;">{{apartment.price}} $/per day</span >
-          </h3>
-
-          <h3 class="card-title">Rooms:
-            <span style="font-size: 25px;">{{apartment.rooms}}</span >
-          </h3>
-          
-        </div>
-      </div><!-- /.card -->
-
-       <!-- Amenities Row -->
-      <div id='amenities' class='container'>
-        <div class="card-header">
-            <h4>Amenities</h4>
-        </div>
-        <div class="row">
-
-          <div class="col-md-3 col-sm-6 mb-4">
-              <h4>Base</h4>
-               <ul v-for="base in amenities.base">
-                 <li>{{base}}</li>
-               </ul>
-          </div>
-
-          <div class="col-md-3 col-sm-6 mb-4">
-              <h4>Family</h4>
-              <ul v-for="family in amenities.family">
-                <li>{{family}}</li>
-              </ul>
-          </div>
-
-          <div class="col-md-3 col-sm-6 mb-4">
-              <h4>Dining</h4>
-              <ul v-for="dining in amenities.dining">
-                <li>{{dining}}</li>
-              </ul>
-          </div>
-
-          <div class="col-md-3 col-sm-6 mb-4">
-              <h4>Facilities</h4>
-              <ul v-for="fac in amenities.fac">
-                <li>{{fac}}</li>
-              </ul>
-          </div>
-          
-        </div>
-        <!-- /.row -->
-      </div>
-
-      <div class="card card-outline-secondary my-4">
-        <div class="card-header">
-          <h4>Apartment Reviews</h4>
-        </div>
-        <div class="card-body" v-for="review in apartment.reviews">
-          <div style="margin-bottom: 10px;" id='star-rating'>
-              <star-rating
-                  inactive-color="#35424a"
-                  active-color="#e8491d"
-                  v-bind:read-only= "true"
-                  v-bind:star-size="20"
-                  v-bind:show-rating="false"
-                  v-bind:rating="review.star">
-              </star-rating>
-          </div>
-          <p>{{review.text}}</p>
-          <small class="text-muted">Posted by {{review.guestId}}</small>
-          <hr>
-
         </div>
       </div>
-      <!-- /.card -->
-
     </div>
-    <!-- /.col-lg-9 -->
+  </div>`,
 
-    </div>
 
-    </div>
+	data: function () {
+		return {
+			user: {
+				username: '',
+				firstname: '',
+				lastname: '',
+				gender: '',
+				password: '',
+				password2: '',
+				role: 'GUEST'
+			},
+			error: false,
+			success: false,
+			messages:{
+				errorUsername:'',
+        errorFirstName:'',
+				errorLastName:'',
+				errorGender:'',
+        errorNewPass:'',
+        errorRepNewPass:'',
+				errorNotEqualNewPassword:'',
+        errorResponse:'',
+        successResponse:'',
+      }
+		}
+	},
+	
+	methods: {
+    signup: function (user) {
+      //Kombinacija sa praznim username poljem
+      if(this.user.username==''){
+          this.messages.errorUsername =  `<h4>Username name of user can't be empty!</h4>`;
+          setTimeout(()=>this.messages.errorUsername='',3000);
+      }
+
+      //Kombinacija sa praznim firstname poljem
+      else if(this.user.firstname==''){
+        this.messages.errorFirstName =  `<h4>First name of user can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorFirstName='',3000);
+      }
+
+      //Kombinacija sa praznim lastname poljem
+      else if(this.user.lastname==''){
+        this.messages.errorLastName =  `<h4>Last name of user can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorLastName='',3000);
+      }
+
+      //Kombinacija sa praznim gender poljem
+      else if(this.user.gender==''){
+        this.messages.errorGender =  `<h4>Gender of user can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorGender='',3000);
+      }
+
+      //Kombinacija sa praznim password poljem
+      else if(this.user.password==''){
+        this.messages.errorNewPass =  `<h4>Password of user can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorNewPass='',3000);
+      }
+
+      //Kombinacija sa praznim password2 poljem
+      else if(this.user.password2==''){
+        this.messages.errorRepNewPass =  `<h4>Confirmation password can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorRepNewPass='',3000);
+      }
+
+      else{
+        //Ako su sva polja popunjena provera da li su unete iste sifre
+        if(this.user.password !== this.user.password2){
+          this.messages.errorNotEqualNewPassword =  `<h4>Your passwords don't match! Please try again...</h4>`;
+          setTimeout(()=>this.messages.errorNotEqualNewPassword='',3000);
+        }
+        else{
+          axios
+          .post('rest/signup', {
+            username: user.username,
+            password: user.password,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            gender: user.gender,
+            role: user.role
+          })
+          .then(response => this.signupSuccessful(response))
+          .catch(() => this.signupFailed())
+        }
+      }
+    },
+		// signup: function (user) {
+		// 	axios
+		// 		.post('rest/signup', {
+		// 			username: user.username,
+		// 			password: user.password,
+		// 			firstname: user.firstname,
+		// 			lastname: user.lastname,
+		// 			gender: user.gender,
+		// 			role: user.role
+		// 		})
+		// 		.then(response => this.signupSuccessful(response))
+		// 		.catch(() => this.signupFailed())
+		// },
+		signupSuccessful: function (response) {
+			if (response.status === 201) {
+				this.login(response.data);
+			}
+			this.signupFailed()
+    },
     
-  </div>  <!-- /.test3 -->
-</div> <!--apartment details-->`,
-    data: function () {
-        return {
-            user: {
-              username: '',
-              role: ''
-            },
-            isAdmin: false,
-            isHost: false,
-            isGuest: false,
-            apartment: {
-              type: null,
-              rooms: null,
-              guests: null,
-              location: {
-                latitude: '',
-                longitude: '',
-                address: {
-                  street: '',
-                  city: '',
-                  postalCode: ''
-                }
-              },
-              period: {
-                to: null,
-                from: null
-              },
-              images:[],
-              price: null,
-              checkin: '',
-              checkout: '',
-              amenities: []
-            },
-            amenities:{
-                base:[],
-                family:[],
-                dining:[],
-                fac:[],
-            },
-            isOtherImgs: true,
-        }
-    },
-    methods: {
-      getFirstImg(){
-        //provera da li ima slika za dati stan
-        if(this.apartment.images == null){
-          img = ['./img/No_Image_Available.png'];
-          // ako nema smesti noimage sliku
-            this.apartment.images = img;
-          }
-      },
-      arrangeAmenities(){
-        for(let i = 0; i< this.apartment.amenities.length; i++){
-          if(this.apartment.amenities[i].type === 'Base'){
-            this.amenities.base.push(this.apartment.amenities[i].name);
-          }
-          else if(this.apartment.amenities[i].type === 'Family' ){
-            this.amenities.family.push(this.apartment.amenities[i].name);
-          }
-          else if(this.apartment.amenities[i].type === 'Dining'){
-            this.amenities.dining.push(this.apartment.amenities[i].name);
-          }
-          else if(this.apartment.amenities[i].type === 'Facilities'){
-            this.amenities.fac.push(this.apartment.amenities[i].name);
-          }
-        }
-      }
-    },
-    computed: {
-      id() {
-        return this.$route.params.id; //preuzimam id apartmana na cijoj sam stranici za prikaz komentara
-      },
 
-      getOtherImgs:function(){
-        //Prva slika mora da se manuelno postavi, a ostale se dodaju preko v-for:
-        imgs = this.apartment.images.slice(1);
-        //Ako ima samo jednu sliku onda se sklanjaju strelice < > za kretanje kroz slike. 
-        if(imgs.length === 0){
-          this.isOtherImgs = false;
-        }
-        //vec je true, ali za svaki slucaj
-        this.isOtherImgs = true;
-        return imgs;
-        
-      }
+		signupFailed: function () {
+      // this.error = true;
+      // setTimeout(()=>this.error=false,3000);
+      this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
+      setTimeout(() => this.messages.errorResponse='', 5000);
     },
-    created() {
-      this.user.username = localStorage.getItem('user');
-      this.user.role = localStorage.getItem('role');
+    
 
-      if (this.user.role == "ADMIN") {
-          this.isAdmin = true; 
-      } else if (this.user.role == "HOST") {
-          this.isHost = true;
-      } else {
-          this.isGuest = true;
-      }
+		login: function (user) {
+			axios
+				.post('rest/login', { username: user.username, password: user.password })
+				.then(response => this.loginSuccessful(response.data))
+				.catch(() => this.loginFailed())
+    },
 
-      this.apartmentId = this.id;
-      axios
-      .get(`rest/apartment/${this.apartmentId}`)
-      .then(response => {
-          this.apartment = response.data;
-          this.getFirstImg();
-          this.arrangeAmenities();
-      })
-  },
+    
+		loginSuccessful: function (data) {
+			if (!data.jwt) {
+				this.loginFailed();
+				return;
+			}
+			localStorage.setItem('jwt', data.jwt);
+			localStorage.setItem('role', data.role);
+			localStorage.setItem('user', data.username);
+
+			window.location.reload(); //refresh Authorization Bearer with new token
+			this.error = false;
+			this.$router.push('/homepage');
+    },
+    
+
+		loginFailed: function () {
+			localStorage.removeItem('jwt');
+			localStorage.removeItem('role');
+			localStorage.removeItem('user');
+
+      // this.error = true;
+      // setTimeout(()=>this.error=false,3000);
+      this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
+      setTimeout(() => this.messages.errorResponse='', 5000);
+    }
+    
+
+	},
+	mounted() {
+
+	},
+	created() {
+		if (localStorage.getItem('jwt')) {
+			this.$router.push('/homepage');
+		}
+	}
   
 })
-
-
 // <!-- Slide Two - Set the background image for this slide in the line below -->
 // <div class="carousel-item" v-for="img in getOtherImgs" :style="{'background-image': 'url(' + img + ')'}">
 //   <div class="carousel-caption d-none d-md-block">
@@ -255,3 +245,36 @@ Vue.component("test", {
 //     <p class="lead">This is a description for the second slide.</p>
 //   </div>
 // </div> 
+
+
+// else{
+     // axios.post('rest/signup',this.user).then(Response => {
+                //     // this.messages.successResponse = `<h4>You registered successfully!</h4>`;
+                //     // setTimeout(() => this.messages.successResponse='', 5000);
+                   
+                //     this.signupSuccessful(response)
+                // })
+                // .catch(error => {
+                //     if(error.response.status === 500 || error.response.status === 404){
+                //         this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
+                //         setTimeout(() => this.messages.errorResponse='', 5000);
+                //     }
+                // });
+// }
+
+      // else if(this.user.username=='' && this.user.firstname=='' && this.user.lastname=='' && this.user.gender=='' && this.user.password==''  && this.user.password2==''){
+      //   this.messages.errorUsername =  `<h4>Username name of user can't be empty!</h4>`;
+      //   this.messages.errorFirstName =  `<h4>First name of user can't be empty!</h4>`;
+      //   this.messages.errorLastName =  `<h4>Last name of user can't be empty!</h4>`;
+      //   this.messages.errorGender =  `<h4>Gender of user can't be empty!</h4>`;
+      //   this.messages.errorNewPass =  `<h4>Password of user can't be empty!</h4>`;
+      //   this.messages.errorRepNewPass =  `<h4>Confirmation password can't be empty!</h4>`;
+          
+      //   setTimeout(()=>this.messages.errorUsername='',3000);  
+      //   setTimeout(()=>this.messages.errorFirstName='',3000);
+      //   setTimeout(()=>this.messages.errorLastName='',3000);
+      //   setTimeout(()=>this.messages.errorGender='',3000);
+      //   setTimeout(()=>this.messages.errorNewPass='',3000);
+      //   setTimeout(()=>this.messages.errorRepNewPass='',3000);
+          
+      // }
