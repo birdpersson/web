@@ -1,252 +1,439 @@
 Vue.component("test", {
-    template: `<div id="apartment-details">
-  <div class="container" id='page-title'>
-      <h1 style="margin-top:10px;color:#35424a;">Apartment <span id='titleEffect'>Details</span></h1>
+  template: `
+  <div id="new-apartment">
+    <div class="container" id='page-title'>
+      <h1 style="margin-top:10px;color:#35424a;"> New/<span id='titleEffect'>Edit Apartment TEST</span></h1>
       <hr style='background:#e8491d;height:1px;'>
-  </div>
- 
-  <div id="test3" class="container">
-    <div class="col-lg-12">
-
-      <!-- <div class="card mt-4"> -->
+    </div>
+  
+    <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
+    <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
+    <div class="container" id='main'>
       <div>
-        <!-- <p>{{apartment.images[0]}}</p> -->
-      <!--SLIDBAR-->
-        <header class="container">
-          <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-              <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-              <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-              <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-            </ol>
-            <div class="carousel-inner"  role="listbox">
-              <!-- Slide One - Set the background image for this slide in the line below  "{background-image:  'url(' + getImgUrl() + ')}"-->
-             <div class="carousel-item active"   :style="{'background-image': 'url(' + this.apartment.images[0] + ')'}">
-                <div class="carousel-caption d-none d-md-block">
-                </div>
-              </div>
-              <!-- Slide Two - Set the background image for this slide in the line below -->
-            <div class="carousel-item" v-for="img in getOtherImgs" :style="{'background-image': 'url(' + img + ')'}">
-                <div class="carousel-caption d-none d-md-block">
-                </div>
-              </div> 
-    
-            </div>
-            <a v-if='isOtherImgs' class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                  <span class="sr-only">Previous</span>
-                </a>
-            <a v-if='isOtherImgs' class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                  <span class="sr-only">Next</span>
-                </a>
+        <div style="margin-top:20px" v-if='messages.errorType' class="alert alert-danger" v-html="messages.errorType"></div>          
+        <label>Type of apartment</label>
+        <select v-model="apartment.type">
+          <option v-for="type in types" v-on:click="checkApartment">{{type}}</option>
+        </select>
+  
+        <div style="margin-top:20px" v-if='messages.errorRooms' class="alert alert-danger" v-html="messages.errorRooms"></div>          
+        <label>Number of rooms</label>
+        <select v-show="isApartment" v-model="apartment.rooms">
+          <option disabled value="">No. of rooms</option>
+          <option v-for="room in rooms">{{room}}</option>
+        </select>
+        <div v-show="!isApartment">
+          <img src="./img/negativ1.1.png" alt=""> <span>This option is anavailable</span>
+        </div>
+  
+        <div style="margin-top:20px" v-if='messages.errorGuests' class="alert alert-danger" v-html="messages.errorGuests"></div>          
+        <label>Number of guests</label>
+        <select v-model="apartment.guests">
+          <option disabled value="">No. of guests</option>
+          <option v-for="guest in guests">{{guest}}</option>
+        </select>
+  
+        <div style="margin-top:20px" v-if='messages.errorLocation' class="alert alert-danger" v-html="messages.errorLocation"></div>          
+        <label>Location</label>
+        <input class='half-size' type="text" placeholder="Enter location latitude..."
+          v-model='apartment.location.latitude'> -
+        <input class='half-size' type="text" placeholder="Enter location longitude..."
+          v-model='apartment.location.longitude'>
+  
+        <div style="margin-top:20px" v-if='messages.errorAddress' class="alert alert-danger" v-html="messages.errorAddress"></div>          
+          <label>Address</label>
+          <div> 
+            <input class="one-third" placeholder="Enter street" v-model='apartment.location.address.street'>
+            <input class="one-third" placeholder="Enter city" v-model='apartment.location.address.city'>
+            <input class="one-third" placeholder="Enter postal code" v-model='apartment.location.address.postalCode'>
           </div>
-        </header>
-        <div class="card-body">
-          <div class="card-header">
-              <h4>Details</h4>
-          </div>
-          <h3 class="card-title">Type: 
-            <span style="font-size: 25px;">{{apartment.type}}</span >
-          </h3>
       
-          <h3 class="card-title">Address:
-            <span style="font-size: 25px;">{{apartment.location.address.street}} - {{apartment.location.address.postalCode}} {{apartment.location.address.city}}</span >
-          </h3>
-
-          <h3 class="card-title">Location:
-            <span style="font-size: 25px;">longitude: {{apartment.location.longitude}} - latitude: {{apartment.location.latitude}}</span >
-          </h3>
-
-          <h3 class="card-title">Price:
-            <span style="font-size: 25px;">{{apartment.price}} $/per day</span >
-          </h3>
-
-          <h3 class="card-title">Rooms:
-            <span style="font-size: 25px;">{{apartment.rooms}}</span >
-          </h3>
-          
-        </div>
-      </div>
-      <!-- /.card -->
-
-       <!-- Amenities Row -->
-      <div id='amenities' class='container'>
-        <!-- <h3 class="my-4">Amenities</h3> -->
-        <div class="card-header">
-            <h4>Amenities</h4>
-        </div>
+        <div style="margin-top:20px" v-if='messages.errorPrice' class="alert alert-danger" v-html="messages.errorPrice"></div>          
+        <label>Price</label>
+        <input id='price' type="text" placeholder="Enter price..." v-model='apartment.price'>
+  
+        <div style="margin-top:20px" v-if='messages.errorCheckInOut' class="alert alert-danger" v-html="messages.errorCheckInOut"></div>          
+        <label>Time to checkin & checkout</label>
+        <input class='half-size' type="text" placeholder="Checkin..." v-model='apartment.checkin'> -
+        <input class='half-size' type="text" placeholder="Checkout..." v-model='apartment.checkout'>
+  
+        <div style="margin-top:20px" v-if='messages.errorDates' class="alert alert-danger" v-html="messages.errorDates"></div>          
+        <label>Dates available</label>
         <div class="row">
-
-          <div class="col-md-3 col-sm-6 mb-4">
-              <h4>Base</h4>
-               <ul v-for="base in amenities.base">
-                 <li>{{base}}</li>
-               </ul>
+          <div class="col">
+            <vuejsDatepicker placeholder="Select Checkin Date" v-model="dates.from" :highlighted="dates" :disabled-dates="disabledDates">
+            </vuejsDatepicker>
           </div>
-
-          <div class="col-md-3 col-sm-6 mb-4">
-              <h4>Family</h4>
-              <ul v-for="family in amenities.family">
-                <li>{{family}}</li>
-              </ul>
+          <div class="col">
+            <vuejsDatepicker placeholder="Select Checkout Date" v-model="dates.to" :highlighted="dates" :disabled-dates="disabledDates">
+            </vuejsDatepicker>
           </div>
-
-          <div class="col-md-3 col-sm-6 mb-4">
-              <h4>Dining</h4>
-              <ul v-for="dining in amenities.dining">
-                <li>{{dining}}</li>
-              </ul>
-          </div>
-
-          <div class="col-md-3 col-sm-6 mb-4">
-              <h4>Facilities</h4>
-              <ul v-for="fac in amenities.fac">
-                <li>{{fac}}</li>
-              </ul>
-          </div>
-          
         </div>
-        <!-- /.row -->
+  
+        <div style="margin-top:20px" v-if='messages.errorAmenities' class="alert alert-danger" v-html="messages.errorAmenities"></div>          
+        <label>Amenities</label>
+        <div id='amenities' style="margin-top:20px">
+            <div class="row">
+              <div class="col-md-3 col-sm-6 mb-4">
+                  <h4>Base</h4>
+                  <ul style="list-style: none; padding-left:0px" v-for="base in amenities.base">
+                    <li><input :value="base" v-model="apartment.amenities" type="checkbox"> {{base.name}}</li>
+                  </ul>
+              </div>
+  
+            <div class="col-md-3 col-sm-6 mb-4">
+                <h4>Family</h4>
+                <ul style="list-style: none; padding-left:0px" v-for="family in amenities.family">
+                    <li><input :value="family" v-model="apartment.amenities" type="checkbox"> {{family.name}}</li>
+                </ul>
+            </div>
+  
+            <div class="col-md-3 col-sm-6 mb-4">
+                <h4>Dining</h4>
+                <ul style="list-style: none; padding-left:0px" v-for="dining in amenities.dining">
+                    <li><input :value="dining" v-model="apartment.amenities" type="checkbox"> {{dining.name}}</li>
+                </ul>
+            </div>
+  
+            <div class="col-md-3 col-sm-6 mb-4">
+                <h4>Facilities</h4>
+                <ul style="list-style: none; padding-left:0px" v-for="fac in amenities.fac">
+                    <li><input :value="fac" v-model="apartment.amenities" type="checkbox"> {{fac.name}}</li>
+                </ul>
+            </div>
+            
+          </div> <!--.row-->
+        </div><!--#amenities-->
+
+        <div>
+          <label>Images</label>
+          <input type="file" class="filestyle" multiple v-on:change="handleFileUploads()">	
+        </div>
+
+        <!--   
+          <div>
+          <h2>Images overview</h2>
+          <div class="carousel-item" v-for="img in images" :style="{'background-image': 'url(' + img + ')'}">
+          </div> 
+        </div> -->
+
+        <button class="btn btn-lg btn-success" v-on:click="create(apartment)">Save</button>
       </div>
-
-      <div class="card card-outline-secondary my-4">
-        <div class="card-header">
-          <h4>Apartment Reviews</h4>
-        </div>
-        <div class="card-body" v-for="review in apartment.reviews">
-          <div style="margin-bottom: 10px;" id='star-rating'>
-              <star-rating
-                  inactive-color="#35424a"
-                  active-color="#e8491d"
-                  v-bind:read-only= "true"
-                  v-bind:star-size="20"
-                  v-bind:show-rating="false"
-                  v-bind:rating="review.star">
-              </star-rating>
-          </div>
-          <p>{{review.text}}</p>
-          <small class="text-muted">Posted by {{review.guestId}}</small>
-          <hr>
-
-        </div>
-      </div>
-      <!-- /.card -->
-
     </div>
-    <!-- /.col-lg-9 -->
+  </div>
+  `
+    ,
+	data: function () {
+		return {
+			isApartment: 'true',
 
-    </div>
+			apartment: {
+				type: null,
+				rooms: null,
+				guests: null,
+				location: {
+					latitude: '',
+					longitude: '',
+					address: {
+						street: '',
+						city: '',
+						postalCode: ''
+					}
+				},
+				to: null,
+				from: null,
+				price: null,
+				checkin: '2 PM',
+				checkout: '10 AM',
+				amenities: []
+			},
 
-    </div>
-    
-  </div>  <!-- /.test3 -->
-</div> <!--apartment details-->`,
-    data: function () {
-        return {
-            user: {
-              username: '',
-              role: ''
-            },
-            isAdmin: false,
-            isHost: false,
-            isGuest: false,
-            apartment: {
-              type: null,
-              rooms: null,
-              guests: null,
-              location: {
-                latitude: '',
-                longitude: '',
-                address: {
-                  street: '',
-                  city: '',
-                  postalCode: ''
-                }
-              },
-              period: {
-                to: null,
-                from: null
-              },
-              images:[],
-              price: null,
-              checkin: '',
-              checkout: '',
-              amenities: []
-            },
-            amenities:{
-                base:[],
-                family:[],
-                dining:[],
-                fac:[],
-            },
-            isOtherImgs: true,
-        }
-    },
-    methods: {
-      getFirstImg(){
-        //provera da li ima slika za dati stan
-        if(this.apartment.images == null){
-          img = ['./img/No_Image_Available.png'];
-          // ako nema smesti noimage sliku
-            this.apartment.images = img;
-          }
+			types: ['APARTMENT', 'ROOM'],
+			rooms: null,
+			guests: null,
+			images: null,
+			amenities: [],
+
+			dates: {
+				from: null,
+				to: null
+			},
+
+			disabledDates: {
+				to: null
+			},
+
+			highlighted: {
+				to: null,
+				from: null
       },
-      arrangeAmenities(){
-        for(let i = 0; i< this.apartment.amenities.length; i++){
-          if(this.apartment.amenities[i].type === 'Base'){
-            this.amenities.base.push(this.apartment.amenities[i].name);
-          }
-          else if(this.apartment.amenities[i].type === 'Family' ){
-            this.amenities.family.push(this.apartment.amenities[i].name);
-          }
-          else if(this.apartment.amenities[i].type === 'Dining'){
-            this.amenities.dining.push(this.apartment.amenities[i].name);
-          }
-          else if(this.apartment.amenities[i].type === 'Facilities'){
-            this.amenities.fac.push(this.apartment.amenities[i].name);
-          }
-        }
-      }
-    },
-    computed: {
-      id() {
-        return this.$route.params.id; //preuzimam id apartmana na cijoj sam stranici za prikaz komentara
+      messages:{
+        errorType:'',
+        errorRooms:'',
+        errorGuests:'',
+        errorLocation:'',
+        errorAddress:'',
+        errorPrice:'',
+        errorCheckInOut:'',
+        errorDates:'',
+        errorAmenities:'',
+        errorResponse:'',
+        successResponse:'',
       },
+      allAmenities:[], //svi amenties koji su u bazi
+      amenities:{
+        base:[],
+        family:[],
+        dining:[],
+        fac:[],
+    },
+		}
+	},
 
-      getOtherImgs:function(){
-        //Prva slika mora da se manuelno postavi, a ostale se dodaju preko v-for:
-        imgs = this.apartment.images.slice(1);
-        //Ako ima samo jednu sliku onda se sklanjaju strelice < > za kretanje kroz slike. 
-        if(imgs.length === 0){
-          this.isOtherImgs = false;
-        }
-        // else{?
-        return imgs;
-        // }
+	methods: {
+		create: function (apartment) {
+      if(this.apartment.type == null){
+        this.messages.errorType =  `<h4>Field type of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorType='',10000);
+      }
+      else if(this.apartment.rooms ==  null && this.apartment.type == 'APARTMENT'){
+        this.messages.errorRooms =  `<h4>Field rooms of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorRooms='',10000);
+      }
+      else if(this.apartment.guests == null){
+        this.messages.errorGuests =  `<h4>Field number of guests of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorGuests='',10000);
+      }
+
+      //Apartment location
+      else if(this.apartment.location.latitude == ''){
+        this.messages.errorLocation =  `<h4>Field latitude of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorLocation='',10000);
+      }
+      //Provera da li je apartment latitude broj;
+      else if(this.isNumeric(this.apartment.location.latitude)){
+        this.messages.errorLocation =  `<h4>Latitude of apartment must be number!</h4>`;
+        setTimeout(()=>this.messages.errorLocation='',10000);
+      }
+      else if(this.apartment.location.longitude == ''){
+        this.messages.errorLocation =  `<h4>Field longitude of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorLocation='',10000);
+      }
+      //Provera da li je apartment longitude broj;
+      else if(this.isNumeric(this.apartment.location.longitude)){
+        this.messages.errorLocation =  `<h4>Longitude of apartment must be number!</h4>`;
+        setTimeout(()=>this.messages.errorLocation='',10000);
+      }
+
+      //Apartment address
+      else if(this.apartment.location.address.street == ''){
+        this.messages.errorAddress =  `<h4>Field street of address of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorAddress='',10000);
+      }
+      else if(this.apartment.location.address.city == ''){
+        this.messages.errorAddress =  `<h4>Field city of address of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorAddress='',10000);
+      }
+      else if(this.apartment.location.address.postalCode == ''){
+        this.messages.errorAddress =  `<h4>Field postal code of address of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorAddress='',10000);
+      }
+
+      //Apartment price: 
+      else if(this.apartment.price == null){
+        this.messages.errorPrice =  `<h4>Field price of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorPrice='',10000);
+      }
+      //Provera da li je cena broj;
+      else if(this.isNumeric(this.apartment.price)){
+        this.messages.errorPrice =  `<h4>Price of apartment must be number!</h4>`;
+        setTimeout(()=>this.messages.errorPrice='',10000);
+      }
+
+      else if(this.apartment.checkin == ''){
+        this.messages.errorCheckInOut =  `<h4>Field check in of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorCheckInOut='',5000);
+      }
+      else if(this.apartment.checkout == ''){
+        this.messages.errorCheckInOut =  `<h4>Field check out of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorCheckInOut='',5000);
+      }
+      else if(this.dates.from == null){
+        this.messages.errorDates =  `<h4>Field checkin date of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorDates='',5000);
+      }
+      else if(this.dates.to == null){
+        this.messages.errorDates =  `<h4>Field checkout to of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorDates='',5000);
+      }
+      else if(this.apartment.amenities == ''){
+        this.messages.errorAmenities =  `<h4>Amenities of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorAmenities='',5000);
+      }
+      else{
+
+        // alert('STAN SE SALJE!')
+        // unselected dates will be disabled
+        this.apartment.to = this.dates.from.getTime();
+        this.apartment.from = this.dates.to.getTime() + 1000 * 60 * 60 * 24;
+        console.log(this.apartment);
+        axios
+          .post('rest/apartment', this.apartment)
+          .then(Response => {
+            console.log(Response);
+            this.messages.successResponse = `<h4>Apartment was added successfully!</h4>`;
+            //Sva uneta polja se isprazne...
+            this.apartment.type=null;
+            this.apartment.rooms=null;
+            this.apartment.guest=null;
+            this.apartment.location.latitude= '';
+            this.apartment.location.longitude= '';
+            this.apartment.location.address.street= '',
+            this.apartment.location.address.city= '',
+            this.apartment.location.address.postalCode= '',
+            this.apartment.to= null;
+            this.apartment.from= null,
+            this.apartment.price= null,
+            this.apartment.checkin= '2 PM',
+            this.apartment.checkout= '10 AM',
+            this.apartment.amenities= []
+      
+            setTimeout(() => this.messages.successResponse='', 5000);
+        })
+        .catch(error => {
+            if(error.response.status === 500 || error.response.status === 404){
+                this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
+                setTimeout(() => this.messages.errorResponse='', 5000);
+            }
+        });
       }
     },
-    created() {
-      this.user.username = localStorage.getItem('user');
-      this.user.role = localStorage.getItem('role');
 
-      if (this.user.role == "ADMIN") {
-          this.isAdmin = true; 
-      } else if (this.user.role == "HOST") {
-          this.isHost = true;
-      } else {
-          this.isGuest = true;
+		update: function (apartment) {
+
+		},
+		handleFileUploads() {
+
+		},
+		submitFiles: function () {
+
+		},
+		checkApartment: function () {
+			if (this.apartment.type == "ROOM") {
+				this.isApartment = false;
       }
-
-      this.apartmentId = this.id;
-      axios
-      .get(`rest/apartment/${this.apartmentId}`)
-      .then(response => {
-          this.apartment = response.data;
-          this.getFirstImg();
-          this.arrangeAmenities();
-      })
+      else {
+        this.isApartment = true;
+      } 
+		},
+		// pomocna metoda za ogranicen odabir dana:
+		range(start = 1, end) {
+			var ans = [];
+			for (let i = start; i <= end; i++) {
+				ans.push(i);
+			}
+			return ans;
+    },
+	  // pomocna metoda za razvrstavanje amenities:
+    arrangeAmenities(){
+      for(let i = 0; i< this.allAmenities.length; i++){
+        if(this.allAmenities[i].type === 'Base'){
+          this.amenities.base.push(this.allAmenities[i]);
+        }
+        else if(this.allAmenities[i].type === 'Family' ){
+          this.amenities.family.push(this.allAmenities[i]);
+        }
+        else if(this.allAmenities[i].type === 'Dining'){
+          this.amenities.dining.push(this.allAmenities[i]);
+        }
+        else if(this.allAmenities[i].type === 'Facilities'){
+          this.amenities.fac.push(this.allAmenities[i]);
+        }
+      }
+    },
+    isNumeric(num){
+      //isNaN(num) returns true if the variable does NOT contain a valid number
+      return isNaN(num);
+    }
+  },
+	created() {      
+    axios
+    .get('rest/amenity/all')
+    .then(response => {
+        this.allAmenities = response.data;
+        this.arrangeAmenities();
+    })  
   },
   
+	mounted() {
+		this.rooms = this.range(1, 10);
+		this.guests = this.range(1, 15);
+
+		let to = new Date();
+		to.setDate(to.getDate() - 1)
+
+		this.disabledDates.to = to;
+  },
+  
+	components: {
+		vuejsDatepicker
+	}
 })
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// <!-- Slide Two - Set the background image for this slide in the line below -->
+// <div class="carousel-item" v-for="img in getOtherImgs" :style="{'background-image': 'url(' + img + ')'}">
+//   <div class="carousel-caption d-none d-md-block">
+//     <h3 class="display-4">Second Slide</h3>
+//     <p class="lead">This is a description for the second slide.</p>
+//   </div>
+// </div> 
+
+
+// else{
+     // axios.post('rest/signup',this.user).then(Response => {
+                //     // this.messages.successResponse = `<h4>You registered successfully!</h4>`;
+                //     // setTimeout(() => this.messages.successResponse='', 5000);
+                   
+                //     this.signupSuccessful(response)
+                // })
+                // .catch(error => {
+                //     if(error.response.status === 500 || error.response.status === 404){
+                //         this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
+                //         setTimeout(() => this.messages.errorResponse='', 5000);
+                //     }
+                // });
+// }
+
+      // else if(this.user.username=='' && this.user.firstname=='' && this.user.lastname=='' && this.user.gender=='' && this.user.password==''  && this.user.password2==''){
+      //   this.messages.errorUsername =  `<h4>Username name of user can't be empty!</h4>`;
+      //   this.messages.errorFirstName =  `<h4>First name of user can't be empty!</h4>`;
+      //   this.messages.errorLastName =  `<h4>Last name of user can't be empty!</h4>`;
+      //   this.messages.errorGender =  `<h4>Gender of user can't be empty!</h4>`;
+      //   this.messages.errorNewPass =  `<h4>Password of user can't be empty!</h4>`;
+      //   this.messages.errorRepNewPass =  `<h4>Confirmation password can't be empty!</h4>`;
+          
+      //   setTimeout(()=>this.messages.errorUsername='',3000);  
+      //   setTimeout(()=>this.messages.errorFirstName='',3000);
+      //   setTimeout(()=>this.messages.errorLastName='',3000);
+      //   setTimeout(()=>this.messages.errorGender='',3000);
+      //   setTimeout(()=>this.messages.errorNewPass='',3000);
+      //   setTimeout(()=>this.messages.errorRepNewPass='',3000);
+          
+      // }

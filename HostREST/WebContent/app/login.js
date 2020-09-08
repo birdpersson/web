@@ -72,6 +72,7 @@ Vue.component("login", {
 			localStorage.removeItem('user');
 
 			this.error = true;
+			setTimeout(() => this.error=false, 3000);
 		}
 	},
 	mounted() {

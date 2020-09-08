@@ -38,9 +38,9 @@ const routes = [
 	{ path: '/amenitiesOverview', component: AmenitiesOverview },
 	{ path: '/amenitiesNew', component: NewAmenities },
 	{ path: '/apartInactiveOverview', component: ApartInactiveOverview },
-	{ path: '/apartmentNew', component: NewApartment },
-	{ path: '/apartment/:id/details', component: Test},
-	// { path: '/apartment/:id/details', component: ApartmentDetails},
+	// { path: '/apartmentNew', component: NewApartment },
+	{ path: '/apartmentNew', component: Test },
+	{ path: '/apartment/:id/details', component: ApartmentDetails},
 
 	{ path: '/test', component: Test },
 ]

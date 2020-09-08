@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -27,7 +26,7 @@ import dao.LocationDAO;
 import dao.ReservationDAO;
 import dao.UserDAO;
 
-@Path("/reservations")
+@Path("/reservation")
 public class ReservationService {
 	@Context
 	ServletContext ctx;
@@ -53,8 +52,28 @@ public class ReservationService {
 		if (ctx.getAttribute("apartmentDAO") == null) {
 			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("apartmentDAO",
-					new ApartmentDAO(contextPath, (LocationDAO) ctx.getAttribute("locationDAO"), null, null));
+					new ApartmentDAO(contextPath, (LocationDAO) ctx.getAttribute("locationDAO"), null, null, null));
 		}
+	}
+
+	@POST
+	@Path("/")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addReservation(@Context HttpServletRequest request, Reservation reservation) {
+		if (!AuthService.getUsername(request).equals(reservation.getGuestId())) {
+			return Response.status(Response.Status.FORBIDDEN).build();
+		}
+		String username = AuthService.getUsername(request);
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+		if (!userDao.findOne(username).getRole().toString().equals("GUEST")) {
+			return Response.status(Response.Status.FORBIDDEN).build();
+		}
+		ReservationDAO reservationDao = (ReservationDAO) ctx.getAttribute("reservationDAO");
+		Reservation newReservation = reservationDao.save(ctx.getRealPath(""), reservation);
+
+		// TODO: check dates
+		return Response.status(Response.Status.CREATED).entity(newReservation).build();
 	}
 
 	@GET
@@ -66,7 +85,7 @@ public class ReservationService {
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
 		ReservationDAO reservDao = (ReservationDAO) ctx.getAttribute("reservationDAO");
 		ApartmentDAO apartDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
-		LocationDAO locatDao = (LocationDAO) ctx.getAttribute("locationDAO");
+//		LocationDAO locatDao = (LocationDAO) ctx.getAttribute("locationDAO");
 		Collection<ReservationDTO> returnDTO = new ArrayList<ReservationDTO>();
 
 		if (!userDao.findOne(username).getRole().toString().equals("GUEST")) {
@@ -86,7 +105,7 @@ public class ReservationService {
 				reservDTO.setId(r.getId());
 				reservDTO.setApartmentId(r.getApartmentId());
 				reservDTO.setGuestId(r.getGuestId());
-				reservDTO.setDate(r.getDate());
+//				reservDTO.setDate(r.getDate());
 				reservDTO.setNight(r.getNight());
 				reservDTO.setPrice(r.getPrice());
 				reservDTO.setConfirmation(r.getConfirmation());
@@ -155,7 +174,7 @@ public class ReservationService {
 
 	public Collection<ReservationDTO> getReservationsDTO(Collection<Reservation> allReservations, String username,
 			String role) {
-		LocationDAO locatDao = (LocationDAO) ctx.getAttribute("locationDAO");
+//		LocationDAO locatDao = (LocationDAO) ctx.getAttribute("locationDAO");
 		ApartmentDAO apartDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
 		Collection<ReservationDTO> returnDTO = new ArrayList<ReservationDTO>();
 
@@ -181,7 +200,7 @@ public class ReservationService {
 			reservDTO.setId(r.getId());
 			reservDTO.setApartmentId(r.getApartmentId());
 			reservDTO.setGuestId(r.getGuestId());
-			reservDTO.setDate(r.getDate());
+//			reservDTO.setDate(r.getDate());
 			reservDTO.setNight(r.getNight());
 			reservDTO.setPrice(r.getPrice());
 			reservDTO.setConfirmation(r.getConfirmation());
@@ -210,43 +229,33 @@ public class ReservationService {
 		return returnDTO;
 	}
 
-	@POST
-	@Path("/")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Reservation setReservation(Reservation reservation) {
-		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
-		return dao.save(reservation);
-	}
+//	@PUT
+//	@Path("/{id}")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Response updateReservation(@Context HttpServletRequest request, @PathParam("id") String id,
+//			Reservation reservation) {
+//		String username = AuthService.getUsername(request);
+//		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+//		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
+//
+//		if (userDao.findOne(username).getRole().toString().equals("GUEST")
+//				|| userDao.findOne(username).getRole().toString().equals("HOST")) {
+//			return Response.status(Response.Status.OK).entity(dao.update(id, reservation)).build();
+//		}
+//		return Response.status(Response.Status.FORBIDDEN).build();
+//	}
 
-	@PUT
-	@Path("/{id}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateReservation(@Context HttpServletRequest request, @PathParam("id") String id,
-			Reservation reservation) {
-		String username = AuthService.getUsername(request);
-		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
-
-		if (userDao.findOne(username).getRole().toString().equals("GUEST")
-				|| userDao.findOne(username).getRole().toString().equals("HOST")) {
-			return Response.status(Response.Status.OK).entity(dao.update(id, reservation)).build();
-		}
-		return Response.status(Response.Status.FORBIDDEN).build();
-	}
-
-	@DELETE
-	@Path("/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Reservation deleteReservation(@PathParam("id") String id) {
-		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
-		return dao.delete(id);
-	}
+//	@DELETE
+//	@Path("/{id}")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Reservation deleteReservation(@PathParam("id") String id) {
+//		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
+//		return dao.delete(id);
+//	}
 
 	@PUT
 	@Path("/{id}/changeStatus/{status}")
-
 	@Produces(MediaType.APPLICATION_JSON)
 	public Reservation updateReservation(@PathParam("id") String id, @PathParam("status") String status) {
 		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
