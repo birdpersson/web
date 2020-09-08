@@ -243,6 +243,12 @@
   margin-bottom:25px
 }
 
+#new-apartment .one-third{
+  width:33%;
+  padding:10px;
+  margin-bottom:25px
+}
+
 #new-apartment #address,#new-apartment #price{
   width:100%;
   padding:10px;
