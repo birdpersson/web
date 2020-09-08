@@ -52,7 +52,7 @@ public class ReservationService {
 		if (ctx.getAttribute("apartmentDAO") == null) {
 			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("apartmentDAO",
-					new ApartmentDAO(contextPath, (LocationDAO) ctx.getAttribute("locationDAO"), null, null));
+					new ApartmentDAO(contextPath, (LocationDAO) ctx.getAttribute("locationDAO"), null, null, null));
 		}
 	}
 
