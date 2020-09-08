@@ -10,34 +10,37 @@ Vue.component("test", {
     <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
     <div class="container" id='main'>
       <div>
-        <div v-if='messages.errorType' class="alert alert-danger" v-html="messages.errorType"></div>          
+        <div style="margin-top:20px" v-if='messages.errorType' class="alert alert-danger" v-html="messages.errorType"></div>          
         <label>Type of apartment</label>
         <select v-model="apartment.type">
           <option v-for="type in types" v-on:click="checkApartment">{{type}}</option>
         </select>
   
-        <div v-if='messages.errorRooms' class="alert alert-danger" v-html="messages.errorRooms"></div>          
+        <div style="margin-top:20px" v-if='messages.errorRooms' class="alert alert-danger" v-html="messages.errorRooms"></div>          
         <label>Number of rooms</label>
         <select v-show="isApartment" v-model="apartment.rooms">
           <option disabled value="">No. of rooms</option>
           <option v-for="room in rooms">{{room}}</option>
         </select>
+        <div v-show="!isApartment">
+          <img src="./img/negativ1.1.png" alt=""> <span>This option is anavailable</span>
+        </div>
   
-        <div v-if='messages.errorGuests' class="alert alert-danger" v-html="messages.errorGuests"></div>          
+        <div style="margin-top:20px" v-if='messages.errorGuests' class="alert alert-danger" v-html="messages.errorGuests"></div>          
         <label>Number of guests</label>
         <select v-model="apartment.guests">
           <option disabled value="">No. of guests</option>
           <option v-for="guest in guests">{{guest}}</option>
         </select>
   
-        <div v-if='messages.errorLocation' class="alert alert-danger" v-html="messages.errorLocation"></div>          
+        <div style="margin-top:20px" v-if='messages.errorLocation' class="alert alert-danger" v-html="messages.errorLocation"></div>          
         <label>Location</label>
         <input class='half-size' type="text" placeholder="Enter location latitude..."
           v-model='apartment.location.latitude'> -
         <input class='half-size' type="text" placeholder="Enter location longitude..."
           v-model='apartment.location.longitude'>
   
-        <div v-if='messages.errorAddress' class="alert alert-danger" v-html="messages.errorAddress"></div>          
+        <div style="margin-top:20px" v-if='messages.errorAddress' class="alert alert-danger" v-html="messages.errorAddress"></div>          
           <label>Address</label>
           <div> 
             <input class="one-third" placeholder="Enter street" v-model='apartment.location.address.street'>
@@ -45,16 +48,16 @@ Vue.component("test", {
             <input class="one-third" placeholder="Enter postal colde" v-model='apartment.location.address.postalCode'>
           </div>
       
-        <div v-if='messages.errorPrice' class="alert alert-danger" v-html="messages.errorPrice"></div>          
+        <div style="margin-top:20px" v-if='messages.errorPrice' class="alert alert-danger" v-html="messages.errorPrice"></div>          
         <label>Price</label>
         <input id='price' type="text" placeholder="Enter price..." v-model='apartment.price'>
   
-        <div v-if='messages.errorCheckInOut' class="alert alert-danger" v-html="messages.errorCheckInOut"></div>          
+        <div style="margin-top:20px" v-if='messages.errorCheckInOut' class="alert alert-danger" v-html="messages.errorCheckInOut"></div>          
         <label>Time to checkin & checkout</label>
         <input class='half-size' type="text" placeholder="Checkin..." v-model='apartment.checkin'> -
         <input class='half-size' type="text" placeholder="Checkout..." v-model='apartment.checkout'>
   
-        <div v-if='messages.errorDates' class="alert alert-danger" v-html="messages.errorDates"></div>          
+        <div style="margin-top:20px" v-if='messages.errorDates' class="alert alert-danger" v-html="messages.errorDates"></div>          
         <label>Dates available</label>
         <div class="row">
           <div class="col">
@@ -67,7 +70,7 @@ Vue.component("test", {
           </div>
         </div>
   
-        <div v-if='messages.errorAmenities' class="alert alert-danger" v-html="messages.errorAmenities"></div>          
+        <div style="margin-top:20px" v-if='messages.errorAmenities' class="alert alert-danger" v-html="messages.errorAmenities"></div>          
         <label>Amenities</label>
         <div id='amenities' style="margin-top:20px">
             <div class="row">
@@ -106,7 +109,7 @@ Vue.component("test", {
           <label>Images</label>
           <input type="file" class="filestyle" multiple v-on:change="handleFileUploads()">	
         </div>
-        
+
         <!--   
           <div>
           <h2>Images overview</h2>
@@ -189,60 +192,123 @@ Vue.component("test", {
 
 	methods: {
 		create: function (apartment) {
-      if(this.apartment.type == ''){
+      if(this.apartment.type == null){
         this.messages.errorType =  `<h4>Field type of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorType='',3000);
+        setTimeout(()=>this.messages.errorType='',10000);
       }
-      else if(this.apartment.rooms == ''){
+      else if(this.apartment.rooms ==  null && this.apartment.type == 'APARTMENT'){
         this.messages.errorRooms =  `<h4>Field rooms of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorRooms='',3000);
+        setTimeout(()=>this.messages.errorRooms='',10000);
       }
-      else if(this.apartment.guests == ''){
-        this.messages.errorGuests =  `<h4>Field rooms of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorGuests='',3000);
+      else if(this.apartment.guests == null){
+        this.messages.errorGuests =  `<h4>Field number of guests of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorGuests='',10000);
       }
+
+      //Apartment location
       else if(this.apartment.location.latitude == ''){
         this.messages.errorLocation =  `<h4>Field latitude of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorLocation='',3000);
+        setTimeout(()=>this.messages.errorLocation='',10000);
+      }
+      //Provera da li je apartment latitude broj;
+      else if(this.isNumeric(this.apartment.location.latitude)){
+        this.messages.errorLocation =  `<h4>Latitude of apartment must be number!</h4>`;
+        setTimeout(()=>this.messages.errorLocation='',10000);
       }
       else if(this.apartment.location.longitude == ''){
         this.messages.errorLocation =  `<h4>Field longitude of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorLocation='',3000);
+        setTimeout(()=>this.messages.errorLocation='',10000);
       }
-      else if(this.apartment.address == ''){
-        this.messages.errorAddress =  `<h4>Field address of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorAddress='',3000);
+      //Provera da li je apartment longitude broj;
+      else if(this.isNumeric(this.apartment.location.longitude)){
+        this.messages.errorLocation =  `<h4>Longitude of apartment must be number!</h4>`;
+        setTimeout(()=>this.messages.errorLocation='',10000);
       }
-      else if(this.apartment.price == ''){
+
+      //Apartment address
+      else if(this.apartment.location.address.street == ''){
+        this.messages.errorAddress =  `<h4>Field street of address of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorAddress='',10000);
+      }
+      else if(this.apartment.location.address.city == ''){
+        this.messages.errorAddress =  `<h4>Field city of address of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorAddress='',10000);
+      }
+      else if(this.apartment.location.address.postalCode == ''){
+        this.messages.errorAddress =  `<h4>Field postal code of address of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorAddress='',10000);
+      }
+
+      //Apartment price: 
+      else if(this.apartment.price == null){
         this.messages.errorPrice =  `<h4>Field price of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorPrice='',3000);
+        setTimeout(()=>this.messages.errorPrice='',10000);
       }
+      //Provera da li je cena broj;
+      else if(this.isNumeric(this.apartment.price)){
+        this.messages.errorPrice =  `<h4>Price of apartment must be number!</h4>`;
+        setTimeout(()=>this.messages.errorPrice='',10000);
+      }
+
       else if(this.apartment.checkin == ''){
         this.messages.errorCheckInOut =  `<h4>Field check in of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorCheckInOut='',3000);
+        setTimeout(()=>this.messages.errorCheckInOut='',5000);
       }
       else if(this.apartment.checkout == ''){
         this.messages.errorCheckInOut =  `<h4>Field check out of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorCheckInOut='',3000);
+        setTimeout(()=>this.messages.errorCheckInOut='',5000);
       }
-      else if(this.apartment.dates == ''){
-        this.messages.errorDates =  `<h4>Field dates of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorDates='',3000);
+      else if(this.dates.from == null){
+        this.messages.errorDates =  `<h4>Field checkin date of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorDates='',5000);
+      }
+      else if(this.dates.to == null){
+        this.messages.errorDates =  `<h4>Field checkout to of apartment can't be empty!</h4>`;
+        setTimeout(()=>this.messages.errorDates='',5000);
       }
       else if(this.apartment.amenities == ''){
         this.messages.errorAmenities =  `<h4>Amenities of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorAmenities='',3000);
+        setTimeout(()=>this.messages.errorAmenities='',5000);
       }
       else{
+
+        // alert('STAN SE SALJE!')
         // unselected dates will be disabled
         this.apartment.to = this.dates.from.getTime();
         this.apartment.from = this.dates.to.getTime() + 1000 * 60 * 60 * 24;
-        // console.log(apartment);
+        console.log(this.apartment);
         axios
-          .post('rest/apartment', apartment)
-          .then(Response => (console.log(Response)));
+          .post('rest/apartment', this.apartment)
+          .then(Response => {
+            console.log(Response);
+            this.messages.successResponse = `<h4>Apartment was added successfully!</h4>`;
+            //Sva uneta polja se isprazne...
+            this.apartment.type=null;
+            this.apartment.rooms=null;
+            this.apartment.guest=null;
+            this.apartment.location.latitude= '';
+            this.apartment.location.longitude= '';
+            this.apartment.location.address.street= '',
+            this.apartment.location.address.city= '',
+            this.apartment.location.address.postalCode= '',
+            this.apartment.to= null;
+            this.apartment.from= null,
+            this.apartment.price= null,
+            this.apartment.checkin= '2 PM',
+            this.apartment.checkout= '10 AM',
+            this.apartment.amenities= []
+      
+            setTimeout(() => this.messages.successResponse='', 5000);
+        })
+        .catch(error => {
+            if(error.response.status === 500 || error.response.status === 404){
+                this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
+                setTimeout(() => this.messages.errorResponse='', 5000);
+            }
+        });
       }
-		},
+    },
+
 		update: function (apartment) {
 
 		},
@@ -255,7 +321,10 @@ Vue.component("test", {
 		checkApartment: function () {
 			if (this.apartment.type == "ROOM") {
 				this.isApartment = false;
-			}
+      }
+      else {
+        this.isApartment = true;
+      } 
 		},
 		// pomocna metoda za ogranicen odabir dana:
 		range(start = 1, end) {
@@ -282,8 +351,11 @@ Vue.component("test", {
         }
       }
     },
+    isNumeric(num){
+      //isNaN(num) returns true if the variable does NOT contain a valid number
+      return isNaN(num);
+    }
   },
-  
 	created() {      
     axios
     .get('rest/amenity/all')

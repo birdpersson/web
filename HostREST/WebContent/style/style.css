@@ -153,12 +153,15 @@
 }
 /* apartmentCommentNew */    /*apartmentAmenityNew */
 #aparm-new-comment label, #new-Reservation label,
-#new-amenity label, #new-apartment label{
+#new-amenity label{
+  color:#35424a;
   display: block;
   margin: 20px 0 10px;
   font-size: 20px;
   font-weight: bold;
 }
+
+
 
 #profile-update label{
   font-weight: bold;
@@ -247,6 +250,14 @@
   width:33%;
   padding:10px;
   margin-bottom:25px
+}
+
+#new-apartment label{
+  color:#35424a;
+  display: block;
+  margin: 10px 0 10px;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 #new-apartment #address,#new-apartment #price{
