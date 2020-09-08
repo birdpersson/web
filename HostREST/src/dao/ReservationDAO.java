@@ -29,6 +29,28 @@ public class ReservationDAO {
 		return reservations.values();
 	}
 
+	public Collection<Reservation> findAllByGuestId(String id) {
+		Collection<Reservation> allReservations = findAll();
+		Collection<Reservation> testRet = new ArrayList<Reservation>();
+		for (Reservation r : allReservations) {
+			if (r.getGuestId().equals(id)) {
+				testRet.add(r);
+			}
+		}
+		return testRet;
+	}
+
+	public Collection<Reservation> findAllByApartmentId(String id) {
+		Collection<Reservation> allReservations = findAll();
+		Collection<Reservation> testRet = new ArrayList<Reservation>();
+		for (Reservation r : allReservations) {
+			if (r.getApartmentId().equals(id)) {
+				testRet.add(r);
+			}
+		}
+		return testRet;
+	}
+
 	public Reservation findOne(String id) {
 		return reservations.containsKey(id) ? reservations.get(id) : null;
 	}
@@ -107,10 +129,10 @@ public class ReservationDAO {
 					int price = Integer.parseInt(st.nextToken().trim());
 					String confirmation = st.nextToken().trim();
 					String message = st.nextToken().trim();
-					Reservation.Status status = Reservation.Status.valueOf(st.nextToken().trim());
+					String status = st.nextToken().trim();
 
-					reservations.put(id, new Reservation(id, apartmentId, guestId,
-							from, to, night, price, confirmation, message, status));
+					reservations.put(id, new Reservation(id, apartmentId, from, to,
+							night, price, message, guestId, Reservation.Status.valueOf(status), confirmation));
 				}
 			}
 		} catch (Exception e) {
@@ -122,28 +144,6 @@ public class ReservationDAO {
 				} catch (Exception e) { }
 			}
 		}
-	}
-
-	public Collection<Reservation> findAllByGuestId(String id) {
-		Collection<Reservation> allReservations = findAll();
-		Collection<Reservation> testRet = new ArrayList<Reservation>();
-		for (Reservation r : allReservations) {
-			if (r.getGuestId().equals(id)) {
-				testRet.add(r);
-			}
-		}
-		return testRet;
-	}
-
-	public Collection<Reservation> findAllByApartmentId(String id) {
-		Collection<Reservation> allReservations = findAll();
-		Collection<Reservation> testRet = new ArrayList<Reservation>();
-		for (Reservation r : allReservations) {
-			if (r.getApartmentId().equals(id)) {
-				testRet.add(r);
-			}
-		}
-		return testRet;
 	}
 
 }

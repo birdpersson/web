@@ -8,32 +8,41 @@ public class Reservation {
 
 	private String id;
 	private String apartmentId;
-	private String guestId;
 	private long from;
 	private long to;
 	private int night;
 	private int price;
-	private String confirmation;
 	private String message;
+	private String guestId;
 	private Status status;
+
+	private String confirmation;
 
 	public Reservation() {
 		super();
 	}
 
-	public Reservation(String id, String apartmentId, String guestId, long from, long to, int night, int price,
-			String confirmation, String message, Status status) {
-		super();
+	public Reservation(String id, String apartmentId, long from, long to, int night, int price, String message,
+			String guestId, Status status, String confirmation) {
 		this.id = id;
 		this.apartmentId = apartmentId;
-		this.guestId = guestId;
 		this.from = from;
 		this.to = to;
 		this.night = night;
 		this.price = price;
-		this.confirmation = confirmation;
 		this.message = message;
+		this.guestId = guestId;
 		this.status = status;
+		this.confirmation = confirmation;
+	}
+
+	// TODO: why this??
+	public String getConfirmation() {
+		return confirmation;
+	}
+
+	public void setConfirmation(String confirmation) {
+		this.confirmation = confirmation;
 	}
 
 	public String getId() {
@@ -50,14 +59,6 @@ public class Reservation {
 
 	public void setApartmentId(String apartmentId) {
 		this.apartmentId = apartmentId;
-	}
-
-	public String getGuestId() {
-		return guestId;
-	}
-
-	public void setGuestId(String guestId) {
-		this.guestId = guestId;
 	}
 
 	public long getFrom() {
@@ -92,20 +93,20 @@ public class Reservation {
 		this.price = price;
 	}
 
-	public String getConfirmation() {
-		return confirmation;
-	}
-
-	public void setConfirmation(String confirmation) {
-		this.confirmation = confirmation;
-	}
-
 	public String getMessage() {
 		return message;
 	}
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public String getGuestId() {
+		return guestId;
+	}
+
+	public void setGuestId(String guestId) {
+		this.guestId = guestId;
 	}
 
 	public Status getStatus() {
