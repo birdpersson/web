@@ -45,7 +45,7 @@ Vue.component("test", {
           <div> 
             <input class="one-third" placeholder="Enter street" v-model='apartment.location.address.street'>
             <input class="one-third" placeholder="Enter city" v-model='apartment.location.address.city'>
-            <input class="one-third" placeholder="Enter postal colde" v-model='apartment.location.address.postalCode'>
+            <input class="one-third" placeholder="Enter postal code" v-model='apartment.location.address.postalCode'>
           </div>
       
         <div style="margin-top:20px" v-if='messages.errorPrice' class="alert alert-danger" v-html="messages.errorPrice"></div>          
@@ -77,28 +77,28 @@ Vue.component("test", {
               <div class="col-md-3 col-sm-6 mb-4">
                   <h4>Base</h4>
                   <ul style="list-style: none; padding-left:0px" v-for="base in amenities.base">
-                    <li><input :value="base" v-model="apartment.amenities" type="checkbox"> {{base}}</li>
+                    <li><input :value="base" v-model="apartment.amenities" type="checkbox"> {{base.name}}</li>
                   </ul>
               </div>
   
             <div class="col-md-3 col-sm-6 mb-4">
                 <h4>Family</h4>
                 <ul style="list-style: none; padding-left:0px" v-for="family in amenities.family">
-                    <li><input :value="family" v-model="apartment.amenities" type="checkbox"> {{family}}</li>
+                    <li><input :value="family" v-model="apartment.amenities" type="checkbox"> {{family.name}}</li>
                 </ul>
             </div>
   
             <div class="col-md-3 col-sm-6 mb-4">
                 <h4>Dining</h4>
                 <ul style="list-style: none; padding-left:0px" v-for="dining in amenities.dining">
-                    <li><input :value="dining" v-model="apartment.amenities" type="checkbox"> {{dining}}</li>
+                    <li><input :value="dining" v-model="apartment.amenities" type="checkbox"> {{dining.name}}</li>
                 </ul>
             </div>
   
             <div class="col-md-3 col-sm-6 mb-4">
                 <h4>Facilities</h4>
                 <ul style="list-style: none; padding-left:0px" v-for="fac in amenities.fac">
-                    <li><input :value="fac" v-model="apartment.amenities" type="checkbox"> {{fac}}</li>
+                    <li><input :value="fac" v-model="apartment.amenities" type="checkbox"> {{fac.name}}</li>
                 </ul>
             </div>
             
@@ -338,16 +338,16 @@ Vue.component("test", {
     arrangeAmenities(){
       for(let i = 0; i< this.allAmenities.length; i++){
         if(this.allAmenities[i].type === 'Base'){
-          this.amenities.base.push(this.allAmenities[i].name);
+          this.amenities.base.push(this.allAmenities[i]);
         }
         else if(this.allAmenities[i].type === 'Family' ){
-          this.amenities.family.push(this.allAmenities[i].name);
+          this.amenities.family.push(this.allAmenities[i]);
         }
         else if(this.allAmenities[i].type === 'Dining'){
-          this.amenities.dining.push(this.allAmenities[i].name);
+          this.amenities.dining.push(this.allAmenities[i]);
         }
         else if(this.allAmenities[i].type === 'Facilities'){
-          this.amenities.fac.push(this.allAmenities[i].name);
+          this.amenities.fac.push(this.allAmenities[i]);
         }
       }
     },
