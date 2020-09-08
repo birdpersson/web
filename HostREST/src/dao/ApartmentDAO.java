@@ -22,15 +22,17 @@ public class ApartmentDAO {
 	private Map<String, Apartment> apartments = new HashMap<>();
 	private LocationDAO locationDAO;
 	private AmenityDAO amenityDAO;
+	private ReservationDAO reservationDAO;
 	private ReviewDAO reviewDAO;
 
 	public ApartmentDAO() {
 		super();
 	}
 
-	public ApartmentDAO(String contextPath, LocationDAO locationDAO, AmenityDAO amenityDAO, ReviewDAO reviewDAO) {
+	public ApartmentDAO(String contextPath, LocationDAO locationDAO, AmenityDAO amenityDAO, ReservationDAO reservationDAO, ReviewDAO reviewDAO) {
 		this.locationDAO = locationDAO;
 		this.amenityDAO = amenityDAO;
+		this.reservationDAO = reservationDAO;
 		this.reviewDAO = reviewDAO;
 		loadApartments(contextPath);
 	}
@@ -85,6 +87,7 @@ public class ApartmentDAO {
 			PrintWriter out = new PrintWriter(writer);
 			out.println(line);
 			out.close();
+			// TODO: Migrate to AmenityDAO (save too crowded)
 			for (Amenity amenity : apartment.getAmenities()) {
 				String line2 = apartment.getId() + ";" + amenity.getId();
 				System.out.println(line2);
@@ -128,6 +131,7 @@ public class ApartmentDAO {
 					Apartment.Type type = Apartment.Type.valueOf(st.nextToken().trim());
 					int rooms = Integer.parseInt(st.nextToken().trim());
 					int guests = Integer.parseInt(st.nextToken().trim());
+					// TODO: Migrate to LocationDAO (Use locatoinId instead);
 					Location location = locationDAO.findOne(st.nextToken().trim());
 					long to = Long.parseLong(st.nextToken().trim());
 					long from = Long.parseLong(st.nextToken().trim());
@@ -137,9 +141,10 @@ public class ApartmentDAO {
 					String checkout = st.nextToken().trim();
 					String status = st.nextToken().trim();
 					
+					// TODO: Migrate to ApartmentService (shouldn't call other dao's here)
 					ArrayList<String> images = loadImages(contextPath, id);
 					ArrayList<Amenity> amenities = amenityDAO.findAllByApartmentId(contextPath, id);
-					ArrayList<Reservation> reservations = new ArrayList<>();
+					Collection<Reservation> reservations = reservationDAO.findAllByApartmentId(id);
 					Collection<Review> reviews = reviewDAO.findAllByApartmentId(id);
 					
 					apartments.put(id, new Apartment(id, type, rooms, guests, location, to, from, reservations,
@@ -155,6 +160,11 @@ public class ApartmentDAO {
 				} catch (Exception e) { }
 			}
 		}
+	}
+
+	// TODO: ??
+	public void saveImages(String contextPath, ArrayList<String> images) {
+		
 	}
 
 	private ArrayList<String> loadImages(String contextPath, String id) {

@@ -47,7 +47,7 @@ public class ReviewsServices {
 		if (ctx.getAttribute("apartmentDAO") == null) {
 			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("apartmentDAO",
-					new ApartmentDAO(contextPath, null, null, null));
+					new ApartmentDAO(contextPath, null, null, null, null));
 		}
 
 	}

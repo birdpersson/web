@@ -9,7 +9,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -30,6 +29,28 @@ public class ReservationDAO {
 		return reservations.values();
 	}
 
+	public Collection<Reservation> findAllByGuestId(String id) {
+		Collection<Reservation> allReservations = findAll();
+		Collection<Reservation> testRet = new ArrayList<Reservation>();
+		for (Reservation r : allReservations) {
+			if (r.getGuestId().equals(id)) {
+				testRet.add(r);
+			}
+		}
+		return testRet;
+	}
+
+	public Collection<Reservation> findAllByApartmentId(String id) {
+		Collection<Reservation> allReservations = findAll();
+		Collection<Reservation> testRet = new ArrayList<Reservation>();
+		for (Reservation r : allReservations) {
+			if (r.getApartmentId().equals(id)) {
+				testRet.add(r);
+			}
+		}
+		return testRet;
+	}
+
 	public Reservation findOne(String id) {
 		return reservations.containsKey(id) ? reservations.get(id) : null;
 	}
@@ -45,9 +66,15 @@ public class ReservationDAO {
 		maxId++;
 		reservation.setId(maxId.toString());
 		reservation.setStatus(Reservation.Status.valueOf("Created"));
-		String line = reservation.getId() + ";" + reservation.getApartmentId() + ";" + reservation.getGuestId() + ";"
-				+ reservation.getFrom() + ";" + reservation.getTo() + ";" + reservation.getNight() + ";"
-				+ reservation.getPrice() + ";" + reservation.getConfirmation() + ";" + reservation.getMessage() + ";"
+		String line = reservation.getId() + ";"
+				+ reservation.getApartmentId() + ";"
+				+ reservation.getGuestId() + ";"
+				+ reservation.getFrom() + ";"
+				+ reservation.getTo() + ";"
+				+ reservation.getNight() + ";"
+				+ reservation.getPrice() + ";"
+				+ reservation.getConfirmation() + ";"
+				+ reservation.getMessage() + ";"
 				+ reservation.getStatus().toString();
 		System.out.println(line);
 		BufferedWriter writer = null;
@@ -114,38 +141,9 @@ public class ReservationDAO {
 			if (in != null) {
 				try {
 					in.close();
-				} catch (Exception e) {
-				}
+				} catch (Exception e) { }
 			}
 		}
-	}
-
-	public List<Reservation> loadDates(String contextPath, String id) {
-		List<Reservation> availability = new ArrayList<>();
-
-		return availability;
-	}
-
-	public Collection<Reservation> findAllByGuestId(String id) {
-		Collection<Reservation> allReservations = findAll();
-		Collection<Reservation> testRet = new ArrayList<Reservation>();
-		for (Reservation r : allReservations) {
-			if (r.getGuestId().equals(id)) {
-				testRet.add(r);
-			}
-		}
-		return testRet;
-	}
-
-	public Collection<Reservation> findAllByApartmentId(String id) {
-		Collection<Reservation> allReservations = findAll();
-		Collection<Reservation> testRet = new ArrayList<Reservation>();
-		for (Reservation r : allReservations) {
-			if (r.getApartmentId().equals(id)) {
-				testRet.add(r);
-			}
-		}
-		return testRet;
 	}
 
 }
