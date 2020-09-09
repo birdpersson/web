@@ -13,9 +13,9 @@ const NewReservation = { template: '<new-reservation></new-reservation>' }
 const NewComment = { template: '<new-comment></new-comment>' }
 const AmenitiesOverview = { template: '<amenities-overview></amenities-overview>' }
 const NewAmenities = { template: '<new-amenities></new-amenities>' }
-const ApartInactiveOverview = { template: '<inactive-overview></inactive-overview>' }
 const NewApartment = { template: '<new-apartment></new-apartment>' }
 const ApartmentDetails = { template: '<apartment-details></apartment-details>' }
+const ApartmentEdit = { template: '<apartment-edit></apartment-edit>' }
 
 
 const Test = { template: '<test></test>' }
@@ -30,16 +30,15 @@ const routes = [
 	{ path: '/users', component: Users },
 	{ path: '/reservations', component: Reservations },
 	{ path: '/apartments', component: Apartments },
-	{ path: '/apartment/:id/comments', component: ApartmentsComments }, //vrv treba /apartmentComments:idApartmana
+	{ path: '/apartment/:id/comments', component: ApartmentsComments },
 	{ path: '/apartmentComments', component: ApartmentsComments },//za admina i hosta
-	{ path: '/apartment/:id/newReservation', component: NewReservation }, //vrv treba /apartmentComments:idApartmana
+	{ path: '/apartment/:id/newReservation', component: NewReservation },
 	{ path: '/newComment/:id', component: NewComment },
 
 	{ path: '/amenitiesOverview', component: AmenitiesOverview },
 	{ path: '/amenitiesNew', component: NewAmenities },
-	{ path: '/apartInactiveOverview', component: ApartInactiveOverview },
-	// { path: '/apartmentNew', component: NewApartment },
-	{ path: '/apartmentNew', component: Test },
+	{ path: '/apartmentNew', component: NewApartment },
+	{ path: '/apartment/:id/edit', component: ApartmentEdit},
 	{ path: '/apartment/:id/details', component: ApartmentDetails},
 
 	{ path: '/test', component: Test },

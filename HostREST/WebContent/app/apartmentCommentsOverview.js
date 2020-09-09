@@ -139,14 +139,9 @@ Vue.component('apartment-comments', {
             axios
             .put(`rest/reviews/${updatedComment.id}`, updatedComment)
             .then(response => {
-                // alert('Novi status response:\n'+response.data.visible);
                 this.getComments();
             })
         },
-
-        // checkCommentAfter(updatedComment){
-        //     alert(`Comment id: ${updatedComment.id}\nNovi status:${updatedComment.visible}`);
-        // },
 
     },
     computed:{

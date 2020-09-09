@@ -94,7 +94,7 @@ Vue.component('apartments', {
                         <td>{{apartment.status}}</td>
                         <td> <button class="btn-primary" v-on:click='showDetails(apartment.id)'> Details </button> </td>
                         <td v-if='isGuest'> <button class="btn-primary" v-on:click='makeReseravation(apartment.id)'> Reserv </button> </td>
-                        <td v-if='!isGuest'> <router-link  to="/apartmentNew"><button class="btn-primary"> Edit </button></router-link> </td>
+                        <td v-if='!isGuest'><button class="btn-primary" v-on:click='editApartment(apartment.id)'> Edit </button></td>
                         <td v-if='!isGuest'> <button class="btn-danger" v-on:click='showMessage'> Delete </button> </td>
                        
                     </tr>
@@ -107,11 +107,10 @@ Vue.component('apartments', {
             <!--Neaktivni stanovi i dodaj stan pripadaju hostu,
                 Komentari i rezervacije hostu i adminu,
                 dok sadrzaj apartmana samo adminu.-->
-            <router-link to="/apartmentComments"> <button class='classButton' v-if='!isGuest' >Komentari</button></router-link>
-            <router-link to="/apartInactiveOverview"> <button class='classButton' v-if='isHost'>Neaktivni stanovi</button></router-link>
-            <router-link to="/apartmentNew"> <button class='classButton' v-if='isHost'>Dodaj stan</button></router-link>
-            <router-link to="/reservations"> <button class='classButton' v-if='!isGuest'>Rezervacije</button></router-link>
-            <router-link to="/amenitiesOverview"> <button  class='classButton' v-if='isAdmin'>Sadrzaj apartmana</button></router-link>
+            <router-link to="/apartmentNew"> <button class='btn-lg classButton' v-if='isHost'>+ Add apartment</span></button></router-link>
+            <router-link to="/apartmentComments"> <button class='classButton' v-if='!isGuest' >Comments</button></router-link>
+            <router-link to="/reservations"> <button class='classButton' v-if='!isGuest'>Reservations</button></router-link>
+            <router-link to="/amenitiesOverview"> <button  class='classButton' v-if='isAdmin'>Amenities</button></router-link>
         </div>
     </div>
 
@@ -289,8 +288,10 @@ Vue.component('apartments', {
                 return false;
             }
             return true;
+        },
+        editApartment:function(id){
+            this.$router.push(`/apartment/${id}/edit`)
         }
-
     },
     computed: {
         sortedApartments: function () {
