@@ -153,66 +153,6 @@ Vue.component('apartments', {
             isGuest: false,
 
             apartments:[],
-            // apartments: [
-            //     {
-            //         id: '1',
-            //         type: 'APARTMENT',
-            //         rooms: 4,
-            //         location: 'Fiftieth street',
-            //         dates: '01.01.2020',
-            //         availability: true,
-            //         price: 250,
-            //         status: 'aktivan',
-            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Kitchen','Coffee maker'],
-            //     },
-            //     {
-            //         id: '2',
-            //         type: 'APARTMENT',
-            //         rooms: 6,
-            //         apartmentLocation: 'Main Boulevard 1',
-            //         dates: '01.01.2020',
-            //         availability: true,
-            //         price: 100,
-            //         status: 'aktivan',
-            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
-            //     },
-            //     {
-            //         id: '3',
-            //         type: 'ROOM',
-            //         rooms: 1,
-            //         location: 'Main Boulevard 2',
-            //         dates: '01.01.2020',
-            //         availability: true,
-            //         price: 150,
-            //         status: 'aktivan',
-            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
-            //     },
-            //     {
-            //         id: '4',
-            //         type: 'ROOM',
-            //         rooms: 1,
-            //         location: 'Main Boulevard 3',
-            //         dates: '01.01.2020',
-            //         availability: true,
-            //         price: 350,
-            //         status: 'neaktivno',
-            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
-            //     },
-            
-            //     {
-            //         id: '5',
-            //         type: 'APARTMENT',
-            //         rooms: 8,
-            //         location: 'Main Boulevard 2',
-            //         dates: '01.01.2020',
-            //         availability: true,
-            //         price: 450,
-            //         status: 'neaktivno',
-            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
-            //     },
-              
-
-            // ],
 
             //sortiranje:
             currentSort: 'price',

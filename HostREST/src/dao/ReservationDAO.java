@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import beans.Reservation;
+import beans.User;
 
 public class ReservationDAO {
 	private Map<String, Reservation> reservations = new HashMap<>();
@@ -29,6 +30,7 @@ public class ReservationDAO {
 		return reservations.values();
 	}
 
+	//Sve rezervacije jednog gosta 
 	public Collection<Reservation> findAllByGuestId(String id) {
 		Collection<Reservation> allReservations = findAll();
 		Collection<Reservation> testRet = new ArrayList<Reservation>();
@@ -39,7 +41,9 @@ public class ReservationDAO {
 		}
 		return testRet;
 	}
+	
 
+	//Sve rezervacije vezane za jedan stan
 	public Collection<Reservation> findAllByApartmentId(String id) {
 		Collection<Reservation> allReservations = findAll();
 		Collection<Reservation> testRet = new ArrayList<Reservation>();
@@ -50,6 +54,19 @@ public class ReservationDAO {
 		}
 		return testRet;
 	}
+	
+	//PROVERITI!!!!!!
+	public String findGuestByApartmentId(String apartmId){
+		Collection<Reservation> allReservations = findAll();
+		String retGuestId  = "";
+		for (Reservation r : allReservations) {
+			if (r.getApartmentId().equals(apartmId)) {
+				retGuestId = r.getGuestId();
+			}
+		}
+		return retGuestId;
+	}
+	
 
 	public Reservation findOne(String id) {
 		return reservations.containsKey(id) ? reservations.get(id) : null;

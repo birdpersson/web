@@ -6,7 +6,7 @@ Vue.component("apartment-details", {
   </div>
  
   <div id="test3" class="container">
-    <div class="col-lg-12">
+    <div class="col-lg-12"> 
       <div id='slidebar'>
         <header class="container">
           <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
