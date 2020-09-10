@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import beans.Apartment;
+import beans.Reservation;
 import beans.User;
 import dao.AmenityDAO;
 import dao.ApartmentDAO;
@@ -122,9 +123,14 @@ public class UserService {
 
 				// Zatim pronalazimo sve korisnike koji imaju trenutnu rezervaciju za neki stan
 				// tog hosta...
-				User guestByApar = userDao.findOne(reservationDao.findGuestByApartmentId(apar.getId()));
-				retVal.add(guestByApar);
-
+				Collection<Reservation> reservations = reservationDao.findAllByApartmentId(apar.getId());
+				for (Reservation r : reservations) {
+					User user = userDao.findOne(r.getGuestId());
+					if (!retVal.contains(user))
+						retVal.add(user);
+				}
+//				User guestByApar = userDao.findOne(reservationDao.findGuestByApartmentId(apar.getId()));
+//				retVal.add(guestByApar);
 			}
 			return Response.status(Response.Status.OK).entity(retVal).build();
 		}
