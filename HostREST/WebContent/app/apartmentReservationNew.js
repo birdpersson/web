@@ -26,6 +26,7 @@ Vue.component('new-reservation', {
                         v-model="dates.from" v-on:input="calculatePrice()">
                     </vuejsDatepicker>
                 </div>
+                <div style="margin-top:20px" v-if='messages.errorDates' class="alert alert-danger" v-html="messages.errorDates"></div>
 
                 <label>Number of nights:</label>
                 <select style="padding:7px; margin-right: 10px" id='NoOfNights' v-model="reservation.night"
@@ -80,7 +81,7 @@ Vue.component('new-reservation', {
                 to: null,
                 from: null,
                 price: null,
-                availability: []
+                reservations: []
             },
 
             disabledDates: {
@@ -89,12 +90,23 @@ Vue.component('new-reservation', {
                 from: null,
             },
 
+            ranges: [{ // Disable dates in given ranges (exclusive).
+                from: new Date(2020, 9, 25),
+                to: new Date(2020, 9, 30)
+              }, {
+                from: new Date(2020, 10, 12),
+                to: new Date(2020, 10, 15)
+              }],
+
             night: null,
             nights: null,
             dates: {
                 from: null,
                 to: null,
                 includeDisabled: true
+            },
+            messages: {
+                errorDates: ""
             }
         }
     },
@@ -105,22 +117,30 @@ Vue.component('new-reservation', {
             this.disabledDates.to = new Date(this.apartment.to);
             this.disabledDates.from = new Date(this.apartment.from);
 
-            if (this.availability != null) {
-                for (let i = 0; i < availability.length; i++) {
-                    //implement availability
-
-                    dates.push(this.disabledDates.range);
+            if (this.reservations != null) {
+                for (let i = 0; i < reservations.length; i++) {
+                    let available = {
+                        from: new Date(reservations[i].from),
+                        to: new Date(reservations[i].to),
+                    }
+                    this.disabledDates.ranges.push(available);
                     //cutting corners
                 }
             }
         },
         sendReservation() {
-            this.reservation.from = this.dates.from.getTime();
-            this.reservation.to = this.dates.to.getTime();
-            console.log(this.reservation);
-            axios
-                .post('rest/reservation', this.reservation)
-                .then(Response => (console.log(Response)));
+            if (this.dates.to >= this.disabledDates.from) {
+                this.messages.errorDates = `<h4>Reservation checkout date not available!</h4>`;
+                setTimeout(() => this.messages.errorDates = '', 20000);
+            } else {
+                this.reservation.from = this.dates.from.getTime();
+                this.reservation.to = this.dates.to.getTime();
+
+                console.log(this.reservation);
+                axios
+                    .post('rest/reservation', this.reservation)
+                    .then(Response => (console.log(Response)));
+            }
         },
 
         // pomocna metoda za ogranicen odabir dana:
@@ -145,18 +165,18 @@ Vue.component('new-reservation', {
             this.reservation.guestId = this.user.username;
         },
 
-        getApartmentData: function () {
-            axios
-                .get(`rest/apartment/${this.apartmentId}`)
-                .then(response => {
-                    this.apartment.type = response.data.type;
-                    this.apartment.rooms = response.data.rooms;
-                    this.apartment.price = response.data.price;
-                    this.apartment.location = response.data.location;
-                    this.disabledDates.to = response.data.to;
-                    this.disabledDates.from = response.data.from;
-                })
-        }
+        // getApartmentData: function () {
+        //     axios
+        //         .get(`rest/apartment/${this.apartmentId}`)
+        //         .then(response => {
+        //             this.apartment.type = response.data.type;
+        //             this.apartment.rooms = response.data.rooms;
+        //             this.apartment.price = response.data.price;
+        //             this.apartment.location = response.data.location;
+        //             this.disabledDates.to = response.data.to;
+        //             this.disabledDates.from = response.data.from;
+        //         })
+        // }
 
     },
     components: {
