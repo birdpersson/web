@@ -18,9 +18,11 @@ import javax.ws.rs.core.Response;
 
 import beans.Apartment;
 import beans.User;
+import dao.AmenityDAO;
 import dao.ApartmentDAO;
 import dao.LocationDAO;
 import dao.ReservationDAO;
+import dao.ReviewDAO;
 import dao.UserDAO;
 
 @Path("")
@@ -35,7 +37,6 @@ public class UserService {
 
 	@PostConstruct
 	public void init() {
-
 		if (ctx.getAttribute("userDAO") == null) {
 			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("userDAO", new UserDAO(contextPath));
@@ -44,14 +45,23 @@ public class UserService {
 			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("locationDAO", new LocationDAO(contextPath));
 		}
+		if (ctx.getAttribute("amenityDAO") == null) {
+			String contextPath = ctx.getRealPath("");
+			ctx.setAttribute("amenityDAO", new AmenityDAO(contextPath));
+		}
 		if (ctx.getAttribute("reservationDAO") == null) {
 			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("reservationDAO", new ReservationDAO(contextPath));
 		}
+		if (ctx.getAttribute("reviewDAO") == null) {
+			String contextPath = ctx.getRealPath("");
+			ctx.setAttribute("reviewDAO", new ReviewDAO(contextPath));
+		}
 		if (ctx.getAttribute("apartmentDAO") == null) {
 			String contextPath = ctx.getRealPath("");
-			ctx.setAttribute("apartmentDAO",
-					new ApartmentDAO(contextPath, (LocationDAO) ctx.getAttribute("locationDAO"), null, null, null));
+			ctx.setAttribute("apartmentDAO", new ApartmentDAO(contextPath,
+					(LocationDAO) ctx.getAttribute("locationDAO"), (AmenityDAO) ctx.getAttribute("amenityDAO"),
+					(ReservationDAO) ctx.getAttribute("reservationDAO"), (ReviewDAO) ctx.getAttribute("reviewDAO")));
 		}
 	}
 
