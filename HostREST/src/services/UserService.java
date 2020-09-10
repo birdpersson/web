@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 import beans.Apartment;
 import beans.User;
 import dao.ApartmentDAO;
+import dao.LocationDAO;
 import dao.ReservationDAO;
 import dao.UserDAO;
 
@@ -29,19 +30,7 @@ public class UserService {
 	ServletContext ctx;
 
 	public UserService() {
-		if (ctx.getAttribute("userDAO") == null) {
-			String contextPath = ctx.getRealPath("");
-			ctx.setAttribute("userDAO", new UserDAO(contextPath));
-		}
-		if (ctx.getAttribute("reservationDAO") == null) {
-			String contextPath = ctx.getRealPath("");
-			ctx.setAttribute("reservationDAO", new ReservationDAO(contextPath));
-		}
-		if (ctx.getAttribute("apartmentDAO") == null) {
-			String contextPath = ctx.getRealPath("");
-			ctx.setAttribute("apartmentDAO",
-					new ApartmentDAO(contextPath, null, null, null, null));
-		}
+		super();
 	}
 
 	@PostConstruct
@@ -51,13 +40,25 @@ public class UserService {
 			String contextPath = ctx.getRealPath("");
 			ctx.setAttribute("userDAO", new UserDAO(contextPath));
 		}
+		if (ctx.getAttribute("locationDAO") == null) {
+			String contextPath = ctx.getRealPath("");
+			ctx.setAttribute("locationDAO", new LocationDAO(contextPath));
+		}
+		if (ctx.getAttribute("reservationDAO") == null) {
+			String contextPath = ctx.getRealPath("");
+			ctx.setAttribute("reservationDAO", new ReservationDAO(contextPath));
+		}
+		if (ctx.getAttribute("apartmentDAO") == null) {
+			String contextPath = ctx.getRealPath("");
+			ctx.setAttribute("apartmentDAO",
+					new ApartmentDAO(contextPath, (LocationDAO) ctx.getAttribute("locationDAO"), null, null, null));
+		}
 	}
 
 	@GET
 	@Path("profile/{username}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getProfile(@Context HttpServletRequest request,
-			@PathParam("username") String username) {
+	public Response getProfile(@Context HttpServletRequest request, @PathParam("username") String username) {
 		if (AuthService.getUsername(request).equals(username)) {
 			UserDAO userDAO = (UserDAO) ctx.getAttribute("userDAO");
 			User user = userDAO.findOne(username);
@@ -70,8 +71,8 @@ public class UserService {
 	@Path("profile/{username}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response editProfile(@Context HttpServletRequest request,
-			@PathParam("username") String username, User user) {
+	public Response editProfile(@Context HttpServletRequest request, @PathParam("username") String username,
+			User user) {
 		if (AuthService.getUsername(request).equals(username)) {
 			UserDAO userDAO = (UserDAO) ctx.getAttribute("userDAO");
 			User newUser = userDAO.update(ctx.getRealPath(""), user);
@@ -92,8 +93,8 @@ public class UserService {
 		}
 		return Response.status(Response.Status.FORBIDDEN).build();
 	}
-	
-	//PROVERITI!!!!!!!
+
+	// PROVERITI!!!!!!!
 	@GET
 	@Path("user/customers")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -103,23 +104,23 @@ public class UserService {
 		ReservationDAO reservationDao = (ReservationDAO) ctx.getAttribute("reservationDAO");
 		ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
 		Collection<User> retVal = new ArrayList<User>();
-		
-		if(userDao.findOne(username).getRole().toString().equals("HOST")) {
-			//Prvo pronalazimo sve stanove vezane za tog hosta...
+
+		if (userDao.findOne(username).getRole().toString().equals("HOST")) {
+			// Prvo pronalazimo sve stanove vezane za tog hosta...
 			Collection<Apartment> hostsApart = apartmentDao.findAllApartByHostId(username);
-			for(Apartment apar : hostsApart) {
-				
-				//Zatim pronalazimo sve korisnike koji imaju trenutnu rezervaciju za neki stan tog hosta...
+			for (Apartment apar : hostsApart) {
+
+				// Zatim pronalazimo sve korisnike koji imaju trenutnu rezervaciju za neki stan
+				// tog hosta...
 				User guestByApar = userDao.findOne(reservationDao.findGuestByApartmentId(apar.getId()));
 				retVal.add(guestByApar);
 
 			}
-			return Response.status(Response.Status.OK).entity(retVal).build(); 
+			return Response.status(Response.Status.OK).entity(retVal).build();
 		}
 		return Response.status(Response.Status.FORBIDDEN).build();
 	}
-	
-	
+
 //	//Vracanje komentara spram id hosta. (za hosta)
 //	@GET
 //	@Path("/apartmentHost")
@@ -146,6 +147,5 @@ public class UserService {
 //		}
 //		return Response.status(Response.Status.FORBIDDEN).build();
 //	}
-	
 
 }
