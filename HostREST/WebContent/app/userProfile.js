@@ -28,11 +28,6 @@ Vue.component('profile', {
                         <h4>{{profile.gender}}</h4>
                     </li>
 
-                    <li class="list-group-item">
-                        <h5 style="color:#e8491d">Password:</h5>
-                        <h4>{{profile.password}}</h4>
-                    </li>
-
                 </ul>
 
                 <div id='buttonUpdate'>

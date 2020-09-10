@@ -94,7 +94,7 @@ Vue.component('apartments', {
                         <td>{{apartment.status}}</td>
                         <td> <button class="btn-primary" v-on:click='showDetails(apartment.id)'> Details </button> </td>
                         <td v-if='isGuest'> <button class="btn-primary" v-on:click='makeReseravation(apartment.id)'> Reserv </button> </td>
-                        <td v-if='!isGuest'> <router-link  to="/apartmentNew"><button class="btn-primary"> Edit </button></router-link> </td>
+                        <td v-if='!isGuest'><button class="btn-primary" v-on:click='editApartment(apartment.id)'> Edit </button></td>
                         <td v-if='!isGuest'> <button class="btn-danger" v-on:click='showMessage'> Delete </button> </td>
                        
                     </tr>
@@ -107,11 +107,10 @@ Vue.component('apartments', {
             <!--Neaktivni stanovi i dodaj stan pripadaju hostu,
                 Komentari i rezervacije hostu i adminu,
                 dok sadrzaj apartmana samo adminu.-->
-            <router-link to="/apartmentComments"> <button class='classButton' v-if='!isGuest' >Komentari</button></router-link>
-            <router-link to="/apartInactiveOverview"> <button class='classButton' v-if='isHost'>Neaktivni stanovi</button></router-link>
-            <router-link to="/apartmentNew"> <button class='classButton' v-if='isHost'>Dodaj stan</button></router-link>
-            <router-link to="/reservations"> <button class='classButton' v-if='!isGuest'>Rezervacije</button></router-link>
-            <router-link to="/amenitiesOverview"> <button  class='classButton' v-if='isAdmin'>Sadrzaj apartmana</button></router-link>
+            <router-link to="/apartmentNew"> <button class='btn-lg classButton' v-if='isHost'>+ Add apartment</span></button></router-link>
+            <router-link to="/apartmentComments"> <button class='classButton' v-if='!isGuest' >Comments</button></router-link>
+            <router-link to="/reservations"> <button class='classButton' v-if='!isGuest'>Reservations</button></router-link>
+            <router-link to="/amenitiesOverview"> <button  class='classButton' v-if='isAdmin'>Amenities</button></router-link>
         </div>
     </div>
 
@@ -154,66 +153,6 @@ Vue.component('apartments', {
             isGuest: false,
 
             apartments:[],
-            // apartments: [
-            //     {
-            //         id: '1',
-            //         type: 'APARTMENT',
-            //         rooms: 4,
-            //         location: 'Fiftieth street',
-            //         dates: '01.01.2020',
-            //         availability: true,
-            //         price: 250,
-            //         status: 'aktivan',
-            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Kitchen','Coffee maker'],
-            //     },
-            //     {
-            //         id: '2',
-            //         type: 'APARTMENT',
-            //         rooms: 6,
-            //         apartmentLocation: 'Main Boulevard 1',
-            //         dates: '01.01.2020',
-            //         availability: true,
-            //         price: 100,
-            //         status: 'aktivan',
-            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
-            //     },
-            //     {
-            //         id: '3',
-            //         type: 'ROOM',
-            //         rooms: 1,
-            //         location: 'Main Boulevard 2',
-            //         dates: '01.01.2020',
-            //         availability: true,
-            //         price: 150,
-            //         status: 'aktivan',
-            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
-            //     },
-            //     {
-            //         id: '4',
-            //         type: 'ROOM',
-            //         rooms: 1,
-            //         location: 'Main Boulevard 3',
-            //         dates: '01.01.2020',
-            //         availability: true,
-            //         price: 350,
-            //         status: 'neaktivno',
-            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
-            //     },
-            
-            //     {
-            //         id: '5',
-            //         type: 'APARTMENT',
-            //         rooms: 8,
-            //         location: 'Main Boulevard 2',
-            //         dates: '01.01.2020',
-            //         availability: true,
-            //         price: 450,
-            //         status: 'neaktivno',
-            //         amenities:['Cable TV','Washer','Wifi','Crib',"Pack'n Play",'Single level home','Refrigerator','Cooking basics']
-            //     },
-              
-
-            // ],
 
             //sortiranje:
             currentSort: 'price',
@@ -289,8 +228,10 @@ Vue.component('apartments', {
                 return false;
             }
             return true;
+        },
+        editApartment:function(id){
+            this.$router.push(`/apartment/${id}/edit`)
         }
-
     },
     computed: {
         sortedApartments: function () {

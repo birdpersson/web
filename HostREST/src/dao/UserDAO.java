@@ -43,6 +43,7 @@ public class UserDAO {
 	public User findOne(String id) {
 		return users.containsKey(id) ? users.get(id) : null;
 	}
+	
 
 	public User save(String contextPath, User user) {
 		String line = user.getUsername() + ";"
@@ -74,6 +75,9 @@ public class UserDAO {
 		users.put(user.getUsername(), user);
 		return user;
 	}
+	
+	
+
 
 	@SuppressWarnings("unused")
 	public User update(String contextPath, User user) {

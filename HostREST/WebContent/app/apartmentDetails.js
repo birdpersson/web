@@ -6,7 +6,7 @@ Vue.component("apartment-details", {
   </div>
  
   <div id="test3" class="container">
-    <div class="col-lg-12">
+    <div class="col-lg-12"> 
       <div id='slidebar'>
         <header class="container">
           <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -16,17 +16,10 @@ Vue.component("apartment-details", {
               <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
             </ol>
             <div class="carousel-inner"  role="listbox">
-              <!-- Slide One - Set the background image for this slide in the line below  "{background-image:  'url(' + getImgUrl() + ')}"-->
-             <div class="carousel-item active"   :style="{'background-image': 'url(' + this.apartment.images[0] + ')'}">
-                <!-- <div class="carousel-caption d-none d-md-block">
-                </div> -->
-              </div>
+              <!-- Slide One - Set the background image for this slide in the line below  "{background-image:-->
+              <div class="carousel-item active"   :style="{'background-image': 'url(' + this.apartment.images[0] + ')'}"></div>
               <!-- Slide Two - Set the background image for this slide in the line below -->
-            <div class="carousel-item" v-for="img in getOtherImgs" :style="{'background-image': 'url(' + img + ')'}">
-                <!-- <div class="carousel-caption d-none d-md-block">
-                </div> -->
-              </div> 
-    
+              <div class="carousel-item" v-for="img in getOtherImgs" :style="{'background-image': 'url(' + img + ')'}"></div> 
             </div>
             <a v-if='isOtherImgs' class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -181,7 +174,7 @@ Vue.component("apartment-details", {
       getFirstImg(){
         //provera da li ima slika za dati stan
         if(this.apartment.images == null){
-          img = ['./img/No_Image_Available.png'];
+          img = ['./img/NoImage.png'];
           // ako nema smesti noimage sliku
             this.apartment.images = img;
           }

@@ -98,32 +98,7 @@ public class ReviewsServices {
 		return Response.status(Response.Status.FORBIDDEN).build();
 	}
 
-//	//Vracanje komentara spram id hosta. (za hosta)
-//	@GET
-//	@Path("/apartmentHost")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Response getReviewsByHostId(@Context HttpServletRequest request, @QueryParam("id") String hostId) {
-//		String username = AuthService.getUsername(request);
-//		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-//		ReviewDAO reviewDao = (ReviewDAO) ctx.getAttribute("reviewDAO");
-//		ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
-//		Collection<Review> retVal = new ArrayList<Review>();
-//		
-//		if(userDao.findOne(username).getRole().toString().equals("HOST")) {
-//			//Prvo pronalazimo sve stanove vezane za tog hosta...
-//			Collection<Apartment> hostsApart = apartmentDao.findAllApartByHostId(hostId);
-//			for(Apartment apar : hostsApart) {
-//				
-//				//Prvo zatim pronalazimo sve komentare vezane za svaki stan tog hosta...
-//				Collection<Review> reviewsByApar = reviewDao.findAllByApartmentId(apar.getId());
-//				for(Review rev : reviewsByApar) {
-//					retVal.add(rev);
-//				}
-//			}
-//			return Response.status(Response.Status.OK).entity(retVal).build(); 
-//		}
-//		return Response.status(Response.Status.FORBIDDEN).build();
-//	}
+
 //	@GET
 //	@Path("/{id}")
 //	@Produces(MediaType.APPLICATION_JSON)

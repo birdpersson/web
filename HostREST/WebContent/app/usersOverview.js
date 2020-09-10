@@ -22,16 +22,12 @@ Vue.component('users', {
                             placeholder="username" aria-label="Search">
                         <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="searchedUser.role">
                             <option disabled value="">Role</option>
-                            <option>admin</option>
-                            <option>host</option>
-                            <option>guest</option>
+                            <option v-for="role in roles">{{role}}</option>
                         </select>
                         <select style="padding:7px; margin-right: 10px" id='listOfGenders'
                             v-model="searchedUser.gender">
                             <option disabled value="">Gender</option>
-                            <option>male</option>
-                            <option>female</option>
-                            <option>other</option>
+                            <option v-for="gender in genders">{{gender}}</option>
                         </select>
                         <button class="btn btn-outline-success my-2 my-sm-0" type="button"
                             v-on:click='searchUser()'>Search</button>
@@ -88,26 +84,42 @@ Vue.component('users', {
             users: [],
             searchedUser: {
                 username: '',
-                gender: '',
-                role: '',
+                gender: null,
+                role: null,
             },
+            searchedQuery:'?',
             isAdmin: false,
             isHost: false,
-            isGuest: false
+            isGuest: false,
+
+            roles:['ADMIN','HOST','GUEST'],
+            genders:['Male','Female','Other'],
         }
     },
     methods: {
         searchUser() {
-            alert(`Trazite usera ${this.searchedUser.username}
+            if(this.searchedUser.username !== ''){
+               this.searchedQuery += 'username=' + this.searchedUser.username;
+            }
+            if(this.searchedUser.gender !== null){
+                this.searchedQuery += '&gender=' + this.searchedUser.gender ;
+            }
+            if(this.searchedUser.role !== null){
+                this.searchedQuery += '&role=' + this.searchedUser.role;
+            }
+            console.log(`Trazite usera ${this.searchedUser.username}
             ${this.searchedUser.gender}
             ${this.searchedUser.role}
             `);
+
+            axios
+            .get('rest/user/search'+searchedQuery)
+            .then(response => this.users=response.data);
+
         }
     },
     mounted() {
-        axios
-        .get('rest/user/all')
-        .then(Response => (this.users=Response.data));
+
     },
     created() {
         this.user.username = localStorage.getItem('user');
@@ -115,9 +127,16 @@ Vue.component('users', {
         if (this.user.role == "ADMIN") {
             this.isAdmin = true;
             //get metoda koja vraca sve usere.
+            axios
+            .get('rest/user/all')
+            .then(Response => (this.users=Response.data));
+          
         } else if (this.user.role == "HOST") {
             this.isHost = true;
             //get metoda koja vraca sve usere tipa guest koji imaju rezervaciju kod tog hosta
+            axios
+            .get(`rest/user/customers`)
+            .then(Response => (this.users=Response.data));
         } else {
             this.isGuest = true;
         }
