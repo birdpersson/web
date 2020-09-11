@@ -72,7 +72,6 @@ public class ReservationService {
 		ReservationDAO reservationDao = (ReservationDAO) ctx.getAttribute("reservationDAO");
 		Reservation newReservation = reservationDao.save(ctx.getRealPath(""), reservation);
 
-		// TODO: check dates
 		return Response.status(Response.Status.CREATED).entity(newReservation).build();
 	}
 

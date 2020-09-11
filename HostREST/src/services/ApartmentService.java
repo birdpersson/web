@@ -81,8 +81,10 @@ public class ApartmentService {
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Apartment getApartment(@PathParam("id") String id) {
-		ApartmentDAO daoApertment = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
-		Apartment apartment = daoApertment.findOne(id);
+		ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+		ReservationDAO reservationDAO = (ReservationDAO) ctx.getAttribute("reservationDAO");
+		Apartment apartment = apartmentDAO.findOne(id);
+		apartment.setReservations(reservationDAO.findAllByApartmentId(id));
 		return apartment;
 	}
 

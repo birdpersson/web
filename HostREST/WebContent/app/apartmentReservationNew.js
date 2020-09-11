@@ -93,7 +93,7 @@ Vue.component('new-reservation', {
 			night: null,
 			nights: null,
 			dates: {
-				from: null,
+				from: new Date(),
 				to: null,
 				includeDisabled: true
 			},
@@ -120,19 +120,18 @@ Vue.component('new-reservation', {
 			}
 		},
 		sendReservation() {
-			for (let i = 0; i < this.disabledDates.ranges; i++) {
+			for (let i = 0; i < this.disabledDates.ranges.length; i++) {
 				if (this.dates.from <= this.disabledDates.ranges[i].from && this.dates.to > this.disabledDates.ranges[i].from) {
 					this.error = true;
-					// console.log(this.error);
 				}
 			}
-			if (this.dates.to >= this.disabledDates.from || this.error == true) {
+			if (this.dates.to >= this.disabledDates.from || this.error) {
 				this.messages.errorDates = `<h4>Reservation checkout date not available!</h4>`;
 				setTimeout(() => this.messages.errorDates = '', 10000);
 			} else {
 				// datepicker disables day after reservatoin.from
-				this.reservation.from = this.dates.from.getTime() - 1000 * 60 * 60 * 24;
-				this.reservation.to = this.dates.to.getTime();
+				this.reservation.from = this.dates.from.getTime();
+				this.reservation.to = this.dates.to.getTime() + 1000 * 60 * 60 * 24;
 
 				axios
 					.post('rest/reservation', this.reservation)
@@ -153,6 +152,7 @@ Vue.component('new-reservation', {
 		calculatePrice: function () {
 			this.reservation.price = this.reservation.night * this.apartment.price;
 			this.dates.to = new Date(this.dates.from.getTime() + this.reservation.night * 1000 * 60 * 60 * 24);
+			this.error = false;
 		},
 
 		insertReservData: function () {
