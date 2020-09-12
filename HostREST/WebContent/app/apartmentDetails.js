@@ -130,14 +130,10 @@ Vue.component("apartment-details", {
         </div>
       </div>
       <!-- /.card -->
-
     </div>
     <!-- /.col-lg-9 -->
-
     </div>
-
     </div>
-    
   </div>  <!-- /.test3 -->
 </div> <!--apartment details-->`,
     data: function () {

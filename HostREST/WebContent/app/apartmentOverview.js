@@ -83,6 +83,7 @@ Vue.component('apartments', {
                         <th v-if='isGuest'>Reserv</th>
                         <th v-if='!isGuest'>Edit</th>
                         <th v-if='!isGuest'>Delete</th>
+                        <th>Amenities TEST</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,7 +97,7 @@ Vue.component('apartments', {
                         <td v-if='isGuest'> <button class="btn-primary" v-on:click='makeReseravation(apartment.id)'> Reserv </button> </td>
                         <td v-if='!isGuest'><button class="btn-primary" v-on:click='editApartment(apartment.id)'> Edit </button></td>
                         <td v-if='!isGuest'> <button class="btn-danger" v-on:click='showMessage'> Delete </button> </td>
-                       
+                        <td>{{apartment.amenities}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -229,6 +230,7 @@ Vue.component('apartments', {
             }
             return true;
         },
+        
         editApartment:function(id){
             this.$router.push(`/apartment/${id}/edit`)
         }
