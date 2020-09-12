@@ -42,7 +42,7 @@ public class ApartmentDAO {
 	}
 
 	public Collection<Apartment> findAllApartByHostId(String id) {
-		Collection<Apartment> allApartments = findAll();
+		Collection<Apartment> allApartments = apartments.values();
 		Collection<Apartment> testApart = new ArrayList<Apartment>();
 		for (Apartment a : allApartments) {
 			if (a.getHost().equals(id)) {

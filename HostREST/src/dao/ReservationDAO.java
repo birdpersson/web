@@ -57,7 +57,7 @@ public class ReservationDAO {
 	
 	//PROVERITI!!!!!!
 	public String findGuestByApartmentId(String apartmId){
-		Collection<Reservation> allReservations = findAll();
+		Collection<Reservation> allReservations = this.findAll();
 		String retGuestId  = "";
 		for (Reservation r : allReservations) {
 			if (r.getApartmentId().equals(apartmId)) {

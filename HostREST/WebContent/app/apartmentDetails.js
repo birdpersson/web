@@ -1,12 +1,12 @@
 Vue.component("apartment-details", {
   template: `<div id="apartment-details">
   <div class="container" id='page-title'>
-      <h1 style="margin-top:10px;color:#35424a;">Apartment <span id='titleEffect'>Details</span></h1>
+      <h1 style="margin-top:10px;color:#35424a;">Apartment #second <span id='titleEffect'>Details</span></h1>
       <hr style='background:#e8491d;height:1px;'>
   </div>
- 
+
   <div id="test3" class="container">
-    <div class="col-lg-12"> 
+    <div class="col-lg-12">
       <div id='slidebar'>
         <header class="container">
           <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -16,10 +16,17 @@ Vue.component("apartment-details", {
               <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
             </ol>
             <div class="carousel-inner"  role="listbox">
-              <!-- Slide One - Set the background image for this slide in the line below  "{background-image:-->
-              <div class="carousel-item active"   :style="{'background-image': 'url(' + this.apartment.images[0] + ')'}"></div>
+              <!-- Slide One - Set the background image for this slide in the line below  "{background-image:  'url(' + getImgUrl() + ')}"-->
+             <div class="carousel-item active"   :style="{'background-image': 'url(' + this.apartment.images[0] + ')'}">
+                <!-- <div class="carousel-caption d-none d-md-block">
+                </div> -->
+              </div>
               <!-- Slide Two - Set the background image for this slide in the line below -->
-              <div class="carousel-item" v-for="img in getOtherImgs" :style="{'background-image': 'url(' + img + ')'}"></div> 
+            <div class="carousel-item" v-for="img in getOtherImgs" :style="{'background-image': 'url(' + img + ')'}">
+                <!-- <div class="carousel-caption d-none d-md-block">
+                </div> -->
+              </div> 
+    
             </div>
             <a v-if='isOtherImgs' class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -101,6 +108,7 @@ Vue.component("apartment-details", {
         <div class="card-header">
           <h4>Apartment Reviews</h4>
         </div>
+
         <div class="card-body" v-for="review in apartment.reviews">
           <div style="margin-bottom: 10px;" id='star-rating'>
               <star-rating
@@ -115,7 +123,10 @@ Vue.component("apartment-details", {
           <p>{{review.text}}</p>
           <small class="text-muted">Posted by {{review.guestId}}</small>
           <hr>
+        </div>
 
+        <div v-show='noReview' class="card-body">
+          <h3>There are no reviews for this apartment...</h3>
         </div>
       </div>
       <!-- /.card -->
@@ -138,6 +149,7 @@ Vue.component("apartment-details", {
             isAdmin: false,
             isHost: false,
             isGuest: false,
+
             apartment: {
               type: null,
               rooms: null,
@@ -159,7 +171,8 @@ Vue.component("apartment-details", {
               price: null,
               checkin: '',
               checkout: '',
-              amenities: []
+              amenities: [],
+              reviews:[]
             },
             amenities:{
                 base:[],
@@ -168,18 +181,20 @@ Vue.component("apartment-details", {
                 fac:[],
             },
             isOtherImgs: true,
+            noReview: false,
         }
     },
     methods: {
-      getFirstImg(){
+      getFirstImg:function(){
         //provera da li ima slika za dati stan
         if(this.apartment.images == null){
-          img = ['./img/NoImage.png'];
+          img = ['./img/No_Image_Available.png'];
           // ako nema smesti noimage sliku
             this.apartment.images = img;
+            console.log(this.apartment.images[0])
           }
       },
-      arrangeAmenities(){
+      arrangeAmenities:function(){
         for(let i = 0; i< this.apartment.amenities.length; i++){
           if(this.apartment.amenities[i].type === 'Base'){
             this.amenities.base.push(this.apartment.amenities[i].name);
@@ -194,6 +209,14 @@ Vue.component("apartment-details", {
             this.amenities.fac.push(this.apartment.amenities[i].name);
           }
         }
+      },
+      noComment:function(){        
+        if(this.apartment.reviews === undefined || this.apartment.reviews.length === 0){
+          this.noReview = true;
+        }else{
+          this.noReview = false;
+        }
+
       }
     },
     computed: {
@@ -233,8 +256,10 @@ Vue.component("apartment-details", {
           this.apartment = response.data;
           this.getFirstImg();
           this.arrangeAmenities();
+          this.noComment();
       })
   },
   
 })
+
 

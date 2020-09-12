@@ -113,7 +113,7 @@ Vue.component('users', {
             `);
 
             axios
-            .get('rest/user/search'+searchedQuery)
+            .get('rest/user/search'+ this.searchedQuery)
             .then(response => this.users=response.data);
 
         }
