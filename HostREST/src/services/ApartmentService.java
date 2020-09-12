@@ -1,6 +1,11 @@
 package services;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -14,6 +19,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.glassfish.jersey.media.multipart.ContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.glassfish.jersey.message.internal.ReaderWriter;
 
 import beans.Apartment;
 import dao.AmenityDAO;
@@ -103,6 +113,32 @@ public class ApartmentService {
 		Apartment newApartment = apartmentDao.save(ctx.getRealPath(""), apartment);
 
 		return Response.status(Response.Status.CREATED).entity(newApartment).build();
+	}
+
+	@POST
+	@Path("/{id}/upload")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public Response uploadPhotos(@Context HttpServletRequest request,
+			@PathParam("id") String id, FormDataMultiPart multiPart) {
+		List<FormDataBodyPart> fields = multiPart.getFields("image");
+		for (FormDataBodyPart filePart : fields) {
+			ContentDisposition fileDetail = filePart.getContentDisposition();
+
+			// TODO: Check if paths work on windows
+			String path = ctx.getRealPath("") + "images/" + id;
+			new File(path).mkdirs();
+			File file = new File(path, fileDetail.getFileName());
+
+			try (FileOutputStream out = new FileOutputStream(file)) {
+				ReaderWriter.writeTo(filePart.getEntityAs(InputStream.class), out);
+				// TODO: Save to file (apartmentDAO)
+			} catch (IOException e) {
+				e.printStackTrace();
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+			}
+		}
+		return Response.status(Response.Status.CREATED).build();
 	}
 
 }
