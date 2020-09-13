@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import beans.Amenity;
-import beans.AmenityDTO;
 import beans.Apartment;
 import beans.Location;
 import beans.Reservation;
@@ -145,12 +144,11 @@ public class ApartmentDAO {
 					// TODO: Migrate to ApartmentService (shouldn't call other dao's here)
 					ArrayList<String> images = loadImages(contextPath, id);
 					ArrayList<Amenity> amenities = amenityDAO.findAllByApartmentId(contextPath, id);
-					ArrayList<AmenityDTO> amenitiesDTO = amenityDAO.findAllByApartmentIdDTO(contextPath, id);
 					Collection<Reservation> reservations = reservationDAO.findAllByApartmentId(id);
 					Collection<Review> reviews = reviewDAO.findAllByApartmentId(id);
 					
 					apartments.put(id, new Apartment(id, type, rooms, guests, location, to, from, reservations,
-							host, reviews, images, price, checkin, checkout, status, amenities, amenitiesDTO));
+							host, reviews, images, price, checkin, checkout, status, amenities));
 				}
 			}
 		} catch (Exception e) {
@@ -182,6 +180,7 @@ public class ApartmentDAO {
 				} catch (Exception e) { }
 			}
 		}
+		loadApartments(contextPath);
 	}
 
 	private ArrayList<String> loadImages(String contextPath, String id) {

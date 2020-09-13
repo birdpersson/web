@@ -25,7 +25,6 @@ public class Apartment {
 	private ArrayList<Amenity> amenities;
 	private Collection<Reservation> reservations;
 	private Collection<Review> reviews;
-	private ArrayList<AmenityDTO> amenitiesDTO;
 
 	public Apartment() {
 		super();
@@ -33,7 +32,7 @@ public class Apartment {
 
 	public Apartment(String id, Type type, int rooms, int guests, Location location, long to, long from,
 			Collection<Reservation> availability, String host, Collection<Review> reviews, ArrayList<String> images,
-			int price, String checkin, String checkout, String status, ArrayList<Amenity> amenities, ArrayList<AmenityDTO> dto) {
+			int price, String checkin, String checkout, String status, ArrayList<Amenity> amenities) {
 		super();
 		this.id = id;
 		this.type = type;
@@ -51,15 +50,6 @@ public class Apartment {
 		this.checkout = checkout;
 		this.status = status;
 		this.amenities = amenities;
-		this.amenitiesDTO = dto;
-	}
-
-	public ArrayList<AmenityDTO> getAmenitiesDTO() {
-		return amenitiesDTO;
-	}
-
-	public void setAmenitiesDTO(ArrayList<AmenityDTO> amenitiesDTO) {
-		this.amenitiesDTO = amenitiesDTO;
 	}
 
 	public String getId() {
