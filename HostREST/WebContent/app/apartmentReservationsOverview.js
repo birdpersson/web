@@ -62,8 +62,7 @@ Vue.component('reservations', {
                         <th>Confirmation</th>
                         <th>Status</th>
                         <th v-if='isHost'>Status</th>
-                        <!-- <th v-if='isHost'>Status</th>
-                        <th v-if='isHost'>Status</th> -->
+                
                     </tr>
                 </thead>
                 <tbody>

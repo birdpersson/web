@@ -365,16 +365,29 @@ Vue.component("test", {
             this.user.role = localStorage.getItem('role');
             if (this.user.role == "ADMIN") {
                 this.isAdmin = true;
+                axios
+                .get('rest/apartment')
+                .then(response => {
+                    this.apartments = response.data;
+                })  
             } else if (this.user.role == "HOST") {
+                console.log('role: ' + this.user.role);
                 this.isHost = true;
+                axios
+                .get('rest/apartment/host')
+                .then(response => {
+                    this.apartments = response.data;
+                    console.log('Response kod hosta!');
+                })  
             } else {
                 this.isGuest = true;
+                axios
+                .get('rest/apartment')
+                .then(response => {
+                    this.apartments = response.data;
+                })  
             }
-            axios
-            .get('rest/apartment')
-            .then(response => {
-                this.apartments = response.data;
-            })  
+    
             
             axios
             .get('rest/amenity/all')
