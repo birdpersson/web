@@ -161,6 +161,7 @@ public class ReservationDAO {
 			e.printStackTrace();
 			return null;
 		}
+		loadReservations(contextPath);
 		return reservation;
 	}
 

@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import beans.Amenity;
+import beans.AmenityDTO;
 
 public class AmenityDAO {
 	private Map<String, Amenity> amenities = new HashMap<>();
@@ -117,6 +118,43 @@ public class AmenityDAO {
 					String amenityId = st.nextToken().trim();
 					if (apartmentId.equals(id)) {
 						returnAmenities.add(amenities.get(amenityId));
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (Exception e) {
+					return null;
+				}
+			}
+		}
+		return returnAmenities;
+	}
+	public ArrayList<AmenityDTO> findAllByApartmentIdDTO(String contextPath, String id) {
+		ArrayList<AmenityDTO> returnAmenities = new ArrayList<>();
+		BufferedReader in = null;
+		try {
+			File file = new File(contextPath + "/apartment_amenities.txt");
+			in = new BufferedReader(new FileReader(file));
+			String line;
+			StringTokenizer st;
+			while ((line = in.readLine()) != null) {
+				line = line.trim();
+				if (line.equals("") || line.indexOf('#') == 0)
+					continue;
+				st = new StringTokenizer(line, ";");
+				while (st.hasMoreTokens()) {
+					String apartmentId = st.nextToken().trim();
+					String amenityId = st.nextToken().trim();
+					if (apartmentId.equals(id)) {
+						Amenity amenity = amenities.get(amenityId);
+						AmenityDTO amenityDTO = new AmenityDTO(amenity.getId(), amenity.getName());
+						returnAmenities.add(amenityDTO);
 					}
 				}
 			}
