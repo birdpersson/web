@@ -29,12 +29,12 @@ const routes = [
 	{ path: '/patient/update', component: ProfileUpdate },
 	{ path: '/users', component: Users },
 	{ path: '/reservations', component: Reservations },
-	{ path: '/apartments', component: Apartments },
+	// { path: '/apartments', component: Apartments },
+	{ path: '/apartments', component: Test },
 	{ path: '/apartment/:id/comments', component: ApartmentsComments },
 	{ path: '/apartmentComments', component: ApartmentsComments },//za admina i hosta
 	{ path: '/apartment/:id/newReservation', component: NewReservation },
 	{ path: '/newComment/:id', component: NewComment },
-
 	{ path: '/amenitiesOverview', component: AmenitiesOverview },
 	{ path: '/amenitiesNew', component: NewAmenities },
 	{ path: '/apartmentNew', component: NewApartment },

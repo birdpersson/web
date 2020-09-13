@@ -7,6 +7,8 @@ Vue.component('new-reservation', {
     </div>
 
     <div id='main' class='container'>
+        <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
+        <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
         <div v-if='isGuest'>
             <div class="card-body">
                 <h3 class="card-title">
@@ -20,22 +22,25 @@ Vue.component('new-reservation', {
                 </h3>
                 <hr style='background:#e8491d;height:1px;'>
 
+
+                <div style="margin-top:20px" v-if='messages.errorDates' class="alert alert-danger" v-html="messages.errorDates"></div>
                 <label>Select Checkin Date:</label>
                 <div>
                     <vuejsDatepicker :inline="true" :disabled-dates="disabledDates" :highlighted="dates"
-                        v-model="dates.from" v-on:input="calculatePrice()">
+                        v-model="dates.from" v-on:input="calculatePriceAndDate()">
                     </vuejsDatepicker>
                 </div>
-                <div style="margin-top:20px" v-if='messages.errorDates' class="alert alert-danger" v-html="messages.errorDates"></div>
 
                 <label>Number of nights:</label>
-                <select style="padding:7px; margin-right: 10px" id='NoOfNights' v-model="reservation.night"
-                    v-on:click="calculatePrice()">
+                <select style="padding:7px; margin-right: 10px" id='NoOfNights'  v-model="reservation.night"
+                    v-on:click="calculatePriceAndDate()">
                     <option disabled value="">No. of nights</option>
                     <option v-for='night in nights'>{{night}}</option>
                 </select>
+                <h2>Selected: {{reservation.night}}</h2>
                 <label for="">Price:</label>
                 <h4>{{reservation.price}}$ </h4>
+                <div style="margin-top:20px" v-if='messages.errorMessage' class="alert alert-danger" v-html="messages.errorMessage"></div>
                 <label>Message:</label>
                 <textarea v-model='reservation.message' placeholder="Enter message..."></textarea>
                 <button class="btn btn-lg btn-success" v-on:click='sendReservation'> Send </button>
@@ -93,14 +98,18 @@ Vue.component('new-reservation', {
 			night: null,
 			nights: null,
 			dates: {
-				from: new Date(),
+				from: null,
 				to: null,
 				includeDisabled: true
 			},
 			messages: {
-				errorDates: ""
+				errorDates: '',
+				errorMessage: '',
+				errorResponse:'',
+                successResponse:'',
 			},
-			error: false
+			error: false,
+            
 		}
 	},
 	methods: {
@@ -108,6 +117,8 @@ Vue.component('new-reservation', {
 			this.apartment = data;
 			this.disabledDates.to = new Date(this.apartment.to);
 			this.disabledDates.from = new Date(this.apartment.from);
+
+			this.insertReservData();
 
 			if (this.apartment.reservations != null) {
 				for (let i = 0; i < this.apartment.reservations.length; i++) {
@@ -117,7 +128,7 @@ Vue.component('new-reservation', {
 					}
 					this.disabledDates.ranges.push(available);
 				}
-			}
+			} 
 		},
 		sendReservation() {
 			for (let i = 0; i < this.disabledDates.ranges.length; i++) {
@@ -125,19 +136,46 @@ Vue.component('new-reservation', {
 					this.error = true;
 				}
 			}
-			if (this.dates.to >= this.disabledDates.from || this.error) {
-				this.messages.errorDates = `<h4>Reservation checkout date not available!</h4>`;
+			//Provera da li je unet datum
+			if(this.dates.to == null){
+				this.messages.errorDates = `<h4>Reservation checkout date can't be empty!</h4>`;
 				setTimeout(() => this.messages.errorDates = '', 10000);
-			} else {
+			}
+			//Ako je datum unet provera da li je dostupan
+			else if (this.dates.to >= this.disabledDates.from || this.error) {
+				this.messages.errorDates = `<h4>Filed checkout date not available!</h4>`;
+				setTimeout(() => this.messages.errorDates = '', 10000);
+			}
+			//Provera da li je unet tekst poruke
+			else if (this.reservation.message == '') {
+				this.messages.errorMessage = `<h4>Message can't be empty!</h4>`;
+				setTimeout(() => this.messages.errorMessage = '', 10000);
+			}
+			else {
 				// datepicker disables day after reservatoin.from
 				this.reservation.from = this.dates.from.getTime();
 				this.reservation.to = this.dates.to.getTime() + 1000 * 60 * 60 * 24;
 
 				axios
 					.post('rest/reservation', this.reservation)
-					.then(Response => (console.log(Response)));
+					.then(response => {
+						this.messages.successResponse = `<h4>Your reservation was sent successfully!</h4>`;
+						this.reservation.message='';
+						this.reservation.night = 1;
+						this.reservation.price = this.apartment.price;
+						setTimeout(() => this.messages.successResponse='', 5000);
+	
+					})
+					.catch(error => {
+						if(error.response.status === 500 || error.response.status === 404){
+							this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
+							setTimeout(() => this.messages.errorResponse='', 5000);
+						}
+					});
 			}
 		},
+
+	
 
 		// pomocna metoda za ogranicen odabir dana:
 		range: function (start = 1, end) {
@@ -148,8 +186,8 @@ Vue.component('new-reservation', {
 			return ans;
 		},
 
-		//Metoda za automatsko racunanje cene rezervacija spram cene apartmana * broj nocenja
-		calculatePrice: function () {
+		//Metoda za automatsko racunanje krajneg datuma spram broja nocenja i cene rezervacija spram cene apartmana * broj nocenja
+		calculatePriceAndDate: function () {
 			this.reservation.price = this.reservation.night * this.apartment.price;
 			this.dates.to = new Date(this.dates.from.getTime() + this.reservation.night * 1000 * 60 * 60 * 24);
 			this.error = false;
@@ -158,23 +196,16 @@ Vue.component('new-reservation', {
 		insertReservData: function () {
 			// dodaje se u rezervaciju id apartmana za koji se pravi rezervacija
 			this.reservation.apartmentId = this.apartmentId;
+
 			// dodaje se u rezervaciju id gusta koji pravi rezervaciju
 			this.reservation.guestId = this.user.username;
+
+			// dodaje se u rezervaciju inicijalni broj nocenja koji je uvek bar 1
+			this.reservation.night = 1;
+
+			// dodaje se u rezervaciju cene rezervacije spram cene apartmana * broj nocenja kao i krajnji datum;
+			this.calculatePriceAndDate();
 		},
-
-		// getApartmentData: function () {
-		//     axios
-		//         .get(`rest/apartment/${this.apartmentId}`)
-		//         .then(response => {
-		//             this.apartment.type = response.data.type;
-		//             this.apartment.rooms = response.data.rooms;
-		//             this.apartment.price = response.data.price;
-		//             this.apartment.location = response.data.location;
-		//             this.disabledDates.to = response.data.to;
-		//             this.disabledDates.from = response.data.from;
-		//         })
-		// }
-
 	},
 	components: {
 		vuejsDatepicker
@@ -196,8 +227,6 @@ Vue.component('new-reservation', {
 			//preuzima se id apartmana iz url-a
 			this.apartmentId = this.id;
 
-			this.insertReservData();
-			// this.getApartmentData();
 		}
 
 	},
@@ -206,7 +235,9 @@ Vue.component('new-reservation', {
 		this.nights = this.range(1, 28);
 
 		axios
-			.get('rest/apartment/' + this.$route.params.id)
-			.then(Response => (this.setApartment(Response.data)));
+		.get('rest/apartment/' + this.$route.params.id)
+		.then(Response => (this.setApartment(Response.data)));
+
+	
 	}
 });

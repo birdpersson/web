@@ -26,16 +26,16 @@ Vue.component('amenities-overview', {
                     <tr>
                         <th>Name</th>
                         <th>Type</th>
-                        <th>In apartment</th>
                         <th>Change name</th>
+                        <th>Delete amenity</th>
                     </tr>
                 </thead>
                 <tbody>
                 <tr v-for='amenity in amenities'>
                     <td>{{amenity.name}}</td>
                     <td>{{amenity.type}}</td>
-                    <td>{{amenity.apartmentId}}</td>
                     <td><a href="#edit-amenity"><button v-on:click='showEdit(amenity)'> edit </button></a></td>
+                    <td><a href="#delete-amenity"><button v-on:click='deleteAmenity(amenity)'> delete </button></a></td>
                 </tr>
                 </tbody>
             </table>
@@ -112,7 +112,7 @@ Vue.component('amenities-overview', {
             newAmenity:{
                 name:'',
                 type:'',
-                apartmentId:[],
+                // apartmentId:[],
             },
             isAddNew:false,
             isEdit:false,
@@ -120,7 +120,7 @@ Vue.component('amenities-overview', {
                 id:'',
                 name:'',
                 type:'',
-                apartmentId:[],
+                // apartmentId:[],
             },
             beckupName:'',
 
@@ -135,7 +135,7 @@ Vue.component('amenities-overview', {
     methods: {
         showAllAmenities:function(){
             axios
-            .get('rest/amenity/')
+            .get('rest/amenity/all')
             .then(response => {
                 this.amenities=response.data;
             })
@@ -242,6 +242,12 @@ Vue.component('amenities-overview', {
                 });
             }
         },
+
+        deleteAmenity:function(amenity){
+            if(confirm('Are you sure that you whant to delete this amenity?')){
+                alert('Ovaj amenity je obrisan!!!')
+            }
+        }
     },
     created() {
         this.user.username = localStorage.getItem('user');

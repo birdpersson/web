@@ -1,383 +1,389 @@
 Vue.component("test", {
-  template: `
-  <div id="new-apartment">
-    <div class="container" id='page-title'>
-      <h1 style="margin-top:10px;color:#35424a;"> New/<span id='titleEffect'>Edit Apartment TEST</span></h1>
-      <hr style='background:#e8491d;height:1px;'>
-    </div>
-  
-    <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
-    <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
-    <div class="container" id='main'>
-      <div>
-        <div style="margin-top:20px" v-if='messages.errorType' class="alert alert-danger" v-html="messages.errorType"></div>          
-        <label>Type of apartment</label>
-        <select v-model="apartment.type">
-          <option v-for="type in types" v-on:click="checkApartment">{{type}}</option>
-        </select>
-  
-        <div style="margin-top:20px" v-if='messages.errorRooms' class="alert alert-danger" v-html="messages.errorRooms"></div>          
-        <label>Number of rooms</label>
-        <select v-show="isApartment" v-model="apartment.rooms">
-          <option disabled value="">No. of rooms</option>
-          <option v-for="room in rooms">{{room}}</option>
-        </select>
-        <div v-show="!isApartment">
-          <img src="./img/negativ1.1.png" alt=""> <span>This option is anavailable</span>
+    template: `
+    <div id="apartments-overview">
+        <div class="container" id='page-title'>
+            <h1 style="margin-top:10px;color:#35424a;">List of <span id='titleEffect'>Apartments TEST</span></h1>
+            <hr style='background:#e8491d;height:1px;'>
         </div>
-  
-        <div style="margin-top:20px" v-if='messages.errorGuests' class="alert alert-danger" v-html="messages.errorGuests"></div>          
-        <label>Number of guests</label>
-        <select v-model="apartment.guests">
-          <option disabled value="">No. of guests</option>
-          <option v-for="guest in guests">{{guest}}</option>
-        </select>
-  
-        <div style="margin-top:20px" v-if='messages.errorLocation' class="alert alert-danger" v-html="messages.errorLocation"></div>          
-        <label>Location</label>
-        <input class='half-size' type="text" placeholder="Enter location latitude..."
-          v-model='apartment.location.latitude'> -
-        <input class='half-size' type="text" placeholder="Enter location longitude..."
-          v-model='apartment.location.longitude'>
-  
-        <div style="margin-top:20px" v-if='messages.errorAddress' class="alert alert-danger" v-html="messages.errorAddress"></div>          
-          <label>Address</label>
-          <div> 
-            <input class="one-third" placeholder="Enter street" v-model='apartment.location.address.street'>
-            <input class="one-third" placeholder="Enter city" v-model='apartment.location.address.city'>
-            <input class="one-third" placeholder="Enter postal code" v-model='apartment.location.address.postalCode'>
-          </div>
-      
-        <div style="margin-top:20px" v-if='messages.errorPrice' class="alert alert-danger" v-html="messages.errorPrice"></div>          
-        <label>Price</label>
-        <input id='price' type="text" placeholder="Enter price..." v-model='apartment.price'>
-  
-        <div style="margin-top:20px" v-if='messages.errorCheckInOut' class="alert alert-danger" v-html="messages.errorCheckInOut"></div>          
-        <label>Time to checkin & checkout</label>
-        <input class='half-size' type="text" placeholder="Checkin..." v-model='apartment.checkin'> -
-        <input class='half-size' type="text" placeholder="Checkout..." v-model='apartment.checkout'>
-  
-        <div style="margin-top:20px" v-if='messages.errorDates' class="alert alert-danger" v-html="messages.errorDates"></div>          
-        <label>Dates available</label>
-        <div class="row">
-          <div class="col">
-            <vuejsDatepicker placeholder="Select Checkin Date" v-model="dates.from" :highlighted="dates" :disabled-dates="disabledDates">
-            </vuejsDatepicker>
-          </div>
-          <div class="col">
-            <vuejsDatepicker placeholder="Select Checkout Date" v-model="dates.to" :highlighted="dates" :disabled-dates="disabledDates">
-            </vuejsDatepicker>
-          </div>
+    
+        <div class='container 'id='filter'>
+            <nav class="navbar navbar-light bg-light justify-content-between">
+                <a class="navbar-brand">Filter</a>
+                <form class="form-inline">
+                    <div>
+                       <link style='display:inline;'><img v-on:click='isFilter = !isFilter' src='img/filterIcon1.1.png' style="display:inline;"></link>
+                        <div style='display:inline;' v-show='isFilter'>
+                            <select v-if='isActive()' style="padding:7px; margin-right: 10px" id='listOfTypes' v-model="filterQueryType">
+                                <option disabled value="">Types</option>
+                                <option v-for='type in types'>{{type}}</option>
+                            </select>
+                            <select v-if='!isGuest' style="padding:7px; margin-right: 10px" id='listOfStatuses'v-model="filterQueryStatus" >
+                                <option disabled value="">Status</option>
+                                <option v-for='status in statuses'>{{status}}</option>
+                            </select>
+                            <select v-if='isActive()' style="padding:7px; margin-right: 10px" id='typeOfAmenities' v-model="choosenType">
+                                <option disabled value="">Type of amenity</option>
+                                <option v-for='amenType in typeOfAmenity' v-on:click='showAmenity'>{{amenType}}</option>
+                            </select>
+                            <select v-if='isActive()' style="padding:7px; margin-right: 10px" id='listOfAmenities' v-model="filterQueryAmanity">
+                                <option disabled value="">Amenities</option>
+                                <option v-for='amenity in shownAmenities'>{{amenity}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </nav>
         </div>
-  
-        <div style="margin-top:20px" v-if='messages.errorAmenities' class="alert alert-danger" v-html="messages.errorAmenities"></div>          
-        <label>Amenities</label>
-        <div id='amenities' style="margin-top:20px">
-            <div class="row">
-              <div class="col-md-3 col-sm-6 mb-4">
-                  <h4>Base</h4>
-                  <ul style="list-style: none; padding-left:0px" v-for="base in amenities.base">
-                    <li><input :value="base" v-model="apartment.amenities" type="checkbox"> {{base.name}}</li>
-                  </ul>
-              </div>
-  
-            <div class="col-md-3 col-sm-6 mb-4">
-                <h4>Family</h4>
-                <ul style="list-style: none; padding-left:0px" v-for="family in amenities.family">
-                    <li><input :value="family" v-model="apartment.amenities" type="checkbox"> {{family.name}}</li>
-                </ul>
-            </div>
-  
-            <div class="col-md-3 col-sm-6 mb-4">
-                <h4>Dining</h4>
-                <ul style="list-style: none; padding-left:0px" v-for="dining in amenities.dining">
-                    <li><input :value="dining" v-model="apartment.amenities" type="checkbox"> {{dining.name}}</li>
-                </ul>
-            </div>
-  
-            <div class="col-md-3 col-sm-6 mb-4">
-                <h4>Facilities</h4>
-                <ul style="list-style: none; padding-left:0px" v-for="fac in amenities.fac">
-                    <li><input :value="fac" v-model="apartment.amenities" type="checkbox"> {{fac.name}}</li>
-                </ul>
-            </div>
-            
-          </div> <!--.row-->
-        </div><!--#amenities-->
-
-        <div>
-          <label>Images</label>
-          <input type="file" class="filestyle" multiple v-on:change="handleFileUploads()">	
+        <div class='container 'id='search'>
+            <nav class="navbar navbar-light bg-light justify-content-between">
+                <a class="navbar-brand">Search</a>
+                <form class="form-inline">
+                    <div>
+                        <link style='display:inline;'><img v-on:click='isSearch = !isSearch' src='img/searchIcon1.1.png' style="display:inline;"></link>
+                        <div style='display:inline;' v-show='isSearch'>
+                            <span>From</span>
+                            <input class="form-control mr-sm-2" type="date">
+                            <span>To</span>
+                            <input class="form-control mr-sm-2" type="date">
+                            <span>Price</span>
+                            <input class="form-control mr-sm-2" type="text" placeholder="min price" aria-label="Search">
+                            <span style="padding-right:3px;"> - </span>
+                            <input class="form-control mr-sm-2" type="text" placeholder="max price" aria-label="Search">
+                            <div>
+                                <span>Location</span>
+                                <input class="form-control mr-sm-2" type="text" placeholder="location" aria-label="Search">
+                                <span>Rooms</span>
+                                <input class="form-control mr-sm-2" type="text" placeholder="min No. of rooms" aria-label="Search">
+                                <span style="padding-right:3px;"> - </span>
+                                <input class="form-control mr-sm-2" type="text" placeholder="max No. of rooms" aria-label="Search">
+                                <span>Persons</span>
+                                <input class="form-control mr-sm-2" type="text" placeholder="No. of people" aria-label="Search">
+                                <button class="btn btn-outline-success my-2 my-sm-0" type="button" v-on:click=''>Search</button>
+                            </div>
+                        </div>
+                    </div> 
+                   
+                </form>
+            </nav>
         </div>
-
-        <!--   
-          <div>
-          <h2>Images overview</h2>
-          <div class="carousel-item" v-for="img in images" :style="{'background-image': 'url(' + img + ')'}">
-          </div> 
-        </div> -->
-
-        <button class="btn btn-lg btn-success" v-on:click="create(apartment)">Save</button>
-      </div>
-    </div>
-  </div>
-  `
-    ,
-	data: function () {
-		return {
-			isApartment: 'true',
-
-			apartment: {
-				type: null,
-				rooms: null,
-				guests: null,
-				location: {
-					latitude: '',
-					longitude: '',
-					address: {
-						street: '',
-						city: '',
-						postalCode: ''
-					}
-				},
-				to: null,
-				from: null,
-				price: null,
-				checkin: '2 PM',
-				checkout: '10 AM',
-				amenities: []
-			},
-
-			types: ['APARTMENT', 'ROOM'],
-			rooms: null,
-			guests: null,
-			images: null,
-			amenities: [],
-
-			dates: {
-				from: null,
-				to: null
-			},
-
-			disabledDates: {
-				to: null
-			},
-
-			highlighted: {
-				to: null,
-				from: null
-      },
-      messages:{
-        errorType:'',
-        errorRooms:'',
-        errorGuests:'',
-        errorLocation:'',
-        errorAddress:'',
-        errorPrice:'',
-        errorCheckInOut:'',
-        errorDates:'',
-        errorAmenities:'',
-        errorResponse:'',
-        successResponse:'',
-      },
-      allAmenities:[], //svi amenties koji su u bazi
-      amenities:{
-        base:[],
-        family:[],
-        dining:[],
-        fac:[],
-    },
-		}
-	},
-
-	methods: {
-		create: function (apartment) {
-      if(this.apartment.type == null){
-        this.messages.errorType =  `<h4>Field type of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorType='',10000);
-      }
-      else if(this.apartment.rooms ==  null && this.apartment.type == 'APARTMENT'){
-        this.messages.errorRooms =  `<h4>Field rooms of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorRooms='',10000);
-      }
-      else if(this.apartment.guests == null){
-        this.messages.errorGuests =  `<h4>Field number of guests of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorGuests='',10000);
-      }
-
-      //Apartment location
-      else if(this.apartment.location.latitude == ''){
-        this.messages.errorLocation =  `<h4>Field latitude of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorLocation='',10000);
-      }
-      //Provera da li je apartment latitude broj;
-      else if(this.isNumeric(this.apartment.location.latitude)){
-        this.messages.errorLocation =  `<h4>Latitude of apartment must be number!</h4>`;
-        setTimeout(()=>this.messages.errorLocation='',10000);
-      }
-      else if(this.apartment.location.longitude == ''){
-        this.messages.errorLocation =  `<h4>Field longitude of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorLocation='',10000);
-      }
-      //Provera da li je apartment longitude broj;
-      else if(this.isNumeric(this.apartment.location.longitude)){
-        this.messages.errorLocation =  `<h4>Longitude of apartment must be number!</h4>`;
-        setTimeout(()=>this.messages.errorLocation='',10000);
-      }
-
-      //Apartment address
-      else if(this.apartment.location.address.street == ''){
-        this.messages.errorAddress =  `<h4>Field street of address of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorAddress='',10000);
-      }
-      else if(this.apartment.location.address.city == ''){
-        this.messages.errorAddress =  `<h4>Field city of address of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorAddress='',10000);
-      }
-      else if(this.apartment.location.address.postalCode == ''){
-        this.messages.errorAddress =  `<h4>Field postal code of address of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorAddress='',10000);
-      }
-
-      //Apartment price: 
-      else if(this.apartment.price == null){
-        this.messages.errorPrice =  `<h4>Field price of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorPrice='',10000);
-      }
-      //Provera da li je cena broj;
-      else if(this.isNumeric(this.apartment.price)){
-        this.messages.errorPrice =  `<h4>Price of apartment must be number!</h4>`;
-        setTimeout(()=>this.messages.errorPrice='',10000);
-      }
-
-      else if(this.apartment.checkin == ''){
-        this.messages.errorCheckInOut =  `<h4>Field check in of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorCheckInOut='',5000);
-      }
-      else if(this.apartment.checkout == ''){
-        this.messages.errorCheckInOut =  `<h4>Field check out of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorCheckInOut='',5000);
-      }
-      else if(this.dates.from == null){
-        this.messages.errorDates =  `<h4>Field checkin date of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorDates='',5000);
-      }
-      else if(this.dates.to == null){
-        this.messages.errorDates =  `<h4>Field checkout to of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorDates='',5000);
-      }
-      else if(this.apartment.amenities == ''){
-        this.messages.errorAmenities =  `<h4>Amenities of apartment can't be empty!</h4>`;
-        setTimeout(()=>this.messages.errorAmenities='',5000);
-      }
-      else{
-
-        // alert('STAN SE SALJE!')
-        // unselected dates will be disabled
-        this.apartment.to = this.dates.from.getTime();
-        this.apartment.from = this.dates.to.getTime() + 1000 * 60 * 60 * 24;
-        console.log(this.apartment);
-        axios
-          .post('rest/apartment', this.apartment)
-          .then(Response => {
-            console.log(Response);
-            this.messages.successResponse = `<h4>Apartment was added successfully!</h4>`;
-            //Sva uneta polja se isprazne...
-            this.apartment.type=null;
-            this.apartment.rooms=null;
-            this.apartment.guest=null;
-            this.apartment.location.latitude= '';
-            this.apartment.location.longitude= '';
-            this.apartment.location.address.street= '',
-            this.apartment.location.address.city= '',
-            this.apartment.location.address.postalCode= '',
-            this.apartment.to= null;
-            this.apartment.from= null,
-            this.apartment.price= null,
-            this.apartment.checkin= '2 PM',
-            this.apartment.checkout= '10 AM',
-            this.apartment.amenities= []
-      
-            setTimeout(() => this.messages.successResponse='', 5000);
-        })
-        .catch(error => {
-            if(error.response.status === 500 || error.response.status === 404){
-                this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
-                setTimeout(() => this.messages.errorResponse='', 5000);
+    
+        <div class="container" id='main'>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Apartment type</th>
+                            <th>Apartment address</th>
+                            <th>Rooms</th>
+                            <th @click="sort('price')"> Price 
+                                <img style='display:inline;' v-if='currentSortDir == "asc"' src='img/up-arrow1.1.png'>
+                                <img v-if='currentSortDir == "desc"' src='img/down-arrow1.1.png'>
+                            </th>
+                            <th>Status</th>
+                            <th>Details</th>
+                            <th v-if='isGuest'>Reserv</th>
+                            <th v-if='!isGuest'>Edit</th>
+                            <th v-if='!isGuest'>Delete</th>
+                            <th>Amenities TEST</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-bind:key='apartments.id' v-for="apartment in filteredApartments">
+                            <td>{{apartment.type}}</td>
+                            <td>{{apartment.location.address.street}} - {{apartment.location.address.postalCode}} {{apartment.location.address.city}} </td>
+                            <td>{{apartment.rooms}}</td>
+                            <td>{{apartment.price}}</td>
+                            <td>{{apartment.status}}</td>
+                            <td> <button class="btn-primary" v-on:click='showDetails(apartment.id)'> Details </button> </td>
+                            <td v-if='isGuest'> <button class="btn-primary" v-on:click='makeReseravation(apartment.id)'> Reserv </button> </td>
+                            <td v-if='!isGuest'><button class="btn-primary" v-on:click='editApartment(apartment.id)'> Edit </button></td>
+                            <td v-if='!isGuest'> <button class="btn-danger" v-on:click='showMessage'> Delete </button> </td>
+                            <td>{{apartment.amenities}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+    
+                <router-link v-if='isGuest' to="/reservations"><button class="classButton btn btn-warning">List of reservations</button></router-link>
+    
+            <div id='options'>
+                <!--Neaktivni stanovi i dodaj stan pripadaju hostu,
+                    Komentari i rezervacije hostu i adminu,
+                    dok sadrzaj apartmana samo adminu.-->
+                <router-link to="/apartmentNew"> <button class='btn-lg classButton' v-if='isHost'>+ Add apartment</span></button></router-link>
+                <router-link to="/apartmentComments"> <button class='classButton' v-if='!isGuest' >Comments</button></router-link>
+                <router-link to="/reservations"> <button class='classButton' v-if='!isGuest'>Reservations</button></router-link>
+                <router-link to="/amenitiesOverview"> <button  class='classButton' v-if='isAdmin'>Amenities</button></router-link>
+            </div>
+        </div>
+    
+        <div v-if='isGuest'>
+                Kao Gost:<br>
+                ○ Želim da sortiram apartmane i svoje rezervacije po ceni:<br>
+                ■ Rastuće<br>
+                ■ Opadajuće<br>
+                ○ Želim da filtriram apartmane po tipu i po sadržaju apartmana<br>
+        </div> 
+        <div v-if='!isGuest'>
+                Kao Domaćin:<br>
+                ○ Pregleda, sortiranja i filtriranja po svim kriterijumima, ali isključivo svojih<br>
+                apartmana sa statusom AKTIVAN<br>
+                ○ Imam pregled svojih apartmana sa statusom NEAKTIVAN<br>
+                ○ Mogu da menjam podatke o svom apartmanu:<br>
+                ■ Sve izmene moraju biti validne - ako neko obavezno polje nije popunjeno,<br>
+                pored odgovarajućeg polja se ispisuje poruka o grešci<br>
+                ■ Pritiskom na dugme za slanje se šalje zahtev za izmenu na server<br>
+                ■ U slučaju uspešne izmene podataka korisnik se obaveštava o tome<br>
+                ■ U slučaju neuspešne izmene podataka korisniku se ispisuje greška<br>
+                ○ Mogu da obrišem svoj apartman<br>
+                <br>
+                <br>
+                Kao Administratoru:<br>
+                ○ Vidim sve apartmane bez obzira na njihov status<br>
+                ○ Modifikujem podatke o apartmanu (isti postupak izmene kao kod Domaćina)<br>
+                ○ Brišem sve postojeće apartmane<br>
+    
+            </div>
+    </div>`,
+        data: function () {
+            return {
+                user: {
+                    username: '',
+                    role: ''
+                },
+                isAdmin: false,
+                isHost: false,
+                isGuest: false,
+    
+                apartments:[],
+    
+                //sortiranje:
+                currentSort: 'price',
+                currentSortDir: 'asc',
+    
+                //filtriranje:
+                filterQueryType: '',
+                filterQueryStatus: '',
+                filterQueryAmanity: '',
+                types: ['APARTMENT', 'ROOM'],
+                statuses:['aktivan', 'neaktivno'],
+                allAmenities:[], //svi amenties koji su u bazi
+                shownAmenities:[], // grupa amenities koja se prikazuje u padajucoj listi
+                amenities:{ //rasporedjeni allAmenities po grupama
+                    base:[],
+                    family:[],
+                    dining:[],
+                    fac:[],
+                },
+                typeOfAmenity:['base','family','dining','fac'], 
+                choosenType:'',
+                isFilter:true,
+                isSearch:true,
             }
-        });
-      }
-    },
+        },
+        methods: {
+            showAmenity: function () {
+                this.shownAmenities = this.amenities[this.choosenType];
+            },
+            showMessage: function () {
+                alert('Klikom na ovo dugme se brise odabrani stan!');
+            },
+    
+            showComments: function(id){
+                this.$router.push(`/apartment/${id}/comments`);
+            },
+    
+            showDetails: function(id){
+                this.$router.push(`/apartment/${id}/details`);
+            },
+            makeReseravation: function(id){
+                this.$router.push(`/apartment/${id}/newReservation`);
+            },
+            sort: function (s) {
+                //if s == current sort, reverse
+                if (s === this.currentSort) {
+                    this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc';
+                }
+                this.currentSort = s;
+            },
+    
+    
+            arrangeAmenities(allAmenities){
+                    for(let i = 0; i< this.allAmenities.length; i++){
+                      if(this.allAmenities[i].type === 'Base'){
+                        this.amenities.base.push(this.allAmenities[i].name);
+                      }
+                      else if(this.allAmenities[i].type === 'Family' ){
+                        this.amenities.family.push(this.allAmenities[i].name);
+                      }
+                      else if(this.allAmenities[i].type === 'Dining'){
+                        this.amenities.dining.push(this.allAmenities[i].name);
+                      }
+                      else if(this.allAmenities[i].type === 'Facilities'){
+                        this.amenities.fac.push(this.allAmenities[i].name);
+                      }
+                    }
+            },
+            //Metoda koja hostu zabranjuje polja za filtraciju i sortiranje njegovih neaktivnih stanova.
+            isActive: function(){
+                if(this.user.role === "HOST" && this.filterQueryStatus === 'neaktivno'){
+                    this.sort('');
+                    return false;
+                }
+                return true;
+            },
+            
+            editApartment:function(id){
+                this.$router.push(`/apartment/${id}/edit`)
+            }
+        },
+        computed: {
+            sortedApartments: function () {
+                return this.apartments.sort((a, b) => {
+                    let modifier = 1;
+                    if (this.currentSortDir === 'desc') modifier = -1;
+                    if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+                    if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+                    return 0;
+                });
+            },
+            //Filtriranje #3
+            filteredApartments: function () {
+                let filteredApartment = null;
+    
+                //Ukoliko ni jedan parametar filtracije nije dodat prikazani su svi apartmani
+                if(this.filterQueryType === '' && this.filterQueryType === '' && this.filterQueryAmanity === ''){
+                    filteredApartment = this.sortedApartments;
+                }
+    
+                //Filter by Type: ovde samo gledam sortedApartments
+                //Ako ni jedan drugi filter nije aktiviran osim ovog (ovo je jedini filter) onda 
+                //filtriaj sve apartmane i smest ih u filtriranje
+                if(this.filterQueryType !== '' && filteredApartment === null){
+                    filteredApartment = this.sortedApartments.filter((items) => {
+                        for (var item in items) {
+                            if (String(items[item]).indexOf(this.filterQueryType) !== -1) {
+                                return true
+                            }
+                        }
+                        return false
+                    })
+                }
+                 //Ako on nije jedini filter vec ima neki pre njega aktivan onda 
+                 //tu grupu izfiltriranih stanova po nekom parametru filtriraj i ovim parametrom
+                //filtriraj filteredaApartment i smesti novo doibjen rezultat ponovo u filteredaApartment
+                else if(this.filterQueryType !== '' && filteredApartment !== null){
+                    filteredApartment = filteredApartment.filter((items) => {
+                        for (var item in items) {
+                            if (String(items[item]).indexOf(this.filterQueryType) !== -1) {
+                                return true
+                            }
+                        }
+                        return false
+                    })
+                }
+    
+                //Filter by Status:
+                if(this.filterQueryStatus !== '' && filteredApartment === null){
+                    filteredApartment = this.sortedApartments.filter((items) => {
+                        for (var item in items) {
+                            if (String(items[item]).indexOf(this.filterQueryStatus) !== -1) {
+                                return true
+                            }
+                        }
+                        return false
+                    })
+                }
+    
+                else if(this.filterQueryStatus !== '' && filteredApartment !== null){
+                    filteredApartment = filteredApartment.filter((items) => {
+                        for (var item in items) {
+                            if (String(items[item]).indexOf(this.filterQueryStatus) !== -1) {
+                                return true
+                            }
+                        }
+                        return false
+                    })
+                }
+    
+                //Filter by Amanity:
+                // if(this.filterQueryAmanity !== '' && filteredApartment === null){
+                //     var sortedApartmentsHelp = this.sortedApartments;
+                //     for(let apartment in sortedApartmentsHelp){
+                //         if(apartment.amenities.name.equals(this.filterQueryAmanity)){
+                //             return true
+                //         }
+                //     }
+                //     return false
+                // }
 
-		update: function (apartment) {
+                // //staro
+                // if(this.filterQueryAmanity !== '' && filteredApartment === null){
+                //     filteredApartment = this.sortedApartments.filter((items) => {
+                //         // console.log(items);
+                //         for (var item in items) {
+                //             if (String(items[item]).indexOf(this.filterQueryAmanity) !== -1) {
+                //                 return true
+                //             }
+                //         }
+                //         return false
+                //     })
+                // }
 
-		},
-		handleFileUploads() {
 
-		},
-		submitFiles: function () {
-
-		},
-		checkApartment: function () {
-			if (this.apartment.type == "ROOM") {
-				this.isApartment = false;
-      }
-      else {
-        this.isApartment = true;
-      } 
-		},
-		// pomocna metoda za ogranicen odabir dana:
-		range(start = 1, end) {
-			var ans = [];
-			for (let i = start; i <= end; i++) {
-				ans.push(i);
-			}
-			return ans;
-    },
-	  // pomocna metoda za razvrstavanje amenities:
-    arrangeAmenities(){
-      for(let i = 0; i< this.allAmenities.length; i++){
-        if(this.allAmenities[i].type === 'Base'){
-          this.amenities.base.push(this.allAmenities[i]);
-        }
-        else if(this.allAmenities[i].type === 'Family' ){
-          this.amenities.family.push(this.allAmenities[i]);
-        }
-        else if(this.allAmenities[i].type === 'Dining'){
-          this.amenities.dining.push(this.allAmenities[i]);
-        }
-        else if(this.allAmenities[i].type === 'Facilities'){
-          this.amenities.fac.push(this.allAmenities[i]);
-        }
-      }
-    },
-    isNumeric(num){
-      //isNaN(num) returns true if the variable does NOT contain a valid number
-      return isNaN(num);
-    }
-  },
-	created() {      
-    axios
-    .get('rest/amenity/all')
-    .then(response => {
-        this.allAmenities = response.data;
-        this.arrangeAmenities();
-    })  
-  },
-  
-	mounted() {
-		this.rooms = this.range(1, 10);
-		this.guests = this.range(1, 15);
-
-		let to = new Date();
-		to.setDate(to.getDate() - 1)
-
-		this.disabledDates.to = to;
-  },
-  
-	components: {
-		vuejsDatepicker
-	}
+                if(this.filterQueryAmanity !== '' && filteredApartment === null){
+                    filteredApartment = this.sortedApartments.filter((items) => {
+                        for (var item in items) {
+                            if(item == 'amenities'){
+                                console.log('item:' + item)
+                                console.log('items[item]:' + items[item].name)
+                            }
+                            if (String(items[item]).indexOf(this.filterQueryAmanity) !== -1) {
+                                return true
+                            }
+                        }
+                        return false
+                    })
+                }
+    
+                //staro
+                else if(this.filterQueryAmanity !== '' && filteredApartment !== null){
+                    filteredApartment = filteredApartment.filter((items) => {
+                        for (var item in items) {
+                            if (String(items[item]).indexOf(this.filterQueryAmanity) !== -1) {
+                                return true
+                            }
+                        }
+                        return false
+                    })
+                }
+    
+                return filteredApartment;
+            },
+     
+        },
+        created() {
+            this.user.username = localStorage.getItem('user');
+            this.user.role = localStorage.getItem('role');
+            if (this.user.role == "ADMIN") {
+                this.isAdmin = true;
+            } else if (this.user.role == "HOST") {
+                this.isHost = true;
+            } else {
+                this.isGuest = true;
+            }
+            axios
+            .get('rest/apartment')
+            .then(response => {
+                this.apartments = response.data;
+            })  
+            
+            axios
+            .get('rest/amenity/all')
+            .then(response => {
+                this.allAmenities = response.data;
+                this.arrangeAmenities(this.allAmenities);
+            })  
+    
+        },
 })
 
 

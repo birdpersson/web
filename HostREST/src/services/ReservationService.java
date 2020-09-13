@@ -232,6 +232,7 @@ public class ReservationService {
 //			else {
 //				reservDTO.setAddress(locat.getAddress());
 //			}
+			reservDTO.setAddress(apartm.getLocation().getAddress().getStreet());
 
 			// vraca se lista reservacija sa svim podacima;
 			returnDTO.add(reservDTO);
@@ -239,22 +240,22 @@ public class ReservationService {
 		return returnDTO;
 	}
 
-//	@PUT
-//	@Path("/{id}")
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Response updateReservation(@Context HttpServletRequest request, @PathParam("id") String id,
-//			Reservation reservation) {
-//		String username = AuthService.getUsername(request);
-//		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-//		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
-//
-//		if (userDao.findOne(username).getRole().toString().equals("GUEST")
-//				|| userDao.findOne(username).getRole().toString().equals("HOST")) {
-//			return Response.status(Response.Status.OK).entity(dao.update(id, reservation)).build();
-//		}
-//		return Response.status(Response.Status.FORBIDDEN).build();
-//	}
+	@PUT
+	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateReservation(@Context HttpServletRequest request, @PathParam("id") String id,
+			Reservation reservation) {
+		String username = AuthService.getUsername(request);
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
+
+		if (userDao.findOne(username).getRole().toString().equals("GUEST")
+				|| userDao.findOne(username).getRole().toString().equals("HOST")) {
+			return Response.status(Response.Status.OK).entity(dao.update(ctx.getRealPath(""), reservation)).build();
+		}
+		return Response.status(Response.Status.FORBIDDEN).build();
+	}
 
 //	@DELETE
 //	@Path("/{id}")
