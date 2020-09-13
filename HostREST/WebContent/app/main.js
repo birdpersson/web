@@ -16,7 +16,7 @@ const NewAmenities = { template: '<new-amenities></new-amenities>' }
 const NewApartment = { template: '<new-apartment></new-apartment>' }
 const ApartmentDetails = { template: '<apartment-details></apartment-details>' }
 const ApartmentEdit = { template: '<apartment-edit></apartment-edit>' }
-
+const AddHost = { template: '<new-host></new-host>' }
 
 const Test = { template: '<test></test>' }
 
@@ -28,6 +28,7 @@ const routes = [
 	{ path: '/profile', component: Profile },
 	{ path: '/patient/update', component: ProfileUpdate },
 	{ path: '/users', component: Users },
+	{ path: '/users/addHost', component: AddHost },
 	{ path: '/reservations', component: Reservations },
 	// { path: '/apartments', component: Apartments },
 	{ path: '/apartments', component: Test },

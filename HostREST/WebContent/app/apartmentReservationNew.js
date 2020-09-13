@@ -226,7 +226,6 @@ Vue.component('new-reservation', {
 			this.isGuest = true;
 			//preuzima se id apartmana iz url-a
 			this.apartmentId = this.id;
-
 		}
 
 	},

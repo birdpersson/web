@@ -115,7 +115,8 @@ public class ReservationService {
 				reservDTO.setId(r.getId());
 				reservDTO.setApartmentId(r.getApartmentId());
 				reservDTO.setGuestId(r.getGuestId());
-//				reservDTO.setDate(r.getDate());
+				reservDTO.setFrom(r.getFrom());
+				reservDTO.setTo(r.getTo());
 				reservDTO.setNight(r.getNight());
 				reservDTO.setPrice(r.getPrice());
 				reservDTO.setConfirmation(r.getConfirmation());
@@ -130,13 +131,8 @@ public class ReservationService {
 					reservDTO.setType(apartm.getType());
 				}
 				// Za lokaciju apartmana:
-//				if(locat.getAddress()==null) {
-//					reservDTO.setAddress("unknown");
-////					return Response.status(Response.Status.BAD_REQUEST).build();
-//				}
-//				else {
-//					reservDTO.setAddress(locat.getAddress());
-//				}
+				reservDTO.setAddress(apartm.getLocation().getAddress().getStreet());
+
 
 				// vraca se lista reservacija sa svim podacima;
 				returnDTO.add(reservDTO);
@@ -210,6 +206,8 @@ public class ReservationService {
 			reservDTO.setId(r.getId());
 			reservDTO.setApartmentId(r.getApartmentId());
 			reservDTO.setGuestId(r.getGuestId());
+			reservDTO.setFrom(r.getFrom());
+			reservDTO.setTo(r.getTo());
 //			reservDTO.setDate(r.getDate());
 			reservDTO.setNight(r.getNight());
 			reservDTO.setPrice(r.getPrice());
@@ -225,13 +223,6 @@ public class ReservationService {
 				reservDTO.setType(apartm.getType());
 			}
 			// Za lokaciju apartmana:
-//			if(locat.getAddress()==null) {
-//				reservDTO.setAddress("unknown");
-////					return Response.status(Response.Status.BAD_REQUEST).build();
-//			}
-//			else {
-//				reservDTO.setAddress(locat.getAddress());
-//			}
 			reservDTO.setAddress(apartm.getLocation().getAddress().getStreet());
 
 			// vraca se lista reservacija sa svim podacima;

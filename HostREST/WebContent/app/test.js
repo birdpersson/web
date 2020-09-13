@@ -360,30 +360,43 @@ Vue.component("test", {
             },
      
         },
-        created() {
-            this.user.username = localStorage.getItem('user');
-            this.user.role = localStorage.getItem('role');
-            if (this.user.role == "ADMIN") {
-                this.isAdmin = true;
-            } else if (this.user.role == "HOST") {
-                this.isHost = true;
-            } else {
-                this.isGuest = true;
-            }
+    created() {
+        this.user.username = localStorage.getItem('user');
+        this.user.role = localStorage.getItem('role');
+        if (this.user.role == "ADMIN") {
+            this.isAdmin = true;
             axios
             .get('rest/apartment')
             .then(response => {
                 this.apartments = response.data;
             })  
-            
+        } else if (this.user.role == "HOST") {
+            console.log('role: ' + this.user.role);
+            this.isHost = true;
             axios
-            .get('rest/amenity/all')
+            .get('rest/apartment/host')
             .then(response => {
-                this.allAmenities = response.data;
-                this.arrangeAmenities(this.allAmenities);
+                this.apartments = response.data;
+                console.log('Response kod hosta!');
             })  
-    
-        },
+        } else {
+            this.isGuest = true;
+            axios
+            .get('rest/apartment')
+            .then(response => {
+                this.apartments = response.data;
+            })  
+        }
+
+        
+        axios
+        .get('rest/amenity/all')
+        .then(response => {
+            this.allAmenities = response.data;
+            this.arrangeAmenities(this.allAmenities);
+        })  
+
+    },
 })
 
 
