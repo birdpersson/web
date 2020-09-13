@@ -123,7 +123,7 @@ Vue.component('new-apartment', {
 
 			<div>
 				<label>Images</label>
-				<input type="file" name="file" @change="uploadImage" multiple>
+				<input type="file" name="file" class="filestyle" multiple @change="uploadImage">
 			</div>
 
 			<!--   
@@ -138,7 +138,8 @@ Vue.component('new-apartment', {
 			<button class="btn btn-lg btn-success" v-on:click="create(apartment)">Save</button>
 		</div>
 	</div>
-</div>`
+</div>
+`
 	,
 	data: function () {
 		return {
@@ -297,25 +298,34 @@ Vue.component('new-apartment', {
 				axios
 					.post('rest/apartment', this.apartment)
 					.then(Response => {
-						console.log(Response);
-						this.messages.successResponse = `<h4>Apartment was added successfully!</h4>`;
-						//Sva uneta polja se isprazne...
-						this.apartment.type = null;
-						this.apartment.rooms = null;
-						this.apartment.guest = null;
-						this.apartment.location.latitude = '';
-						this.apartment.location.longitude = '';
-						this.apartment.location.address.street = '',
-							this.apartment.location.address.city = '',
-							this.apartment.location.address.postalCode = '',
-							this.apartment.to = null;
-						this.apartment.from = null,
-							this.apartment.price = null,
-							this.apartment.checkin = '2 PM',
-							this.apartment.checkout = '10 AM',
-							this.apartment.amenities = []
+						let contentType = {
+							headers: {
+								"Content-Type": "multipart/form-data"
+							}
+						}
+						axios
+							.post('rest/apartment/' + Response.data.id + '/upload', this.images, contentType)
+							.then(response => {
+								console.log(response);
+								this.messages.successResponse = `<h4>Apartment was added successfully!</h4>`;
+								//Sva uneta polja se isprazne...
+								this.apartment.type = null;
+								this.apartment.rooms = null;
+								this.apartment.guest = null;
+								this.apartment.location.latitude = '';
+								this.apartment.location.longitude = '';
+								this.apartment.location.address.street = '';
+								this.apartment.location.address.city = '';
+								this.apartment.location.address.postalCode = '';
+								this.apartment.to = null;
+								this.apartment.from = null;
+								this.apartment.price = null;
+								this.apartment.checkin = '2 PM';
+								this.apartment.checkout = '10 AM';
+								this.apartment.amenities = [];
 
-						setTimeout(() => this.messages.successResponse = '', 5000);
+								setTimeout(() => this.messages.successResponse = '', 5000);
+							});
 					})
 					.catch(error => {
 						if (error.response.status === 500 || error.response.status === 404) {
@@ -336,16 +346,6 @@ Vue.component('new-apartment', {
 				formData.append('image', this.images[i], this.images[i].name);
 			}
 			this.images = formData;
-
-			let contentType = {
-				headers: {
-					"Content-Type": "multipart/form-data"
-				}
-			}
-			axios
-				.post('rest/apartment/' + '3' + '/upload', this.images, contentType)
-				.then(Response => console.log(Response));
-			// cutting corners
 		},
 		submitFiles: function () {
 
