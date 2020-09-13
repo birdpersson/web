@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -25,7 +26,9 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.message.internal.ReaderWriter;
 
+import beans.Amenity;
 import beans.Apartment;
+import beans.ApartmentDTO;
 import dao.AmenityDAO;
 import dao.ApartmentDAO;
 import dao.LocationDAO;
@@ -75,15 +78,27 @@ public class ApartmentService {
 	@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Apartment> getAllApartments() {
+	public Collection<ApartmentDTO> getAllApartments() {
 		ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
-		Collection<Apartment> retApartment = apartmentDAO.findAll();
+		AmenityDAO amenityDAO = (AmenityDAO) ctx.getAttribute("amenityDAO");
 
-//		for (Apartment a : retApartment) {
+		Collection<Apartment> apartments = apartmentDAO.findAll();
+		Collection<ApartmentDTO> retApartment = new ArrayList<>();
+
+		for (Apartment a : apartments) {
+			ArrayList<Amenity> amenitiesOriginal = amenityDAO.findAllByApartmentId(ctx.getRealPath(""), a.getId());
+			ArrayList<String> amenities = new ArrayList<>();
+			for (Amenity amenity : amenitiesOriginal) {
+				amenities.add(amenity.getName());
+			}
+			ApartmentDTO dto = new ApartmentDTO(a.getId(), a.getType(), a.getRooms(), a.getGuests(), a.getLocation(),
+					a.getTo(), a.getFrom(), a.getHost(), a.getPrice(), a.getStatus(), amenities);
+			retApartment.add(dto);
+//			a.setAmenities((ArrayList<Amenity>) daoAmen.findAllByApartmentId(a.getId()));
 //			a.setReviews((ArrayList<Review>) daoReview.findAllByApartmentId(a.getId()));
 //			a.setReservations((ArrayList<Reservation>) daoReser.findAllByApartmentId(a.getId()));
-//			a.setAmenities((ArrayList<Amenity>) daoAmen.findAllByApartmentId(a.getId()));
-//		}
+		}
+
 		return retApartment;
 	}
 
@@ -119,8 +134,8 @@ public class ApartmentService {
 	@Path("/{id}/upload")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response uploadPhotos(@Context HttpServletRequest request,
-			@PathParam("id") String id, FormDataMultiPart multiPart) {
+	public Response uploadPhotos(@Context HttpServletRequest request, @PathParam("id") String id,
+			FormDataMultiPart multiPart) {
 		ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
 		List<FormDataBodyPart> fields = multiPart.getFields("image");
 		for (FormDataBodyPart filePart : fields) {
