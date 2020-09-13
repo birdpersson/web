@@ -27,6 +27,10 @@ Vue.component("new-host", {
 	},
 	template: `
 	<div id="signup">
+	<div class="container" id='page-title'>
+		<h1 style="margin-top:10px;color:#35424a;">Create Host <span id='titleEffect'>Account</span></h1>
+		<hr style='background:#e8491d;height:1px;'>
+	</div>
 	  <div class="container-fluid">
 		<div class="row no-gutter">
   
@@ -35,7 +39,6 @@ Vue.component("new-host", {
 			  <div class="container">
 				<div class="row">
 				  <div class="col-md-9 col-lg-8 mx-auto">
-					<h3 class="login-heading mb-4">Create Account</h3>
 					<div class="alert alert-danger" v-if="error" v-html="messages.errorResponse"></div>
   
 					<form class="form-signin">
