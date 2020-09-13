@@ -162,9 +162,24 @@ public class ApartmentDAO {
 		}
 	}
 
-	// TODO: ??
-	public void saveImages(String contextPath, ArrayList<String> images) {
-		
+	public void saveImage(String contextPath, String imagePath, String apartmentId) {
+		String line = apartmentId + ";" + imagePath;
+		BufferedWriter writer = null;
+		try {
+			File file = new File(contextPath + "/images.txt");
+			writer = new BufferedWriter(new FileWriter(file, true));
+			PrintWriter out = new PrintWriter(writer);
+			out.println(line);
+			out.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) { }
+			}
+		}
 	}
 
 	private ArrayList<String> loadImages(String contextPath, String id) {
