@@ -121,6 +121,7 @@ public class ApartmentService {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response uploadPhotos(@Context HttpServletRequest request,
 			@PathParam("id") String id, FormDataMultiPart multiPart) {
+		ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
 		List<FormDataBodyPart> fields = multiPart.getFields("image");
 		for (FormDataBodyPart filePart : fields) {
 			ContentDisposition fileDetail = filePart.getContentDisposition();
@@ -132,7 +133,7 @@ public class ApartmentService {
 
 			try (FileOutputStream out = new FileOutputStream(file)) {
 				ReaderWriter.writeTo(filePart.getEntityAs(InputStream.class), out);
-				// TODO: Save to file (apartmentDAO)
+				apartmentDAO.saveImage(ctx.getRealPath(""), "images/" + id + "/" + fileDetail.getFileName(), id);
 			} catch (IOException e) {
 				e.printStackTrace();
 				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
