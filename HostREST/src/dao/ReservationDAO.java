@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import beans.Reservation;
-import beans.User;
 
 public class ReservationDAO {
 	private Map<String, Reservation> reservations = new HashMap<>();
@@ -30,7 +29,6 @@ public class ReservationDAO {
 		return reservations.values();
 	}
 
-	//Sve rezervacije jednog gosta 
 	public Collection<Reservation> findAllByGuestId(String id) {
 		Collection<Reservation> allReservations = findAll();
 		Collection<Reservation> testRet = new ArrayList<Reservation>();
@@ -42,8 +40,6 @@ public class ReservationDAO {
 		return testRet;
 	}
 	
-
-	//Sve rezervacije vezane za jedan stan
 	public Collection<Reservation> findAllByApartmentId(String id) {
 		Collection<Reservation> allReservations = findAll();
 		Collection<Reservation> testRet = new ArrayList<Reservation>();
@@ -114,6 +110,58 @@ public class ReservationDAO {
 			}
 		}
 		reservations.put(reservation.getId(), reservation);
+		return reservation;
+	}
+
+	public Reservation update(String contextPath, Reservation reservation) {
+		try {
+			File file = new File(contextPath + "/reservations.txt");
+			BufferedReader in = new BufferedReader(new FileReader(file));
+			String line = "", text = "";
+			StringTokenizer st;
+			while ((line = in.readLine()) != null) {
+				line = line.trim();
+				if (line.equals("") || line.indexOf('#') == 0)
+					continue;
+				st = new StringTokenizer(line, ";");
+				while (st.hasMoreTokens()) {
+					String id = st.nextToken().trim();
+					String apartmentId = st.nextToken().trim();
+					String guestId = st.nextToken().trim();
+					long from = Long.parseLong(st.nextToken().trim());
+					long to = Long.parseLong(st.nextToken().trim());
+					int night = Integer.parseInt(st.nextToken().trim());
+					int price = Integer.parseInt(st.nextToken().trim());
+					String confirmation = st.nextToken().trim();
+					String message = st.nextToken().trim();
+					String status = st.nextToken().trim();
+					// TODO: Find less stupid way to change status
+					if (reservation.getId().equals(id)) {
+						text += id + ";"
+								+ apartmentId + ";"
+								+ guestId + ";"
+								+ from + ";"
+								+ to + ";"
+								+ night + ";"
+								+ price + ";"
+								+ confirmation + ";"
+								+ message + ";"
+								+ reservation.getStatus() + "\r\n";
+					} else {
+						text += line + "\r\n";
+					}
+				}
+			}
+			in.close();
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+			PrintWriter out = new PrintWriter(writer);
+			out.println(text);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		loadReservations(contextPath);
 		return reservation;
 	}
 

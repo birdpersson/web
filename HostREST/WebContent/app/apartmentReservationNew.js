@@ -98,7 +98,7 @@ Vue.component('new-reservation', {
 			night: null,
 			nights: null,
 			dates: {
-				from: new Date(),
+				from: null,
 				to: null,
 				includeDisabled: true
 			},
