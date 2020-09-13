@@ -62,7 +62,6 @@ Vue.component('apartments', {
                         </div>
                     </div>
                 </div> 
-               
             </form>
         </nav>
     </div>
@@ -140,7 +139,6 @@ Vue.component('apartments', {
             ○ Vidim sve apartmane bez obzira na njihov status<br>
             ○ Modifikujem podatke o apartmanu (isti postupak izmene kao kod Domaćina)<br>
             ○ Brišem sve postojeće apartmane<br>
-
         </div>
 </div>`,
     data: function () {

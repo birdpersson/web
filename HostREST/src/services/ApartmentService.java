@@ -86,21 +86,6 @@ public class ApartmentService {
 //		}
 		return retApartment;
 	}
-	
-	@GET
-	@Path("/host")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllApartmentsByHost(@Context HttpServletRequest request) {
-		String username = AuthService.getUsername(request);
-		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-		if (!userDao.findOne(username).getRole().toString().equals("HOST")) {
-			return Response.status(Response.Status.FORBIDDEN).build();
-		}
-		
-		ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
-		Collection<Apartment> retApartment = apartmentDAO.findAllApartByHostId(username);
-		return Response.status(Response.Status.CREATED).entity(retApartment).build();
-	}
 
 	@GET
 	@Path("/{id}")
