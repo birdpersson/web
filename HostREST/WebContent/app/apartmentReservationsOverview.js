@@ -121,7 +121,8 @@ Vue.component('reservations', {
                     <tr v-bind:key='reservations.id' v-for="reservation in filteredReservations">
                         <td>{{reservation.type}}</td>
                         <td>{{reservation.address}}</td>
-                        <td>{{reservation.date}}</td>
+                        <td>{{reservation.from | moment}}</td>
+                        <td>{{reservation.to | moment}}</td>
                         <td>{{reservation.night}}</td>
                         <td>{{reservation.price}}</td>
                         <td>{{reservation.confirmation}}</td>
@@ -154,174 +155,174 @@ Vue.component('reservations', {
             //filtriranje:
             statuses: ['Created', 'Rejected', 'Canceled', 'Accepted', 'Completed'],
             filterQuery: '',
-            searchedQuery:'',
+            searchedQuery: '',
 
-            messages:{
-                errorName:'',
-                errorType:'',
-                errorResponse:'',
-                successResponse:'',
+            messages: {
+                errorName: '',
+                errorType: '',
+                errorResponse: '',
+                successResponse: '',
             },
 
-            updatedReserv:{
-                id:null,
-                apartmentId:null,
-                guestId:null,
-                date:null,
-                night:null,
-                price:null,
-                confirmation:null,
-                message:null,
-                status:null,
+            updatedReserv: {
+                id: null,
+                apartmentId: null,
+                guestId: null,
+                date: null,
+                night: null,
+                price: null,
+                confirmation: null,
+                message: null,
+                status: null,
             },
 
         }
     },
     methods: {
-        messageHost:function(){
+        messageHost: function () {
             alert('Promeni se status!');
         },
-        getReservations:function(){
+        getReservations: function () {
             axios
-            .get(`rest/reservation/`)
-            .then(response => {
-                this.reservations=response.data;
-            })
+                .get(`rest/reservation/`)
+                .then(response => {
+                    this.reservations = response.data;
+                })
         },
-        cancelReservation:function(chosenReservation){
-            if(confirm('Do you whant to cancel this reservation?')){
+        cancelReservation: function (chosenReservation) {
+            if (confirm('Do you whant to cancel this reservation?')) {
                 //Mora da se iz reservationDTO prebaci u reservation model pre slanja;
                 this.updatedReserv.id = chosenReservation.id;
                 this.updatedReserv.apartmentId = chosenReservation.apartmentId;
                 this.updatedReserv.guestId = chosenReservation.guestId;
-                this.updatedReserv.date= chosenReservation.date;
-                this.updatedReserv.night= chosenReservation.night;
-                this.updatedReserv.price= chosenReservation.price;
+                this.updatedReserv.date = chosenReservation.date;
+                this.updatedReserv.night = chosenReservation.night;
+                this.updatedReserv.price = chosenReservation.price;
                 this.updatedReserv.confirmation = chosenReservation.confirmation;
-                this.updatedReserv.message= chosenReservation.message;
+                this.updatedReserv.message = chosenReservation.message;
                 this.updatedReserv.status = 'Canceled';
 
                 axios
-                .put(`rest/reservation/${this.updatedReserv.id}`,this.updatedReserv)
-                .then(response => {
-                    this.getReservations();
-                    this.messages.successResponse = `<h4>You successfuly canceled reservation!</h4>`;
-        
-                    setTimeout(()=>this.messages.successResponse='',5000);
-                }).catch(error => {
-                    if(error.response.status === 400){
-                        this.messages.errorResponse = `<h4>We had some server errors, please try again later!</h4>`;
-            
-                        setTimeout(()=>this.messages.errorResponse='',5000);
-                    }
-                });
+                    .put(`rest/reservation/${this.updatedReserv.id}`, this.updatedReserv)
+                    .then(response => {
+                        this.getReservations();
+                        this.messages.successResponse = `<h4>You successfuly canceled reservation!</h4>`;
+
+                        setTimeout(() => this.messages.successResponse = '', 5000);
+                    }).catch(error => {
+                        if (error.response.status === 400) {
+                            this.messages.errorResponse = `<h4>We had some server errors, please try again later!</h4>`;
+
+                            setTimeout(() => this.messages.errorResponse = '', 5000);
+                        }
+                    });
             }
         },
 
-        acceptReservation:function(chosenReservation){
-            if(confirm('Do you whant to accept this reservation?')){
+        acceptReservation: function (chosenReservation) {
+            if (confirm('Do you whant to accept this reservation?')) {
                 //Mora da se iz reservationDTO prebaci u reservation model pre slanja;
                 this.updatedReserv.id = chosenReservation.id;
                 this.updatedReserv.apartmentId = chosenReservation.apartmentId;
                 this.updatedReserv.guestId = chosenReservation.guestId;
-                this.updatedReserv.date= chosenReservation.date;
-                this.updatedReserv.night= chosenReservation.night;
-                this.updatedReserv.price= chosenReservation.price;
+                this.updatedReserv.date = chosenReservation.date;
+                this.updatedReserv.night = chosenReservation.night;
+                this.updatedReserv.price = chosenReservation.price;
                 this.updatedReserv.confirmation = chosenReservation.confirmation;
-                this.updatedReserv.message= chosenReservation.message;
+                this.updatedReserv.message = chosenReservation.message;
                 this.updatedReserv.status = 'Accepted';
 
                 axios
-                .put(`rest/reservation/${this.updatedReserv.id}`,this.updatedReserv)
-                .then(response => {
-                    this.getReservations();
-                    this.messages.successResponse = `<h4>You successfuly accepted reservation!</h4>`;
-        
-                    setTimeout(()=>this.messages.successResponse='',5000);
-                }).catch(error => {
-                    if(error.response.status === 400){
-                        this.messages.errorResponse = `<h4>We had some server errors, please try again later!</h4>`;
-            
-                        setTimeout(()=>this.messages.errorResponse='',5000);
-                    }
-                    else if(error.response.status === 403){
-                        this.messages.errorResponse = `<h4>You don't have permission for this action!</h4>`;
-                       
-                        setTimeout(()=>this.messages.errorResponse='',5000);
-                    }
-                });
+                    .put(`rest/reservation/${this.updatedReserv.id}`, this.updatedReserv)
+                    .then(response => {
+                        this.getReservations();
+                        this.messages.successResponse = `<h4>You successfuly accepted reservation!</h4>`;
+
+                        setTimeout(() => this.messages.successResponse = '', 5000);
+                    }).catch(error => {
+                        if (error.response.status === 400) {
+                            this.messages.errorResponse = `<h4>We had some server errors, please try again later!</h4>`;
+
+                            setTimeout(() => this.messages.errorResponse = '', 5000);
+                        }
+                        else if (error.response.status === 403) {
+                            this.messages.errorResponse = `<h4>You don't have permission for this action!</h4>`;
+
+                            setTimeout(() => this.messages.errorResponse = '', 5000);
+                        }
+                    });
             }
         },
 
-        rejectReservation:function(chosenReservation){
-            if(confirm('Do you whant to reject this reservation?')){
+        rejectReservation: function (chosenReservation) {
+            if (confirm('Do you whant to reject this reservation?')) {
                 //Mora da se iz reservationDTO prebaci u reservation model pre slanja;
                 this.updatedReserv.id = chosenReservation.id;
                 this.updatedReserv.apartmentId = chosenReservation.apartmentId;
                 this.updatedReserv.guestId = chosenReservation.guestId;
-                this.updatedReserv.date= chosenReservation.date;
-                this.updatedReserv.night= chosenReservation.night;
-                this.updatedReserv.price= chosenReservation.price;
+                this.updatedReserv.date = chosenReservation.date;
+                this.updatedReserv.night = chosenReservation.night;
+                this.updatedReserv.price = chosenReservation.price;
                 this.updatedReserv.confirmation = chosenReservation.confirmation;
-                this.updatedReserv.message= chosenReservation.message;
+                this.updatedReserv.message = chosenReservation.message;
                 this.updatedReserv.status = 'Rejected';
 
                 axios
-                .put(`rest/reservation/${this.updatedReserv.id}`,this.updatedReserv)
-                .then(response => {
-                    this.getReservations();
-                    this.messages.successResponse = `<h4>You successfuly rejected reservation!</h4>`;
-        
-                    setTimeout(()=>this.messages.successResponse='',5000);
-                }).catch(error => {
-                    if(error.response.status === 400){
-                        this.messages.errorResponse = `<h4>We had some server errors, please try again later!</h4>`;
-            
-                        setTimeout(()=>this.messages.errorResponse='',5000);
-                    }
-                    else if(error.response.status === 403){
-                        this.messages.errorResponse = `<h4>You don't have permission for this action!</h4>`;
-            
-                        setTimeout(()=>this.messages.errorResponse='',5000);
-                    }
-                });
+                    .put(`rest/reservation/${this.updatedReserv.id}`, this.updatedReserv)
+                    .then(response => {
+                        this.getReservations();
+                        this.messages.successResponse = `<h4>You successfuly rejected reservation!</h4>`;
+
+                        setTimeout(() => this.messages.successResponse = '', 5000);
+                    }).catch(error => {
+                        if (error.response.status === 400) {
+                            this.messages.errorResponse = `<h4>We had some server errors, please try again later!</h4>`;
+
+                            setTimeout(() => this.messages.errorResponse = '', 5000);
+                        }
+                        else if (error.response.status === 403) {
+                            this.messages.errorResponse = `<h4>You don't have permission for this action!</h4>`;
+
+                            setTimeout(() => this.messages.errorResponse = '', 5000);
+                        }
+                    });
             }
         },
-        completeReservation:function(chosenReservation){
-            if(confirm('Do you whant to complete this reservation?')){
+        completeReservation: function (chosenReservation) {
+            if (confirm('Do you whant to complete this reservation?')) {
                 //Mora da se iz reservationDTO prebaci u reservation model pre slanja;
                 this.updatedReserv.id = chosenReservation.id;
                 this.updatedReserv.apartmentId = chosenReservation.apartmentId;
                 this.updatedReserv.guestId = chosenReservation.guestId;
-                this.updatedReserv.date= chosenReservation.date;
-                this.updatedReserv.night= chosenReservation.night;
-                this.updatedReserv.price= chosenReservation.price;
+                this.updatedReserv.date = chosenReservation.date;
+                this.updatedReserv.night = chosenReservation.night;
+                this.updatedReserv.price = chosenReservation.price;
                 this.updatedReserv.confirmation = chosenReservation.confirmation;
-                this.updatedReserv.message= chosenReservation.message;
+                this.updatedReserv.message = chosenReservation.message;
                 this.updatedReserv.status = 'Completed';
 
                 axios
-                .put(`rest/reservation/${this.updatedReserv.id}`,this.updatedReserv)
-                .then(response => {
-                    this.getReservations();
-                    this.messages.successResponse = `<h4>You successfuly completed reservation!</h4>`;
-        
-                    setTimeout(()=>this.messages.successResponse='',5000);
-                }).catch(error => {
-                    if(error.response.status === 400){
-                        this.messages.errorResponse = `<h4>We had some server errors, please try again later!</h4>`;
-            
-                        setTimeout(()=>this.messages.errorResponse='',5000);
-                    }
-                    else if(error.response.status === 403){
-                        this.messages.errorResponse = `<h4>You don't have permission for this action!</h4>`;
-            
-                        setTimeout(()=>this.messages.errorResponse='',5000);
-                    }
-                });
+                    .put(`rest/reservation/${this.updatedReserv.id}`, this.updatedReserv)
+                    .then(response => {
+                        this.getReservations();
+                        this.messages.successResponse = `<h4>You successfuly completed reservation!</h4>`;
+
+                        setTimeout(() => this.messages.successResponse = '', 5000);
+                    }).catch(error => {
+                        if (error.response.status === 400) {
+                            this.messages.errorResponse = `<h4>We had some server errors, please try again later!</h4>`;
+
+                            setTimeout(() => this.messages.errorResponse = '', 5000);
+                        }
+                        else if (error.response.status === 403) {
+                            this.messages.errorResponse = `<h4>You don't have permission for this action!</h4>`;
+
+                            setTimeout(() => this.messages.errorResponse = '', 5000);
+                        }
+                    });
             }
         },
-        addComment: function(apartmentId){
+        addComment: function (apartmentId) {
             this.$router.push(`/newComment/${apartmentId}`);
         },
         sort: function (s) {
@@ -331,14 +332,14 @@ Vue.component('reservations', {
             }
             this.currentSort = s;
         },
-        statusCancel:function(status){
-            if(status==="Created" || status==='Accepted'){
+        statusCancel: function (status) {
+            if (status === "Created" || status === 'Accepted') {
                 return false; //nemoj disable uraditi
             }
             return true; //za sve ostale ce uraditi disable
         },
-        statusComment:function(status){
-            if(status==="Rejected" || status==='Completed'){
+        statusComment: function (status) {
+            if (status === "Rejected" || status === 'Completed') {
                 return false; //nemoj disable uraditi
             }
             return true; //za sve ostale ce uraditi disable
@@ -346,25 +347,25 @@ Vue.component('reservations', {
 
 
         //Za dugmad kod Host:
-        statusAccept:function(reservation){
-            if(reservation.status==='Created'){ //prelazi u Accepted
+        statusAccept: function (reservation) {
+            if (reservation.status === 'Created') { //prelazi u Accepted
                 return true;
             }
-            return false; 
+            return false;
         },
-        statusReject:function(reservation){
-            if(reservation.status==='Accepted' || reservation.status==="Created"){//prelazi u Rejected
+        statusReject: function (reservation) {
+            if (reservation.status === 'Accepted' || reservation.status === "Created") {//prelazi u Rejected
                 return true;
             }
-            return false; 
+            return false;
         },
-        statusComplete:function(reservation){
+        statusComplete: function (reservation) {
             //fali i length>current.date uslov, jer rezervacija mora biti prihvacena
             //i da je istekao odmor 
-            if(reservation.status==='Accepted'){
+            if (reservation.status === 'Accepted') {
                 return true;
             }
-           
+
             // Nakon završnog datuma noćenja, mogu da postavim rezervaciju na
             // status ZAVRŠENA
             // const length = reservation.date + reservation.night;
@@ -373,13 +374,13 @@ Vue.component('reservations', {
             // }
             // return false; 
         },
-        search:function(){
+        search: function () {
             axios
-            .get(`rest/reservation/search?username=${this.searchedQuery}`)
-            .then(response => {
-                this.reservations=response.data;
-            })
-            
+                .get(`rest/reservation/search?username=${this.searchedQuery}`)
+                .then(response => {
+                    this.reservations = response.data;
+                })
+
         }
     },
     computed: {
@@ -418,6 +419,12 @@ Vue.component('reservations', {
             this.getReservations();
         }
     },
+    filters: {
+        moment: function (date) {
+            // US date format
+            return this.moment(date).format("MMMM Do YYYY");
+        }
+    }
 });
 
 
