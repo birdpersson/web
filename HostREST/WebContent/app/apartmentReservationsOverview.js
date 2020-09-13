@@ -70,7 +70,8 @@ Vue.component('reservations', {
                         <td>{{reservation.guestId}}</td>
                         <td>{{reservation.type}}</td>
                         <td>{{reservation.address}}</td>
-                        <td>{{reservation.date}}</td>
+                        <td>{{reservation.from | moment}}</td>
+                        <td>{{reservation.to | moment}}</td>
                         <td>{{reservation.night}}</td>
                         <td>{{reservation.price}}</td>
                         <td>{{reservation.confirmation}}</td>
