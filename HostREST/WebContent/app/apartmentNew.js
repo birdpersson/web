@@ -389,6 +389,9 @@ Vue.component('new-apartment', {
 		}
 	},
 	created() {
+		if (!localStorage.getItem('jwt'))
+			this.$router.push('/login');
+
 		axios
 			.get('rest/amenity/all')
 			.then(response => {

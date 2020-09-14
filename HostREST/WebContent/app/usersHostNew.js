@@ -179,4 +179,8 @@ Vue.component("new-host", {
 	mounted() {
 
 	},
+	created() {
+		if (!localStorage.getItem('jwt'))
+			this.$router.push('/login');
+	}
 })

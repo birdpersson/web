@@ -105,11 +105,11 @@ Vue.component('new-reservation', {
 			messages: {
 				errorDates: '',
 				errorMessage: '',
-				errorResponse:'',
-                successResponse:'',
+				errorResponse: '',
+				successResponse: '',
 			},
 			error: false,
-            
+
 		}
 	},
 	methods: {
@@ -128,7 +128,7 @@ Vue.component('new-reservation', {
 					}
 					this.disabledDates.ranges.push(available);
 				}
-			} 
+			}
 		},
 		sendReservation() {
 			for (let i = 0; i < this.disabledDates.ranges.length; i++) {
@@ -137,7 +137,7 @@ Vue.component('new-reservation', {
 				}
 			}
 			//Provera da li je unet datum
-			if(this.dates.to == null){
+			if (this.dates.to == null) {
 				this.messages.errorDates = `<h4>Reservation checkout date can't be empty!</h4>`;
 				setTimeout(() => this.messages.errorDates = '', 10000);
 			}
@@ -160,22 +160,22 @@ Vue.component('new-reservation', {
 					.post('rest/reservation', this.reservation)
 					.then(response => {
 						this.messages.successResponse = `<h4>Your reservation was sent successfully!</h4>`;
-						this.reservation.message='';
+						this.reservation.message = '';
 						this.reservation.night = 1;
 						this.reservation.price = this.apartment.price;
-						setTimeout(() => this.messages.successResponse='', 5000);
-	
+						setTimeout(() => this.messages.successResponse = '', 5000);
+
 					})
 					.catch(error => {
-						if(error.response.status === 500 || error.response.status === 404){
-							this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
-							setTimeout(() => this.messages.errorResponse='', 5000);
+						if (error.response.status === 500 || error.response.status === 404) {
+							this.messages.errorResponse = `<h4>We had some server errors, please try again later!</h4>`;
+							setTimeout(() => this.messages.errorResponse = '', 5000);
 						}
 					});
 			}
 		},
 
-	
+
 
 		// pomocna metoda za ogranicen odabir dana:
 		range: function (start = 1, end) {
@@ -216,6 +216,9 @@ Vue.component('new-reservation', {
 		},
 	},
 	created() {
+		if (!localStorage.getItem('jwt'))
+			this.$router.push('/login');
+
 		this.user.username = localStorage.getItem('user');
 		this.user.role = localStorage.getItem('role');
 		if (this.user.role == "ADMIN") {
@@ -234,9 +237,9 @@ Vue.component('new-reservation', {
 		this.nights = this.range(1, 28);
 
 		axios
-		.get('rest/apartment/' + this.$route.params.id)
-		.then(Response => (this.setApartment(Response.data)));
+			.get('rest/apartment/' + this.$route.params.id)
+			.then(Response => (this.setApartment(Response.data)));
 
-	
+
 	}
 });

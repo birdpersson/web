@@ -409,6 +409,9 @@ Vue.component('reservations', {
         },
     },
     created() {
+        if (!localStorage.getItem('jwt'))
+            this.$router.push('/login');
+
         this.user.username = localStorage.getItem('user');
         this.user.role = localStorage.getItem('role');
         if (this.user.role == "ADMIN") {

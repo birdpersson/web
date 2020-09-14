@@ -114,43 +114,46 @@ Vue.component('apartment-comments', {
             isAdmin: false,
             isHost: false,
             isGuest: false,
-         
-            isTest:false,
+
+            isTest: false,
             //overview u modelu
-            comments:[],
-            apartmentId:''
+            comments: [],
+            apartmentId: ''
         }
     },
     methods: {
-        setRating: function(rating){
-        this.rating = rating;
+        setRating: function (rating) {
+            this.rating = rating;
         },
-        getComments:function(){
+        getComments: function () {
             // dobavljanje svih komentara za prikaz adminu ili hostu
             axios
-            .get('rest/reviews/')
-            .then(response => {
-                this.comments=response.data;
-            })
+                .get('rest/reviews/')
+                .then(response => {
+                    this.comments = response.data;
+                })
         },
-        checkComment:function(updatedComment){
-          
+        checkComment: function (updatedComment) {
+
             updatedComment.visible = !updatedComment.visible;
             axios
-            .put(`rest/reviews/${updatedComment.id}`, updatedComment)
-            .then(response => {
-                this.getComments();
-            })
+                .put(`rest/reviews/${updatedComment.id}`, updatedComment)
+                .then(response => {
+                    this.getComments();
+                })
         },
 
     },
-    computed:{
+    computed: {
         id() {
             return this.$route.params.id; //preuzimam id apartmana na cijoj sam stranici za prikaz komentara
-            
+
         }
     },
     created() {
+        if (!localStorage.getItem('jwt'))
+            this.$router.push('/login');
+
         this.user.username = localStorage.getItem('user');
         this.user.role = localStorage.getItem('role');
 
@@ -164,10 +167,10 @@ Vue.component('apartment-comments', {
             this.isGuest = true;
             this.apartmentId = this.id;
             axios
-            .get(`rest/reviews/apartment/${this.apartmentId}`)
-            .then(response => {
-                this.comments=response.data;
-            })
+                .get(`rest/reviews/apartment/${this.apartmentId}`)
+                .then(response => {
+                    this.comments = response.data;
+                })
         }
     },
 });

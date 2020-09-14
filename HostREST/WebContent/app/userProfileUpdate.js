@@ -80,8 +80,8 @@ Vue.component('profile-update', {
                 gender: '',
                 role: '',
             },
-            changedPassword:{
-                oldPassword:'',
+            changedPassword: {
+                oldPassword: '',
                 newPassword: '',
                 newPasswordRepeat: '',
             },
@@ -89,124 +89,127 @@ Vue.component('profile-update', {
             isHost: false,
             isGuest: false,
 
-            messages:{
-                errorFirstName:'',
-                errorLastName:'',
-                errorOldPass:'',
-                errorNewPass:'',
-                errorRepNewPass:'',
-                errorNotEqualOldPassword:'',
-                errorNotEqualNewPassword:'',
-                errorResponse:'',
-                successResponse:'',
+            messages: {
+                errorFirstName: '',
+                errorLastName: '',
+                errorOldPass: '',
+                errorNewPass: '',
+                errorRepNewPass: '',
+                errorNotEqualOldPassword: '',
+                errorNotEqualNewPassword: '',
+                errorResponse: '',
+                successResponse: '',
             }
         }
     },
     methods: {
 
-        updateProfile: function(){
+        updateProfile: function () {
             // First name i last name se u paru gledaju da li su popunjeni
             // Ako su oba prazna u isto vreme ce za oba izbaciti error
-            if(this.profile.firstname=='' && this.profile.lastname!=''){
-                this.messages.errorFirstName =  `<h4>First name of user can't be empty!</h4>`;
-                setTimeout(()=>this.messages.errorFirstName='',3000);
+            if (this.profile.firstname == '' && this.profile.lastname != '') {
+                this.messages.errorFirstName = `<h4>First name of user can't be empty!</h4>`;
+                setTimeout(() => this.messages.errorFirstName = '', 3000);
             }
-            else if(this.profile.firstname!='' && this.profile.lastname==''){
-                this.messages.errorLastName =  `<h4>Last name of user can't be empty!</h4>`;
-                setTimeout(()=>this.messages.errorLastName='',3000);
+            else if (this.profile.firstname != '' && this.profile.lastname == '') {
+                this.messages.errorLastName = `<h4>Last name of user can't be empty!</h4>`;
+                setTimeout(() => this.messages.errorLastName = '', 3000);
             }
-            else if(this.profile.firstname=='' && this.profile.lastname==''){
-                this.messages.errorFirstName =  `<h4>First name of user can't be empty!</h4>`;
-                this.messages.errorLastName =  `<h4>Last name of user can't be empty!</h4>`;
-                setTimeout(()=>this.messages.errorFirstName='',3000);
-                setTimeout(()=>this.messages.errorLastName='',3000);
-               
+            else if (this.profile.firstname == '' && this.profile.lastname == '') {
+                this.messages.errorFirstName = `<h4>First name of user can't be empty!</h4>`;
+                this.messages.errorLastName = `<h4>Last name of user can't be empty!</h4>`;
+                setTimeout(() => this.messages.errorFirstName = '', 3000);
+                setTimeout(() => this.messages.errorLastName = '', 3000);
+
             }
             //Password check
             //Ako je unet old password, a nije uneto jedno od polja newPassword ili newPassword reapeat unosi se error
-            else if(this.changedPassword.oldPassword !== '' && this.changedPassword.newPassword !== '' && this.changedPassword.newPasswordRepeat === ''){
-                this.messages.errorRepNewPass =  `<h4>You need to repeat your new password!</h4>`;
-                setTimeout(()=>this.messages.errorRepNewPass='',3000);
+            else if (this.changedPassword.oldPassword !== '' && this.changedPassword.newPassword !== '' && this.changedPassword.newPasswordRepeat === '') {
+                this.messages.errorRepNewPass = `<h4>You need to repeat your new password!</h4>`;
+                setTimeout(() => this.messages.errorRepNewPass = '', 3000);
             }
 
             //Ako je unet old password, a nije uneto jedno od polja newPassword ili newPassword reapeat unosi se error
-            else if(this.changedPassword.oldPassword !== '' && this.changedPassword.newPassword === '' && this.changedPassword.newPasswordRepeat !== ''){
-                this.messages.errorNewPass =  `<h4>You need to enter your new password!</h4>`;
-                setTimeout(()=>this.messages.errorNewPass='',3000);
+            else if (this.changedPassword.oldPassword !== '' && this.changedPassword.newPassword === '' && this.changedPassword.newPasswordRepeat !== '') {
+                this.messages.errorNewPass = `<h4>You need to enter your new password!</h4>`;
+                setTimeout(() => this.messages.errorNewPass = '', 3000);
             }
 
             //Ako je unet old password, a nije uneto jedno od polja newPassword ili newPassword reapeat unosi se error
-            else if(this.changedPassword.oldPassword !== '' && this.changedPassword.newPassword === '' && this.changedPassword.newPasswordRepeat === ''){
-                this.messages.errorNewPass =  `<h4>You need to enter your new password!</h4>`;
-                this.messages.errorRepNewPass =  `<h4>You need to repeat your new password!</h4>`;
-                setTimeout(()=>this.messages.errorNewPass='',3000);
-                setTimeout(()=>this.messages.errorRepNewPass='',3000);
+            else if (this.changedPassword.oldPassword !== '' && this.changedPassword.newPassword === '' && this.changedPassword.newPasswordRepeat === '') {
+                this.messages.errorNewPass = `<h4>You need to enter your new password!</h4>`;
+                this.messages.errorRepNewPass = `<h4>You need to repeat your new password!</h4>`;
+                setTimeout(() => this.messages.errorNewPass = '', 3000);
+                setTimeout(() => this.messages.errorRepNewPass = '', 3000);
             }
-            
+
             //Ako nije unet old password, a jesu novi ispisuje se error
-            else if(this.changedPassword.oldPassword === '' && this.changedPassword.newPassword !== '' && this.changedPassword.newPasswordRepeat !== ''){
-                this.messages.errorOldPass =  `<h4>You need to enter your old password first!</h4>`;
-                setTimeout(()=>this.messages.errorOldPass='',3000);
+            else if (this.changedPassword.oldPassword === '' && this.changedPassword.newPassword !== '' && this.changedPassword.newPasswordRepeat !== '') {
+                this.messages.errorOldPass = `<h4>You need to enter your old password first!</h4>`;
+                setTimeout(() => this.messages.errorOldPass = '', 3000);
             }
 
             //Ako su uneta sva 3 passworda, nema errora za prazna polja, ali se proverava validnost samog unosa
-            else if(this.changedPassword.oldPassword !== '' && this.changedPassword.newPassword !== '' && this.changedPassword.newPasswordRepeat !== ''){
+            else if (this.changedPassword.oldPassword !== '' && this.changedPassword.newPassword !== '' && this.changedPassword.newPasswordRepeat !== '') {
                 //Provera da li je stara sifra dobro uneta
-                if(this.profile.password !== this.changedPassword.oldPassword){
-                    this.messages.errorNotEqualOldPassword =  `<h4>Your old password is incorrect! Please try again...</h4>`;
-                    setTimeout(()=>this.messages.errorNotEqualOldPassword ='',3000);
+                if (this.profile.password !== this.changedPassword.oldPassword) {
+                    this.messages.errorNotEqualOldPassword = `<h4>Your old password is incorrect! Please try again...</h4>`;
+                    setTimeout(() => this.messages.errorNotEqualOldPassword = '', 3000);
                 }
-                else{
+                else {
                     //Provera da li se nove sifre poklapaju
-                    if(this.changedPassword.newPassword !== this.changedPassword.newPasswordRepeat){
-                        this.messages.errorNotEqualNewPassword =  `<h4>Your passwords don't match! Please try again...</h4>`;
-                        setTimeout(()=>this.messages.errorNotEqualNewPassword='',3000);
+                    if (this.changedPassword.newPassword !== this.changedPassword.newPasswordRepeat) {
+                        this.messages.errorNotEqualNewPassword = `<h4>Your passwords don't match! Please try again...</h4>`;
+                        setTimeout(() => this.messages.errorNotEqualNewPassword = '', 3000);
                     }
-                    else{
+                    else {
                         //ako je stara sifra dobro uneta, a nove se poklapaju,
                         //stara sifra se menja novom.
                         this.profile.password = this.changedPassword.newPassword;
-                        
-                        axios.put(`rest/profile/${this.user.username}`,this.profile).then(Response => {
+
+                        axios.put(`rest/profile/${this.user.username}`, this.profile).then(Response => {
                             this.messages.successResponse = `<h4>Your profile was edited successfully!</h4>`;
-                            setTimeout(() => this.messages.successResponse='', 5000);
-        
+                            setTimeout(() => this.messages.successResponse = '', 5000);
+
                             this.getUserProfile();
-        
+
                         })
-                        .catch(error => {
-                            if(error.response.status === 500 || error.response.status === 404){
-                                this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
-                                setTimeout(() => this.messages.errorResponse='', 5000);
-                            }
-                        });
-                        
+                            .catch(error => {
+                                if (error.response.status === 500 || error.response.status === 404) {
+                                    this.messages.errorResponse = `<h4>We had some server errors, please try again later!</h4>`;
+                                    setTimeout(() => this.messages.errorResponse = '', 5000);
+                                }
+                            });
+
                     }
                 }
             }
-            else{
-                axios.put(`rest/profile/${this.user.username}`,this.profile).then(Response => {
+            else {
+                axios.put(`rest/profile/${this.user.username}`, this.profile).then(Response => {
                     this.messages.successResponse = `<h4>Your profile was edited successfully!</h4>`;
-                    setTimeout(() => this.messages.successResponse='', 5000);
+                    setTimeout(() => this.messages.successResponse = '', 5000);
 
                     this.getUserProfile();
 
                 })
-                .catch(error => {
-                    if(error.response.status === 500 || error.response.status === 404){
-                        this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
-                        setTimeout(() => this.messages.errorResponse='', 5000);
-                    }
-                });
+                    .catch(error => {
+                        if (error.response.status === 500 || error.response.status === 404) {
+                            this.messages.errorResponse = `<h4>We had some server errors, please try again later!</h4>`;
+                            setTimeout(() => this.messages.errorResponse = '', 5000);
+                        }
+                    });
             }
         },
-        getUserProfile:function(){
+        getUserProfile: function () {
             axios.get(`rest/profile/${this.user.username}`).then(Response => {
                 this.profile = Response.data;
             })
         }
     },
     created() {
+        if (!localStorage.getItem('jwt'))
+            this.$router.push('/login');
+
         this.user.username = localStorage.getItem('user');
         this.user.role = localStorage.getItem('role');
         if (this.user.role == "ADMIN") {

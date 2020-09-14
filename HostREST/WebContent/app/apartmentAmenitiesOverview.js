@@ -107,155 +107,158 @@ Vue.component('amenities-overview', {
             isAdmin: false,
             isHost: false,
             isGuest: false,
-            amenities:[],
+            amenities: [],
 
-            newAmenity:{
-                name:'',
-                type:'',
+            newAmenity: {
+                name: '',
+                type: '',
                 // apartmentId:[],
             },
-            isAddNew:false,
-            isEdit:false,
-            updatedAmenity:{
-                id:'',
-                name:'',
-                type:'',
+            isAddNew: false,
+            isEdit: false,
+            updatedAmenity: {
+                id: '',
+                name: '',
+                type: '',
                 // apartmentId:[],
             },
-            beckupName:'',
+            beckupName: '',
 
-            messages:{
-                errorName:'',
-                errorType:'',
-                errorResponse:'',
-                successResponse:'',
+            messages: {
+                errorName: '',
+                errorType: '',
+                errorResponse: '',
+                successResponse: '',
             }
         }
     },
     methods: {
-        showAllAmenities:function(){
+        showAllAmenities: function () {
             axios
-            .get('rest/amenity/all')
-            .then(response => {
-                this.amenities=response.data;
-            })
+                .get('rest/amenity/all')
+                .then(response => {
+                    this.amenities = response.data;
+                })
         },
-        showNew:function(){
+        showNew: function () {
             //Ako je otvoreno polje za edit zatvori se prvo
             // da bi se otvorilo polje za dodavanje novog sadrzaja.
-            if(this.isEdit === true){
+            if (this.isEdit === true) {
                 this.isEdit = false;
-                
-                this.updatedAmenity.name = this.beckupName 
+
+                this.updatedAmenity.name = this.beckupName
             }
-            this.isAddNew=!this.isAddNew
+            this.isAddNew = !this.isAddNew
         },
-        showEdit:function(chosenAmenity){
+        showEdit: function (chosenAmenity) {
             //Ako je otvoreno polje za dodavanje novog sadrzaja
             //zatvori se prvo da bi se otvorilo polje za edit.
-            if(this.isAddNew === true){
+            if (this.isAddNew === true) {
                 this.isAddNew = false;
             }
             //Ako je vec otvoreno polje za edit
             //i odabere se neki drugi sadrzaj ostaje polje otvoreno,
             //a novi sadrzaj se edituje.
-            if(this.isEdit === true){
+            if (this.isEdit === true) {
                 this.isEdit = true;
                 //ako promeni ime a ne sacuva nego skoci na sledeci sadrzaj
                 //promenjeo ime se gubi i vraca na staro;
-                this.updatedAmenity.name = this.beckupName 
+                this.updatedAmenity.name = this.beckupName
 
                 this.updatedAmenity = chosenAmenity;
                 this.beckupName = chosenAmenity.name;
             }
-            else{
-                this.isEdit=!this.isEdit;
+            else {
+                this.isEdit = !this.isEdit;
                 this.updatedAmenity = chosenAmenity;
                 this.beckupName = chosenAmenity.name;
             }
         },
-        closeEdit(){
+        closeEdit() {
             //Ako je vec otvoreno polje za edit zatvori se.
-            if(this.isEdit === true){
-                this.isEdit=!this.isEdit;
+            if (this.isEdit === true) {
+                this.isEdit = !this.isEdit;
                 //ako promeni ime a ne sacuva nego ugasi edit 
                 //promenjeo ime se gubi i vraca na staro;
-                this.updatedAmenity.name = this.beckupName 
+                this.updatedAmenity.name = this.beckupName
                 // this.updatedAmenity = {};
             }
         },
-        addAmenity:function(){
-            if(this.newAmenity.name=='' &&  this.newAmenity.type!=''){
-                this.messages.errorName =  `<h4>Name of amenity can't be empty!</h4>`;
-                setTimeout(()=>this.messages.errorName='',3000);
+        addAmenity: function () {
+            if (this.newAmenity.name == '' && this.newAmenity.type != '') {
+                this.messages.errorName = `<h4>Name of amenity can't be empty!</h4>`;
+                setTimeout(() => this.messages.errorName = '', 3000);
             }
-            else if(this.newAmenity.name!='' && this.newAmenity.type==''){
-                this.messages.errorType =  `<h4>Type of amenity can't be empty!</h4>`;
-                setTimeout(()=>this.messages.errorType='',3000);
+            else if (this.newAmenity.name != '' && this.newAmenity.type == '') {
+                this.messages.errorType = `<h4>Type of amenity can't be empty!</h4>`;
+                setTimeout(() => this.messages.errorType = '', 3000);
             }
-            else if(this.newAmenity.name=='' && this.newAmenity.type==''){
-                this.messages.errorName =  `<h4>Name of amenity can't be empty!</h4>`;
-                this.messages.errorType =  `<h4>Type of amenity can't be empty!</h4>`;
-                setTimeout(()=>this.messages.errorName='',3000);
-                setTimeout(()=>this.messages.errorType='',3000);
-               
-            }
-            else{
-                axios
-                .post('rest/amenity/', this.newAmenity)
-                .then(response => {
-                    this.messages.successResponse = `<h4>Amenity was added successfully!</h4>`;
-                    this.newAmenity.name='';
-                    this.newAmenity.type='';
-                    this.showAllAmenities();
-                    setTimeout(() => this.messages.successResponse='', 5000);
+            else if (this.newAmenity.name == '' && this.newAmenity.type == '') {
+                this.messages.errorName = `<h4>Name of amenity can't be empty!</h4>`;
+                this.messages.errorType = `<h4>Type of amenity can't be empty!</h4>`;
+                setTimeout(() => this.messages.errorName = '', 3000);
+                setTimeout(() => this.messages.errorType = '', 3000);
 
-                })
-                .catch(error => {
-                    if(error.response.status === 500 || error.response.status === 404){
-                        this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
-                        setTimeout(() => this.messages.errorResponse='', 5000);
-                    }
-                });
+            }
+            else {
+                axios
+                    .post('rest/amenity/', this.newAmenity)
+                    .then(response => {
+                        this.messages.successResponse = `<h4>Amenity was added successfully!</h4>`;
+                        this.newAmenity.name = '';
+                        this.newAmenity.type = '';
+                        this.showAllAmenities();
+                        setTimeout(() => this.messages.successResponse = '', 5000);
+
+                    })
+                    .catch(error => {
+                        if (error.response.status === 500 || error.response.status === 404) {
+                            this.messages.errorResponse = `<h4>We had some server errors, please try again later!</h4>`;
+                            setTimeout(() => this.messages.errorResponse = '', 5000);
+                        }
+                    });
             }
         },
-        editAmenity:function(){
-            if(this.updatedAmenity.name===''){
-                this.messages.errorName =  `<h4>Name of amenity can't be empty!</h4>`;
-                setTimeout(()=>this.messages.errorName='',3000);
+        editAmenity: function () {
+            if (this.updatedAmenity.name === '') {
+                this.messages.errorName = `<h4>Name of amenity can't be empty!</h4>`;
+                setTimeout(() => this.messages.errorName = '', 3000);
             }
-            else{
+            else {
                 axios
-                .put(`rest/amenity/${this.updatedAmenity.id}`, this.updatedAmenity)
-                .then(response => {
-                    this.messages.successResponse = `<h4>Amenity was updated successfuly!</h4>`;
-                    this.updatedAmenity.name='';
-                    this.showAllAmenities();
-                    setTimeout(() => this.messages.successResponse='', 5000);
+                    .put(`rest/amenity/${this.updatedAmenity.id}`, this.updatedAmenity)
+                    .then(response => {
+                        this.messages.successResponse = `<h4>Amenity was updated successfuly!</h4>`;
+                        this.updatedAmenity.name = '';
+                        this.showAllAmenities();
+                        setTimeout(() => this.messages.successResponse = '', 5000);
 
-                })
-                .catch(error => {
-                    if(error.response.status === 500 || error.response.status === 404){
-                        this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
-                        setTimeout(() => this.messages.errorResponse='', 5000);
-                    }
-                });
+                    })
+                    .catch(error => {
+                        if (error.response.status === 500 || error.response.status === 404) {
+                            this.messages.errorResponse = `<h4>We had some server errors, please try again later!</h4>`;
+                            setTimeout(() => this.messages.errorResponse = '', 5000);
+                        }
+                    });
             }
         },
 
-        deleteAmenity:function(amenity){
-            if(confirm('Are you sure that you whant to delete this amenity?')){
+        deleteAmenity: function (amenity) {
+            if (confirm('Are you sure that you whant to delete this amenity?')) {
                 alert('Ovaj amenity je obrisan!!!')
             }
         }
     },
     created() {
+        if (!localStorage.getItem('jwt'))
+            this.$router.push('/login');
+
         this.user.username = localStorage.getItem('user');
         this.user.role = localStorage.getItem('role');
         if (this.user.role == "ADMIN") {
             this.isAdmin = true;
             this.showAllAmenities();
-           
+
         } else if (this.user.role == "HOST") {
             this.isHost = true;
         } else {

@@ -89,24 +89,24 @@ Vue.component('users', {
                 gender: null,
                 role: null,
             },
-            searchedQuery:'?',
+            searchedQuery: '?',
             isAdmin: false,
             isHost: false,
             isGuest: false,
 
-            roles:['ADMIN','HOST','GUEST'],
-            genders:['Male','Female','Other'],
+            roles: ['ADMIN', 'HOST', 'GUEST'],
+            genders: ['Male', 'Female', 'Other'],
         }
     },
     methods: {
         searchUser() {
-            if(this.searchedUser.username !== ''){
-               this.searchedQuery += 'username=' + this.searchedUser.username;
+            if (this.searchedUser.username !== '') {
+                this.searchedQuery += 'username=' + this.searchedUser.username;
             }
-            if(this.searchedUser.gender !== null){
-                this.searchedQuery += '&gender=' + this.searchedUser.gender ;
+            if (this.searchedUser.gender !== null) {
+                this.searchedQuery += '&gender=' + this.searchedUser.gender;
             }
-            if(this.searchedUser.role !== null){
+            if (this.searchedUser.role !== null) {
                 this.searchedQuery += '&role=' + this.searchedUser.role;
             }
             console.log(`Trazite usera ${this.searchedUser.username}
@@ -115,38 +115,38 @@ Vue.component('users', {
             `);
 
             axios
-            .get('rest/user/search'+ this.searchedQuery)
-            .then(response => {
-                 this.users=response.data;
-                //  this.searchedUser.username= '';
-                //  this.searchedUser.gender= null;
-                //  this.searchedUser.role= null;
-                 this.searchedQuery='?';
-            });
+                .get('rest/user/search' + this.searchedQuery)
+                .then(response => {
+                    this.users = response.data;
+                    //  this.searchedUser.username= '';
+                    //  this.searchedUser.gender= null;
+                    //  this.searchedUser.role= null;
+                    this.searchedQuery = '?';
+                });
 
 
         },
 
-        getUsersForAdmin(){
+        getUsersForAdmin() {
             //get metoda koja vraca sve usere.
             axios
-            .get('rest/user/all')
-            .then(Response => (this.users=Response.data));
+                .get('rest/user/all')
+                .then(Response => (this.users = Response.data));
         },
-        getUsersForHost(){
+        getUsersForHost() {
             //get metoda koja vraca sve usere tipa guest koji imaju rezervaciju kod tog hosta
             axios
-            .get(`rest/user/customers`)
-            .then(Response => (this.users=Response.data));
+                .get(`rest/user/customers`)
+                .then(Response => (this.users = Response.data));
         },
-        resetFilter(){
+        resetFilter() {
             if (this.user.role == "ADMIN") {
                 this.getUsersForAdmin();
 
                 // this.searchedUser.username= '';
                 // this.searchedUser.gender= null;
                 // this.searchedUser.role= null;
-                this.searchedQuery='?';
+                this.searchedQuery = '?';
 
             }
             if (this.user.role == "HOST") {
@@ -158,16 +158,19 @@ Vue.component('users', {
 
     },
     created() {
+        if (!localStorage.getItem('jwt'))
+            this.$router.push('/login');
+
         this.user.username = localStorage.getItem('user');
         this.user.role = localStorage.getItem('role');
         if (this.user.role == "ADMIN") {
             this.isAdmin = true;
             this.getUsersForAdmin();
-          
+
         } else if (this.user.role == "HOST") {
             this.isHost = true;
             this.getUsersForHost();
-           
+
         } else {
             this.isGuest = true;
         }
