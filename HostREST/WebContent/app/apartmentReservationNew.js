@@ -37,10 +37,10 @@ Vue.component('new-reservation', {
                     <option disabled value="">No. of nights</option>
                     <option v-for='night in nights'>{{night}}</option>
                 </select>
-                <h2>Selected: {{reservation.night}}</h2>
+                <!-- <h2>Selected: {{reservation.night}}</h2> -->
                 <label for="">Price:</label>
                 <h4>{{reservation.price}}$ </h4>
-                <div style="margin-top:20px" v-if='messages.errorMessage' class="alert alert-danger" v-html="messages.errorMessage"></div>
+                <!-- <div style="margin-top:20px" v-if='messages.errorMessage' class="alert alert-danger" v-html="messages.errorMessage"></div> -->
                 <label>Message:</label>
                 <textarea v-model='reservation.message' placeholder="Enter message..."></textarea>
                 <button class="btn btn-lg btn-success" v-on:click='sendReservation'> Send </button>
@@ -147,10 +147,10 @@ Vue.component('new-reservation', {
 				setTimeout(() => this.messages.errorDates = '', 10000);
 			}
 			//Provera da li je unet tekst poruke
-			else if (this.reservation.message == '') {
-				this.messages.errorMessage = `<h4>Message can't be empty!</h4>`;
-				setTimeout(() => this.messages.errorMessage = '', 10000);
-			}
+			// else if (this.reservation.message == '') {
+			// 	this.messages.errorMessage = `<h4>Message can't be empty!</h4>`;
+			// 	setTimeout(() => this.messages.errorMessage = '', 10000);
+			// }
 			else {
 				// datepicker disables day after reservatoin.from
 				this.reservation.from = this.dates.from.getTime();

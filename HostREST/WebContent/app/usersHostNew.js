@@ -26,19 +26,19 @@ Vue.component("new-host", {
 		}
 	},
 	template: `
-	<div id="signup">
+	<div id="new-host">
 	<div class="container" id='page-title'>
 		<h1 style="margin-top:10px;color:#35424a;">Create Host <span id='titleEffect'>Account</span></h1>
 		<hr style='background:#e8491d;height:1px;'>
 	</div>
-	  <div class="container-fluid">
-		<div class="row no-gutter">
+	  <div class="container-fluid container">
+		<div class="row no-gutter";">
   
 		  <div class="col-md-8 col-lg-6">
 			<div class="login d-flex alignlogin d-flex align-items-center py-5">
 			  <div class="container">
 				<div class="row">
-				  <div class="col-md-9 col-lg-8 mx-auto">
+				  <div class="col-md-9 col-lg-8 ">
 					<div class="alert alert-danger" v-if="error" v-html="messages.errorResponse"></div>
   
 					<form class="form-signin">
@@ -162,7 +162,7 @@ Vue.component("new-host", {
 		},
 		signupSuccessful: function (response) {
 			if (response.status === 201) {
-				this.login(response.data);
+				this.$router.push('/users');
 			}
 			this.signupFailed()
 		},
@@ -185,16 +185,6 @@ Vue.component("new-host", {
 	
 		
 		loginSuccessful: function (data) {
-			// if (!data.jwt) {
-			// 	this.loginFailed();
-			// 	return;
-			// }
-			// localStorage.setItem('jwt', data.jwt);
-			// localStorage.setItem('role', data.role);
-			// localStorage.setItem('user', data.username);
-
-			// window.location.reload(); //refresh Authorization Bearer with new token
-			// this.error = false;
 			this.$router.push('/users');
 		},
 		
@@ -213,10 +203,6 @@ Vue.component("new-host", {
 	mounted() {
 
 	},
-	// created() {
-	// 	if (localStorage.getItem('jwt')) {
-	// 		this.$router.push('/homepage');
-	// 	}
-	// }
+
 
 })
