@@ -46,23 +46,23 @@ Vue.component('profile-update', {
             <div v-if='messages.errorOldPass' class="alert alert-danger" v-html="messages.errorOldPass"></div>
             <fieldset class="form-group">
                 <label>Old password</label>
-                <input type="text" class="form-control" v-model="changedPassword.oldPassword" placeholder="Enter old password" />
+                <input type="password" class="form-control" v-model="changedPassword.oldPassword" placeholder="Enter old password" />
             </fieldset>
 
             <div v-if='messages.errorNewPass' class="alert alert-danger" v-html="messages.errorNewPass"></div>
             <fieldset class="form-group">
                 <label>New password</label>
-                <input type="text" class="form-control" v-model="changedPassword.newPassword" placeholder="Enter new password" />
+                <input type="password" class="form-control" v-model="changedPassword.newPassword" placeholder="Enter new password" />
             </fieldset>
 
             <div v-if='messages.errorNotEqualNewPassword' class="alert alert-danger" v-html="messages.errorNotEqualNewPassword"></div>
             <div v-if='messages.errorRepNewPass' class="alert alert-danger" v-html="messages.errorRepNewPass"></div>
             <fieldset class="form-group">
                 <label>Repeat new password</label>
-                <input type="text" class="form-control" v-model="changedPassword.newPasswordRepeat" placeholder="Repeat your new password"  />
+                <input type="password" class="form-control" v-model="changedPassword.newPasswordRepeat" placeholder="Repeat your new password"  />
             </fieldset>
 
-            <button type="button" class="btn btn-lg btn-success" v-on:click='updatePacijentProfile'> Save </button>
+            <button type="button" class="btn btn-lg btn-success" v-on:click='updateProfile'> Save </button>
         </div>
     </div>
 </div>`,
@@ -104,7 +104,7 @@ Vue.component('profile-update', {
     },
     methods: {
 
-        updatePacijentProfile: function(){
+        updateProfile: function(){
             // First name i last name se u paru gledaju da li su popunjeni
             // Ako su oba prazna u isto vreme ce za oba izbaciti error
             if(this.profile.firstname=='' && this.profile.lastname!=''){
