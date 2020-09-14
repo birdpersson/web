@@ -130,9 +130,11 @@ public class ReviewsServices {
 		String username = AuthService.getUsername(request);
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
 		ReviewDAO dao = (ReviewDAO) ctx.getAttribute("reviewDAO");
-
+		
+		System.out.println("Review status old: " + dao.findOne(id).isVisible());
+		
 		if (userDao.findOne(username).getRole().toString().equals("HOST")) {
-
+			System.out.println("Review status new: " + review.isVisible());
 			return Response.status(Response.Status.OK).entity(dao.update(id, review)).build();
 		}
 

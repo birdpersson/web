@@ -34,7 +34,7 @@ Vue.component('apartment-comments', {
                         {{comment.text}}  
                     </div>
                 </div>
-            </div> <!--comments-->d
+            </div> <!--comments-->
         </div> <!--isGuest-->
 
         <div v-if='isAdmin'>
@@ -43,7 +43,7 @@ Vue.component('apartment-comments', {
             ih je Domaćin odabrao ili nije)<br>
             <br>-->
             <div id='apartmentInfo'>
-                <h3>Apartmetn id: {{apartmentId}}</h3>
+                <h3>Apartment id: {{apartmentId}}</h3>
             </div>
             <div class="comments" v-for='comment in comments'>
                 <div class="single-comment">

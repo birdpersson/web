@@ -109,19 +109,19 @@ Vue.component("apartment-details", {
           <h4>Apartment Reviews</h4>
         </div>
 
-        <div class="card-body" v-for="review in apartment.reviews">
-          <div style="margin-bottom: 10px;" id='star-rating'>
-              <star-rating
-                  inactive-color="#35424a"
-                  active-color="#e8491d"
-                  v-bind:read-only= "true"
-                  v-bind:star-size="20"
-                  v-bind:show-rating="false"
-                  v-bind:rating="review.star">
-              </star-rating>
-          </div>
-          <p>{{review.text}}</p>
-          <small class="text-muted">Posted by {{review.guestId}}</small>
+        <div class="card-body" v-for="review in apartment.reviews" v-if="review.visible" >
+            <div style="margin-bottom: 10px;" id='star-rating' >
+                <star-rating
+                    inactive-color="#35424a"
+                    active-color="#e8491d"
+                    v-bind:read-only= "true"
+                    v-bind:star-size="20"
+                    v-bind:show-rating="false"
+                    v-bind:rating="review.star">
+                </star-rating>
+            </div>
+            <p>{{review.text}}</p>
+            <small class="text-muted">Posted by {{review.guestId}}</small>
           <hr>
         </div>
 

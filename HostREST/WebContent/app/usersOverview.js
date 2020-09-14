@@ -56,7 +56,7 @@ Vue.component('users', {
                         </tr>
                     </tbody>
                 </table>
-                <router-link style='text-decoration: none;color:#35424a;' to="/users/addHost" ><button class="navbar-brand nav-link btn btn-success">+ Add host</button></router-link>
+                <router-link v-if='isAdmin' style='text-decoration: none;color:#35424a;' to="/users/addHost" ><button class="navbar-brand nav-link btn btn-success">+ Add host</button></router-link>
             </div>
         </div>
         <!--    <br>
