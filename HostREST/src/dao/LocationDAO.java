@@ -74,33 +74,43 @@ public class LocationDAO {
 		return location;
 	}
 
-	//TODO: rewrite
-	public Location update(String id, Location updatedLocation) {
-
-		// We retrive host based on id we received as argument.
-		Location oldLocation = findOne(id);
-
-		// if there is not host with such id we save that product as new one.
-		if (oldLocation == null) {
-			System.out.println("Usao u save host u okviru update");
-			return updatedLocation;
-		} else {
-			System.out.println("usao u update product u okviru update");
-			// We don't change id of existing host just username, password, firstname and
-			// lastname.
-
-//			oldLocation.setApartmentId(updatedLocation.getApartmentId());
-			oldLocation.setLongitude(updatedLocation.getLongitude());
-			oldLocation.setLatitude(updatedLocation.getLatitude());
-			oldLocation.setAddress(updatedLocation.getAddress());
-
-			// We save old product which is now updated.
-			return locations.put(oldLocation.getId(), oldLocation);
+	public Location update(String contextPath, Location location) {
+		try {
+			File file = new File(contextPath + "/locations.txt");
+			BufferedReader in = new BufferedReader(new FileReader(file));
+			String line = "", text = "";
+			StringTokenizer st;
+			while ((line = in.readLine()) != null) {
+				line = line.trim();
+				if (line.equals("") || line.indexOf('#') == 0)
+					continue;
+				st = new StringTokenizer(line, ";");
+				String id = st.nextToken().trim();
+				if (location.getId().equals(id)) {
+					text += id + ";"
+							+ location.getLatitude() + ";"
+							+ location.getLongitude() + ";"
+							+ location.getAddress().getStreet() + ";"
+							+ location.getAddress().getCity() + ";"
+							+ location.getAddress().getPostalCode() + "\r\n";
+				} else {
+					text += line + "\r\n";
+				}
+			}
+			in.close();
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+			PrintWriter out = new PrintWriter(writer);
+			out.println(text);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
-
+		loadLocations(contextPath);
+		return location;
 	}
 
-	//TODO: rewrite
+	//TODO: remove if not necessary
 	public Location delete(String id) {
 		// hosts.get(id).isLogicalyRemoved(true); za logicko brisanje...
 		return locations.containsKey(id) ? locations.remove(id) : null;
