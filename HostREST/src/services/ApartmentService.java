@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -155,6 +156,20 @@ public class ApartmentService {
 			}
 		}
 		return Response.status(Response.Status.CREATED).build();
+	}
+
+	@PUT
+	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateApartment(@Context HttpServletRequest request, Apartment apartment) {
+		String username = AuthService.getUsername(request);
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+		if (!userDao.findOne(username).getRole().toString().equals("HOST")) {
+			return Response.status(Response.Status.FORBIDDEN).build();
+		}
+		ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+		return Response.status(Response.Status.CREATED).entity(apartmentDao.update(ctx.getRealPath(""), apartment)).build();
 	}
 
 }

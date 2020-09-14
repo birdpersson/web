@@ -46,69 +46,72 @@ Vue.component('new-comment', {
                 role: ''
             },
             isGuest: false,
-            review:{
-	            guestId:'',
-	            apartmentId:'',
-	            text:'',
-	            star:null,
-	            visible:false,
+            review: {
+                guestId: '',
+                apartmentId: '',
+                text: '',
+                star: null,
+                visible: false,
                 // comment:'',
                 // rating:null,
             },
-            messages:{
-                errorText:'',
-                errorStar:'',
-                errorResponse:'',
-                successResponse:'',
+            messages: {
+                errorText: '',
+                errorStar: '',
+                errorResponse: '',
+                successResponse: '',
             }
         }
     },
 
     methods: {
-        addComment: function(){
-            if(this.review.text=='' &&  this.review.star!=null){
-                this.messages.errorText =  `<h4>Text of comment can't be empty!</h4>`;
-                setTimeout(()=>this.messages.errorText='',3000);
+        addComment: function () {
+            if (this.review.text == '' && this.review.star != null) {
+                this.messages.errorText = `<h4>Text of comment can't be empty!</h4>`;
+                setTimeout(() => this.messages.errorText = '', 3000);
             }
-            else if(this.review.text!='' && this.review.star==null){
-                this.messages.errorStar =  `<h4>Rating can't be empty!</h4>`;
-                setTimeout(()=>this.messages.errorStar='',3000);
+            else if (this.review.text != '' && this.review.star == null) {
+                this.messages.errorStar = `<h4>Rating can't be empty!</h4>`;
+                setTimeout(() => this.messages.errorStar = '', 3000);
             }
-            else if(this.review.text=='' && this.review.star==null){
-                this.messages.errorText =  `<h4>Text of comment can't be empty!</h4>`;
-                this.messages.errorStar =  `<h4>Rating can't be empty!</h4>`;
-                setTimeout(()=>this.messages.errorText='',3000);
-                setTimeout(()=>this.messages.errorStar='',3000);
-               
-            }
-            else{
-                axios
-                .post('rest/reviews/', this.review)
-                .then(response => {
-                    this.messages.successResponse = `<h4>Your review was sent successfully! Thank you for your feedback!</h4>`;
-                    this.review.text='';
-                    this.review.star=null;
-                    setTimeout(() => this.messages.successResponse='', 5000);
+            else if (this.review.text == '' && this.review.star == null) {
+                this.messages.errorText = `<h4>Text of comment can't be empty!</h4>`;
+                this.messages.errorStar = `<h4>Rating can't be empty!</h4>`;
+                setTimeout(() => this.messages.errorText = '', 3000);
+                setTimeout(() => this.messages.errorStar = '', 3000);
 
-                })
-                .catch(error => {
-                    if(error.response.status === 500 || error.response.status === 404){
-                        this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
-                        setTimeout(() => this.messages.errorResponse='', 5000);
-                    }
-                });
+            }
+            else {
+                axios
+                    .post('rest/reviews/', this.review)
+                    .then(response => {
+                        this.messages.successResponse = `<h4>Your review was sent successfully! Thank you for your feedback!</h4>`;
+                        this.review.text = '';
+                        this.review.star = null;
+                        setTimeout(() => this.messages.successResponse = '', 5000);
+
+                    })
+                    .catch(error => {
+                        if (error.response.status === 500 || error.response.status === 404) {
+                            this.messages.errorResponse = `<h4>We had some server errors, please try again later!</h4>`;
+                            setTimeout(() => this.messages.errorResponse = '', 5000);
+                        }
+                    });
             }
         }
     },
-    computed:{
+    computed: {
         id() {
             return this.$route.params.id; //preuzimam id apartmana za koga dodajem novi komentara
         }
     },
     created() {
+        if (!localStorage.getItem('jwt'))
+            this.$router.push('/login');
+
         this.user.username = localStorage.getItem('user');
         this.user.role = localStorage.getItem('role');
-       
+
         if (this.user.role == "ADMIN") {
             this.isAdmin = true;
         } else if (this.user.role == "HOST") {
@@ -116,7 +119,7 @@ Vue.component('new-comment', {
         } else {
             this.isGuest = true;
             this.review.guestId = this.user.username;
-            this.review.apartmentId = this.id 
+            this.review.apartmentId = this.id
             // alert('Apartment id: ' + this.review.apartmentId);
         }
     },

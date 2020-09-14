@@ -31,6 +31,7 @@ Vue.component('reservations', {
                 <nav class="navbar navbar-light bg-light justify-content-between">
                     <a class="navbar-brand">Filter&Search</a>
                     <form class="form-inline">
+                        <button style='margin-right:5px;' class='btn btn-outline-primary my-2 my-sm-0' v-on:click="resetFilter()">Reset</button>
                         <div>
                             <img src='img/filterIcon1.1.png' style="display:inline;">
                             <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="filterQuery">
@@ -128,8 +129,8 @@ Vue.component('reservations', {
                         <td>{{reservation.price}}</td>
                         <td>{{reservation.confirmation}}</td>
                         <td>{{reservation.status}}</td>
-                        <td><button :disabled='statusCancel(reservation.status)' v-on:click='cancelReservation(reservation)'> Odustani </button></td>
-                        <td><button :disabled='statusComment(reservation.status)'v-on:click='addComment(reservation.apartmentId)'> + Komentar </button></td>
+                        <td><button :disabled='statusCancel(reservation.status)' v-on:click='cancelReservation(reservation)'> Cancel </button></td>
+                        <td><button :disabled='statusComment(reservation.status)'v-on:click='addComment(reservation.apartmentId)'> + Comment </button></td>
                     </tr>
                 </tbody>
             </table>
@@ -190,6 +191,7 @@ Vue.component('reservations', {
                     this.reservations = response.data;
                 })
         },
+
         cancelReservation: function (chosenReservation) {
             if (confirm('Do you whant to cancel this reservation?')) {
                 //Mora da se iz reservationDTO prebaci u reservation model pre slanja;
@@ -407,6 +409,9 @@ Vue.component('reservations', {
         },
     },
     created() {
+        if (!localStorage.getItem('jwt'))
+            this.$router.push('/login');
+
         this.user.username = localStorage.getItem('user');
         this.user.role = localStorage.getItem('role');
         if (this.user.role == "ADMIN") {

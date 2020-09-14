@@ -33,7 +33,7 @@ public class ReservationDAO {
 		Collection<Reservation> allReservations = findAll();
 		Collection<Reservation> testRet = new ArrayList<Reservation>();
 		for (Reservation r : allReservations) {
-			if (r.getGuestId().equals(id)) {
+			if (r.getGuestId().toLowerCase().equals(id.toLowerCase())) {
 				testRet.add(r);
 			}
 		}

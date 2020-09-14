@@ -1,5 +1,5 @@
 Vue.component('apartment-edit', {
-    template: `
+	template: `
 	<div id="new-apartment">
 	  <div class="container" id='page-title'>
 		<h1 style="margin-top:10px;color:#35424a;">Edit <span id='titleEffect'>Apartment</span></h1>
@@ -124,266 +124,269 @@ Vue.component('apartment-edit', {
 	  </div>
 	</div>
 	`
-	  ,
-	  data: function () {
-		  return {
-	 
-			  apartment: {
-				  type: null,
-				  rooms: null,
-				  guests: null,
-				  location: {
-					  latitude: '',
-					  longitude: '',
-					  address: {
-						  street: '',
-						  city: '',
-						  postalCode: ''
-					  }
-				  },
-				  to: null,
-				  from: null,
-				  price: null,
-				  checkin: '2 PM',
-				  checkout: '10 AM',
-				  amenities: []
-			  },
-  
-			  types: ['APARTMENT', 'ROOM'],
-			  rooms: null,
-			  guests: null,
-			  images: null,
-			  amenities: [],
-  
-			  dates: {
-				  from: null,
-				  to: null
-			  },
-  
-			  disabledDates: {
-				  to: null
-			  },
-  
-			  highlighted: {
-				  to: null,
-				  from: null
-        },
-        apartmentId:'',
+	,
+	data: function () {
+		return {
 
-		messages:{
-		  errorType:'',
-		  errorRooms:'',
-		  errorGuests:'',
-		  errorLocation:'',
-		  errorAddress:'',
-		  errorPrice:'',
-		  errorCheckInOut:'',
-		  errorDates:'',
-		  errorAmenities:'',
-		  errorResponse:'',
-		  successResponse:'',
+			apartment: {
+				type: null,
+				rooms: null,
+				guests: null,
+				location: {
+					latitude: '',
+					longitude: '',
+					address: {
+						street: '',
+						city: '',
+						postalCode: ''
+					}
+				},
+				to: null,
+				from: null,
+				price: null,
+				checkin: '2 PM',
+				checkout: '10 AM',
+				amenities: []
+			},
+
+			types: ['APARTMENT', 'ROOM'],
+			rooms: null,
+			guests: null,
+			images: null,
+			amenities: [],
+
+			dates: {
+				from: null,
+				to: null
+			},
+
+			disabledDates: {
+				to: null
+			},
+
+			highlighted: {
+				to: null,
+				from: null
+			},
+			apartmentId: '',
+
+			messages: {
+				errorType: '',
+				errorRooms: '',
+				errorGuests: '',
+				errorLocation: '',
+				errorAddress: '',
+				errorPrice: '',
+				errorCheckInOut: '',
+				errorDates: '',
+				errorAmenities: '',
+				errorResponse: '',
+				successResponse: '',
+			},
+			allAmenities: [], //svi amenties koji su u bazi
+			amenities: {
+				base: [],
+				family: [],
+				dining: [],
+				fac: [],
+			},
+		}
+	},
+
+	methods: {
+		create: function (apartment) {
+			if (this.apartment.type == null) {
+				this.messages.errorType = `<h4>Field type of apartment can't be empty!</h4>`;
+				setTimeout(() => this.messages.errorType = '', 10000);
+			}
+			else if (this.apartment.rooms == null && this.apartment.type == 'APARTMENT') {
+				this.messages.errorRooms = `<h4>Field rooms of apartment can't be empty!</h4>`;
+				setTimeout(() => this.messages.errorRooms = '', 10000);
+			}
+			else if (this.apartment.guests == null) {
+				this.messages.errorGuests = `<h4>Field number of guests of apartment can't be empty!</h4>`;
+				setTimeout(() => this.messages.errorGuests = '', 10000);
+			}
+
+			//Apartment location
+			else if (this.apartment.location.latitude == '') {
+				this.messages.errorLocation = `<h4>Field latitude of apartment can't be empty!</h4>`;
+				setTimeout(() => this.messages.errorLocation = '', 10000);
+			}
+			//Provera da li je apartment latitude broj;
+			else if (this.isNumeric(this.apartment.location.latitude)) {
+				this.messages.errorLocation = `<h4>Latitude of apartment must be number!</h4>`;
+				setTimeout(() => this.messages.errorLocation = '', 10000);
+			}
+			else if (this.apartment.location.longitude == '') {
+				this.messages.errorLocation = `<h4>Field longitude of apartment can't be empty!</h4>`;
+				setTimeout(() => this.messages.errorLocation = '', 10000);
+			}
+			//Provera da li je apartment longitude broj;
+			else if (this.isNumeric(this.apartment.location.longitude)) {
+				this.messages.errorLocation = `<h4>Longitude of apartment must be number!</h4>`;
+				setTimeout(() => this.messages.errorLocation = '', 10000);
+			}
+
+			//Apartment address
+			else if (this.apartment.location.address.street == '') {
+				this.messages.errorAddress = `<h4>Field street of address of apartment can't be empty!</h4>`;
+				setTimeout(() => this.messages.errorAddress = '', 10000);
+			}
+			else if (this.apartment.location.address.city == '') {
+				this.messages.errorAddress = `<h4>Field city of address of apartment can't be empty!</h4>`;
+				setTimeout(() => this.messages.errorAddress = '', 10000);
+			}
+			else if (this.apartment.location.address.postalCode == '') {
+				this.messages.errorAddress = `<h4>Field postal code of address of apartment can't be empty!</h4>`;
+				setTimeout(() => this.messages.errorAddress = '', 10000);
+			}
+
+			//Apartment price: 
+			else if (this.apartment.price == null) {
+				this.messages.errorPrice = `<h4>Field price of apartment can't be empty!</h4>`;
+				setTimeout(() => this.messages.errorPrice = '', 10000);
+			}
+			//Provera da li je cena broj;
+			else if (this.isNumeric(this.apartment.price)) {
+				this.messages.errorPrice = `<h4>Price of apartment must be number!</h4>`;
+				setTimeout(() => this.messages.errorPrice = '', 10000);
+			}
+
+			else if (this.apartment.checkin == '') {
+				this.messages.errorCheckInOut = `<h4>Field check in of apartment can't be empty!</h4>`;
+				setTimeout(() => this.messages.errorCheckInOut = '', 5000);
+			}
+			else if (this.apartment.checkout == '') {
+				this.messages.errorCheckInOut = `<h4>Field check out of apartment can't be empty!</h4>`;
+				setTimeout(() => this.messages.errorCheckInOut = '', 5000);
+			}
+			else if (this.dates.from == null) {
+				this.messages.errorDates = `<h4>Field checkin date of apartment can't be empty!</h4>`;
+				setTimeout(() => this.messages.errorDates = '', 5000);
+			}
+			else if (this.dates.to == null) {
+				this.messages.errorDates = `<h4>Field checkout to of apartment can't be empty!</h4>`;
+				setTimeout(() => this.messages.errorDates = '', 5000);
+			}
+			else if (this.apartment.amenities == '') {
+				this.messages.errorAmenities = `<h4>Amenities of apartment can't be empty!</h4>`;
+				setTimeout(() => this.messages.errorAmenities = '', 5000);
+			}
+			else {
+
+				// unselected dates will be disabled
+				this.apartment.to = this.dates.from.getTime();
+				this.apartment.from = this.dates.to.getTime() + 1000 * 60 * 60 * 24;
+				console.log(this.apartment);
+				// axios
+				//     .post('rest/apartment', this.apartment)
+				//     .then(Response => {
+				//     console.log(Response);
+				//     this.messages.successResponse = `<h4>Apartment was edited successfully!</h4>`;                
+				//     setTimeout(() => this.messages.successResponse='', 5000);
+				// })
+				// .catch(error => {
+				//     if(error.response.status === 500 || error.response.status === 404){
+				//         this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
+				//         setTimeout(() => this.messages.errorResponse='', 5000);
+				//     }
+				// });
+			}
 		},
-		allAmenities:[], //svi amenties koji su u bazi
-		amenities:{
-		  base:[],
-		  family:[],
-		  dining:[],
-		  fac:[],
-	  },
-		  }
-	  },
-  
-    methods: {
-        create: function (apartment) {
-            if(this.apartment.type == null){
-            this.messages.errorType =  `<h4>Field type of apartment can't be empty!</h4>`;
-            setTimeout(()=>this.messages.errorType='',10000);
-            }
-            else if(this.apartment.rooms ==  null && this.apartment.type == 'APARTMENT'){
-            this.messages.errorRooms =  `<h4>Field rooms of apartment can't be empty!</h4>`;
-            setTimeout(()=>this.messages.errorRooms='',10000);
-            }
-            else if(this.apartment.guests == null){
-            this.messages.errorGuests =  `<h4>Field number of guests of apartment can't be empty!</h4>`;
-            setTimeout(()=>this.messages.errorGuests='',10000);
-            }
-    
-            //Apartment location
-            else if(this.apartment.location.latitude == ''){
-            this.messages.errorLocation =  `<h4>Field latitude of apartment can't be empty!</h4>`;
-            setTimeout(()=>this.messages.errorLocation='',10000);
-            }
-            //Provera da li je apartment latitude broj;
-            else if(this.isNumeric(this.apartment.location.latitude)){
-            this.messages.errorLocation =  `<h4>Latitude of apartment must be number!</h4>`;
-            setTimeout(()=>this.messages.errorLocation='',10000);
-            }
-            else if(this.apartment.location.longitude == ''){
-            this.messages.errorLocation =  `<h4>Field longitude of apartment can't be empty!</h4>`;
-            setTimeout(()=>this.messages.errorLocation='',10000);
-            }
-            //Provera da li je apartment longitude broj;
-            else if(this.isNumeric(this.apartment.location.longitude)){
-            this.messages.errorLocation =  `<h4>Longitude of apartment must be number!</h4>`;
-            setTimeout(()=>this.messages.errorLocation='',10000);
-            }
-    
-            //Apartment address
-            else if(this.apartment.location.address.street == ''){
-            this.messages.errorAddress =  `<h4>Field street of address of apartment can't be empty!</h4>`;
-            setTimeout(()=>this.messages.errorAddress='',10000);
-            }
-            else if(this.apartment.location.address.city == ''){
-            this.messages.errorAddress =  `<h4>Field city of address of apartment can't be empty!</h4>`;
-            setTimeout(()=>this.messages.errorAddress='',10000);
-            }
-            else if(this.apartment.location.address.postalCode == ''){
-            this.messages.errorAddress =  `<h4>Field postal code of address of apartment can't be empty!</h4>`;
-            setTimeout(()=>this.messages.errorAddress='',10000);
-            }
-    
-            //Apartment price: 
-            else if(this.apartment.price == null){
-            this.messages.errorPrice =  `<h4>Field price of apartment can't be empty!</h4>`;
-            setTimeout(()=>this.messages.errorPrice='',10000);
-            }
-            //Provera da li je cena broj;
-            else if(this.isNumeric(this.apartment.price)){
-            this.messages.errorPrice =  `<h4>Price of apartment must be number!</h4>`;
-            setTimeout(()=>this.messages.errorPrice='',10000);
-            }
-    
-            else if(this.apartment.checkin == ''){
-            this.messages.errorCheckInOut =  `<h4>Field check in of apartment can't be empty!</h4>`;
-            setTimeout(()=>this.messages.errorCheckInOut='',5000);
-            }
-            else if(this.apartment.checkout == ''){
-            this.messages.errorCheckInOut =  `<h4>Field check out of apartment can't be empty!</h4>`;
-            setTimeout(()=>this.messages.errorCheckInOut='',5000);
-            }
-            else if(this.dates.from == null){
-            this.messages.errorDates =  `<h4>Field checkin date of apartment can't be empty!</h4>`;
-            setTimeout(()=>this.messages.errorDates='',5000);
-            }
-            else if(this.dates.to == null){
-            this.messages.errorDates =  `<h4>Field checkout to of apartment can't be empty!</h4>`;
-            setTimeout(()=>this.messages.errorDates='',5000);
-            }
-            else if(this.apartment.amenities == ''){
-            this.messages.errorAmenities =  `<h4>Amenities of apartment can't be empty!</h4>`;
-            setTimeout(()=>this.messages.errorAmenities='',5000);
-            }
-            else{
-    
-                // unselected dates will be disabled
-                this.apartment.to = this.dates.from.getTime();
-                this.apartment.from = this.dates.to.getTime() + 1000 * 60 * 60 * 24;
-                console.log(this.apartment);
-                // axios
-                //     .post('rest/apartment', this.apartment)
-                //     .then(Response => {
-                //     console.log(Response);
-                //     this.messages.successResponse = `<h4>Apartment was edited successfully!</h4>`;                
-                //     setTimeout(() => this.messages.successResponse='', 5000);
-                // })
-                // .catch(error => {
-                //     if(error.response.status === 500 || error.response.status === 404){
-                //         this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
-                //         setTimeout(() => this.messages.errorResponse='', 5000);
-                //     }
-                // });
-            }
-        },
-  
-        update: function (apartment) {
 
-        },
-        handleFileUploads() {
+		update: function (apartment) {
 
-        },
-        submitFiles: function () {
+		},
+		handleFileUploads() {
 
-        },
-        checkApartment: function () {
-            if (this.apartment.type == "ROOM") {
-                this.isApartment = false;
-            }
-            else {
-                this.isApartment = true;
-            } 
-        },
-        // pomocna metoda za ogranicen odabir dana:
-        range(start = 1, end) {
-            var ans = [];
-            for (let i = start; i <= end; i++) {
-                ans.push(i);
-            }
-            return ans;
-        },
-        
+		},
+		submitFiles: function () {
+
+		},
+		checkApartment: function () {
+			if (this.apartment.type == "ROOM") {
+				this.isApartment = false;
+			}
+			else {
+				this.isApartment = true;
+			}
+		},
+		// pomocna metoda za ogranicen odabir dana:
+		range(start = 1, end) {
+			var ans = [];
+			for (let i = start; i <= end; i++) {
+				ans.push(i);
+			}
+			return ans;
+		},
+
 		// pomocna metoda za razvrstavanje amenities:
-	    arrangeAndCheckAmenities(){
-            for(let i = 0; i< this.allAmenities.length; i++){
-                if(this.allAmenities[i].type === 'Base'){
-                    this.amenities.base.push(this.allAmenities[i]);
-                }
-                else if(this.allAmenities[i].type === 'Family' ){
-                    this.amenities.family.push(this.allAmenities[i]);
-                }
-                else if(this.allAmenities[i].type === 'Dining'){
-                    this.amenities.dining.push(this.allAmenities[i]);
-                }
-                else if(this.allAmenities[i].type === 'Facilities'){
-                    this.amenities.fac.push(this.allAmenities[i]);
-                }
-            }
-	    },
-        isNumeric(num){
-            //isNaN(num) returns true if the variable does NOT contain a valid number
-            return isNaN(num);
-        },
-        isApartment(){
-            if(this.apartment.type == 'APARTMENT'){
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
-    },
-    computed:{
-        id() {
-            return this.$route.params.id; //preuzimam id apartmana koji hocu da editujem 
-        }
-    },
-    created() {      
-        this.apartmentId = this.id;
-        axios
-        .get(`rest/apartment/${this.apartmentId}`)
-        .then(response => {
-            this.apartment = response.data;
-        })
+		arrangeAndCheckAmenities() {
+			for (let i = 0; i < this.allAmenities.length; i++) {
+				if (this.allAmenities[i].type === 'Base') {
+					this.amenities.base.push(this.allAmenities[i]);
+				}
+				else if (this.allAmenities[i].type === 'Family') {
+					this.amenities.family.push(this.allAmenities[i]);
+				}
+				else if (this.allAmenities[i].type === 'Dining') {
+					this.amenities.dining.push(this.allAmenities[i]);
+				}
+				else if (this.allAmenities[i].type === 'Facilities') {
+					this.amenities.fac.push(this.allAmenities[i]);
+				}
+			}
+		},
+		isNumeric(num) {
+			//isNaN(num) returns true if the variable does NOT contain a valid number
+			return isNaN(num);
+		},
+		isApartment() {
+			if (this.apartment.type == 'APARTMENT') {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+	},
+	computed: {
+		id() {
+			return this.$route.params.id; //preuzimam id apartmana koji hocu da editujem 
+		}
+	},
+	created() {
+		if (!localStorage.getItem('jwt'))
+			this.$router.push('/login');
 
-        axios
-        .get('rest/amenity/all')
-        .then(response => {
-            this.allAmenities = response.data;
-            this.arrangeAndCheckAmenities();
-        })  
+		this.apartmentId = this.id;
+		axios
+			.get(`rest/apartment/${this.apartmentId}`)
+			.then(response => {
+				this.apartment = response.data;
+			})
+
+		axios
+			.get('rest/amenity/all')
+			.then(response => {
+				this.allAmenities = response.data;
+				this.arrangeAndCheckAmenities();
+			})
 	},
-	
-	  mounted() {
-		  this.rooms = this.range(1, 10);
-		  this.guests = this.range(1, 15);
-  
-		  let to = new Date();
-		  to.setDate(to.getDate() - 1)
-  
-		  this.disabledDates.to = to;
+
+	mounted() {
+		this.rooms = this.range(1, 10);
+		this.guests = this.range(1, 15);
+
+		let to = new Date();
+		to.setDate(to.getDate() - 1)
+
+		this.disabledDates.to = to;
 	},
-	
-	  components: {
-		  vuejsDatepicker
-	  }
+
+	components: {
+		vuejsDatepicker
+	}
 });
 

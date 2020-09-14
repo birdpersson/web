@@ -82,7 +82,6 @@ Vue.component('apartments', {
                         <th v-if='isGuest'>Reserv</th>
                         <th v-if='!isGuest'>Edit</th>
                         <th v-if='!isGuest'>Delete</th>
-                        <th>Amenities TEST</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,15 +95,14 @@ Vue.component('apartments', {
                         <td v-if='isGuest'> <button class="btn-primary" v-on:click='makeReseravation(apartment.id)'> Reserv </button> </td>
                         <td v-if='!isGuest'><button class="btn-primary" v-on:click='editApartment(apartment.id)'> Edit </button></td>
                         <td v-if='!isGuest'> <button class="btn-danger" v-on:click='showMessage'> Delete </button> </td>
-                        <td>{{apartment.amenities}}</td>
                     </tr>
                 </tbody>
             </table>
 
-            <router-link v-if='isGuest' to="/reservations"><button class="classButton btn btn-warning">List of reservations</button></router-link>
+            <!--<router-link v-if='isGuest' to="/reservations"><button class="classButton btn btn-warning">List of reservations</button></router-link>-->
 
         <div id='options'>
-            <!--Neaktivni stanovi i dodaj stan pripadaju hostu,
+            <!--Dodaj stan pripada samo hostu,
                 Komentari i rezervacije hostu i adminu,
                 dok sadrzaj apartmana samo adminu.-->
             <router-link to="/apartmentNew"> <button class='btn-lg classButton' v-if='isHost'>+ Add apartment</span></button></router-link>

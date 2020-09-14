@@ -31,7 +31,7 @@ Vue.component('profile', {
                 </ul>
 
                 <div id='buttonUpdate'>
-                    <router-link to='/patient/update'><button type='button' class="btn btn-lg btn-success "> Update
+                    <router-link to='/profile/update'><button type='button' class="btn btn-lg btn-success "> Update
                         </button> </router-link>
                 </div>
             </form>

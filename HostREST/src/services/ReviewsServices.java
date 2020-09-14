@@ -116,7 +116,7 @@ public class ReviewsServices {
 		ReviewDAO dao = (ReviewDAO) ctx.getAttribute("reviewDAO");
 
 		if (userDao.findOne(username).getRole().toString().equals("GUEST")) {
-			return Response.status(Response.Status.OK).entity(dao.save(review)).build();
+			return Response.status(Response.Status.OK).entity(dao.save(ctx.getRealPath(""), review)).build();
 		}
 		return Response.status(Response.Status.FORBIDDEN).build();
 
@@ -130,10 +130,12 @@ public class ReviewsServices {
 		String username = AuthService.getUsername(request);
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
 		ReviewDAO dao = (ReviewDAO) ctx.getAttribute("reviewDAO");
-
+		
+		System.out.println("Review status old: " + dao.findOne(id).isVisible());
+		
 		if (userDao.findOne(username).getRole().toString().equals("HOST")) {
-
-			return Response.status(Response.Status.OK).entity(dao.update(id, review)).build();
+			System.out.println("Review status new: " + review.isVisible());
+			return Response.status(Response.Status.OK).entity(dao.update(ctx.getRealPath(""), review)).build();
 		}
 
 		return Response.status(Response.Status.FORBIDDEN).build();

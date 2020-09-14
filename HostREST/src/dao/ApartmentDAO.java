@@ -114,6 +114,49 @@ public class ApartmentDAO {
 		return apartment;
 	}
 
+	public Apartment update(String contextPath, Apartment apartment) {
+		try {
+			File file = new File(contextPath + "/apartments.txt");
+			BufferedReader in = new BufferedReader(new FileReader(file));
+			String line = "", text = "";
+			StringTokenizer st;
+			while ((line = in.readLine()) != null) {
+				line = line.trim();
+				if (line.equals("") || line.indexOf('#') == 0)
+					continue;
+				st = new StringTokenizer(line, ";");
+				String id = st.nextToken().trim();
+				if (apartment.getId().equals(id)) {
+					text += id + ";"
+							+ apartment.getType() + ";"
+							+ apartment.getRooms() + ";"
+							+ apartment.getGuests() + ";"
+							+ locationDAO.update(contextPath, apartment.getLocation()).getId() + ";"
+							+ apartment.getTo() + ";"
+							+ apartment.getFrom() + ";"
+							+ apartment.getHost() + ";"
+							+ apartment.getPrice() + ";"
+							+ apartment.getCheckin() + ";"
+							+ apartment.getCheckout() + ";"
+							+ apartment.getStatus() + "\r\n";
+				} else {
+					text += line + "\r\n";
+				}
+			}
+			in.close();
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+			PrintWriter out = new PrintWriter(writer);
+			out.println(text);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		amenityDAO.updateApartmentAmenities(contextPath, apartment);
+		loadApartments(contextPath);
+		return apartment;
+	}
+
 	private void loadApartments(String contextPath) {
 		BufferedReader in = null;
 		try {

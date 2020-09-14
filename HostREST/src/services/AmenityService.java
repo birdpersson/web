@@ -67,7 +67,7 @@ public class AmenityService {
 		AmenityDAO dao = (AmenityDAO) ctx.getAttribute("amenityDAO");
 
 		if (userDao.findOne(username).getRole().toString().equals("ADMIN")) {
-			return Response.status(Response.Status.OK).entity(dao.save(amenity)).build();
+			return Response.status(Response.Status.OK).entity(dao.save(ctx.getRealPath(""), amenity)).build();
 		}
 		return Response.status(Response.Status.FORBIDDEN).build();
 
@@ -84,7 +84,7 @@ public class AmenityService {
 		AmenityDAO dao = (AmenityDAO) ctx.getAttribute("amenityDAO");
 
 		if (userDao.findOne(username).getRole().toString().equals("ADMIN")) {
-			return Response.status(Response.Status.OK).entity(dao.update(id, amenity)).build();
+			return Response.status(Response.Status.OK).entity(dao.update(ctx.getRealPath(""), amenity)).build();
 		}
 		return Response.status(Response.Status.FORBIDDEN).build();
 	}
