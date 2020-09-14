@@ -63,7 +63,7 @@ public class LocationService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Location updateLocation(@PathParam("id") String id, Location location) {
 		LocationDAO dao = (LocationDAO) ctx.getAttribute("locationDAO");
-		return dao.update(id, location);
+		return dao.update(ctx.getRealPath(""), location);
 	}
 	
 	@DELETE

@@ -1,8 +1,11 @@
 package dao;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,6 +13,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import beans.Amenity;
+import beans.Apartment;
 
 public class AmenityDAO {
 	private Map<String, Amenity> amenities = new HashMap<>();
@@ -30,7 +34,7 @@ public class AmenityDAO {
 		return amenities.containsKey(id) ? amenities.get(id) : null;
 	}
 
-	public Amenity save(Amenity admin) {
+	public Amenity save(String contextPath, Amenity amenity) {
 		Integer maxId = -1;
 		for (String id : amenities.keySet()) {
 			int idNum = Integer.parseInt(id);
@@ -39,29 +43,66 @@ public class AmenityDAO {
 			}
 		}
 		maxId++;
-		admin.setId(maxId.toString());
-		amenities.put(admin.getId(), admin);
-		return admin;
+		amenity.setId(maxId.toString());
+		String line = amenity.getId() + ";" + amenity.getName() + ";" + amenity.getType();
+		System.out.println(line);
+		BufferedWriter writer = null;
+		try {
+			File file = new File(contextPath + "/amenities.txt");
+			writer = new BufferedWriter(new FileWriter(file, true));
+			PrintWriter out = new PrintWriter(writer);
+			out.println(line);
+			out.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		} finally {
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) {
+					return null;
+				}
+			}
+		}
+		amenities.put(amenity.getId(), amenity);
+		return amenity;
 	}
 
-	public Amenity update(String id, Amenity updatedAmenitie) {
-
-		Amenity oldAmenitie = findOne(id);
-
-		if (oldAmenitie == null) {
-			System.out.println("Usao u save admina u okviru update");
-			return save(updatedAmenitie);
-		} else {
-
-			// We don't change id of existing host just username, password, firstname and
-			// lastname.
-			oldAmenitie.setName(updatedAmenitie.getName());
-			oldAmenitie.setType(updatedAmenitie.getType());
-
-			// We save and return old admin which is now updated.
-			return amenities.put(oldAmenitie.getId(), oldAmenitie);
+	@SuppressWarnings("unused")
+	public Amenity update(String contextPath, Amenity amenity) {
+		try {
+			File file = new File(contextPath + "/amenities.txt");
+			BufferedReader in = new BufferedReader(new FileReader(file));
+			String line = "", text = "";
+			StringTokenizer st;
+			while ((line = in.readLine()) != null) {
+				line = line.trim();
+				if (line.equals("") || line.indexOf('#') == 0)
+					continue;
+				st = new StringTokenizer(line, ";");
+				while (st.hasMoreTokens()) {
+					String id = st.nextToken().trim();
+					String name = st.nextToken().trim();
+					String type = st.nextToken().trim();
+					if (amenity.getId().equals(id)) {
+						text += id + ";" + amenity.getName() + ";" + amenity.getType() + "\r\n";
+					} else {
+						text += line + "\r\n";
+					}
+				}
+			}
+			in.close();
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+			PrintWriter out = new PrintWriter(writer);
+			out.println(text);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
-
+		loadAmenities(contextPath);
+		return amenity;
 	}
 
 	public Amenity delete(String id) {
@@ -96,6 +137,37 @@ public class AmenityDAO {
 					in.close();
 				} catch (Exception e) { }
 			}
+		}
+	}
+
+	public void updateApartmentAmenities(String contextPath, Apartment apartment) {
+		ArrayList<Amenity> amenities = apartment.getAmenities();
+		try {
+			File file = new File(contextPath + "/apartment_amenities.txt");
+			BufferedReader in = new BufferedReader(new FileReader(file));
+			String line = "", text = "";
+			StringTokenizer st;
+			while ((line = in.readLine()) != null) {
+				line = line.trim();
+				if (line.equals("") || line.indexOf('#') == 0)
+					continue;
+				st = new StringTokenizer(line, ";");
+				String apartmentId = st.nextToken().trim();
+				if (apartmentId.equals(apartment.getId())) {
+					for (Amenity amenity : amenities) {
+						text += apartment.getId() + ";" + amenity.getId() + "\r\n";
+					}
+				} else {
+					text += line + "\r\n";
+				}
+			}
+			in.close();
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+			PrintWriter out = new PrintWriter(writer);
+			out.println(text);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
