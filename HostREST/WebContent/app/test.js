@@ -31,6 +31,7 @@ Vue.component("test", {
                 <nav class="navbar navbar-light bg-light justify-content-between">
                     <a class="navbar-brand">Filter&Search</a>
                     <form class="form-inline">
+                            <button style='margin-right:5px;' class='btn btn-outline-primary my-2 my-sm-0' v-on:click="resetFilter()">Reset</button>
                         <div>
                             <img src='img/filterIcon1.1.png' style="display:inline;">
                             <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="filterQuery">
@@ -174,6 +175,11 @@ Vue.component("test", {
             .then(response => {
                 this.reservations=response.data;
             })
+        },
+        resetFilter(){
+            this.filterQuery = '';
+            this.searchedQuery =  '';
+            this.getReservations();
         },
         cancelReservation:function(chosenReservation){
             if(confirm('Do you whant to cancel this reservation?')){

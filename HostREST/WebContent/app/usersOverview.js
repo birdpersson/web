@@ -18,6 +18,7 @@ Vue.component('users', {
                 <nav class="navbar navbar-light bg-light justify-content-between">
                     <a class="navbar-brand">Pretraga</a>
                     <form class="form-inline">
+                        <button style='margin-right:5px;' class='btn btn-outline-primary my-2 my-sm-0' v-on:click="resetFilter()">Reset</button>
                         <input class="form-control mr-sm-2" v-model='searchedUser.username' type="text"
                             placeholder="username" aria-label="Search">
                         <select style="padding:7px; margin-right: 10px" id='listOfRoles' v-model="searchedUser.role">
@@ -117,6 +118,27 @@ Vue.component('users', {
             .get('rest/user/search'+ this.searchedQuery)
             .then(response => this.users=response.data);
 
+        },
+
+        getUsersForAdmin(){
+            //get metoda koja vraca sve usere.
+            axios
+            .get('rest/user/all')
+            .then(Response => (this.users=Response.data));
+        },
+        getUsersForHost(){
+            //get metoda koja vraca sve usere tipa guest koji imaju rezervaciju kod tog hosta
+            axios
+            .get(`rest/user/customers`)
+            .then(Response => (this.users=Response.data));
+        },
+        resetFilter(){
+            if (this.user.role == "ADMIN") {
+                this.getUsersForAdmin();
+            }
+            if (this.user.role == "HOST") {
+                this.getUsersForHost();
+            }
         }
     },
     mounted() {
@@ -127,17 +149,12 @@ Vue.component('users', {
         this.user.role = localStorage.getItem('role');
         if (this.user.role == "ADMIN") {
             this.isAdmin = true;
-            //get metoda koja vraca sve usere.
-            axios
-            .get('rest/user/all')
-            .then(Response => (this.users=Response.data));
+            this.getUsersForAdmin();
           
         } else if (this.user.role == "HOST") {
             this.isHost = true;
-            //get metoda koja vraca sve usere tipa guest koji imaju rezervaciju kod tog hosta
-            axios
-            .get(`rest/user/customers`)
-            .then(Response => (this.users=Response.data));
+            this.getUsersForHost();
+           
         } else {
             this.isGuest = true;
         }

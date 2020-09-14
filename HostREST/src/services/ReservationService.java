@@ -106,8 +106,7 @@ public class ReservationService {
 
 				ReservationDTO reservDTO = new ReservationDTO();
 				Apartment apartm = apartDao.findOne(r.getApartmentId());
-//				Location locat = locatDao.findLocatByApartId(r.getApartmentId());
-				if (apartm == null /* || locat == null */) {
+				if (apartm == null ) {
 					return Response.status(Response.Status.BAD_REQUEST).build();
 				}
 
@@ -126,7 +125,6 @@ public class ReservationService {
 				// Za apartman detalji:
 				if (apartm.getType() == null) {
 					reservDTO.setType(null);
-//					return Response.status(Response.Status.BAD_REQUEST).build();
 				} else {
 					reservDTO.setType(apartm.getType());
 				}

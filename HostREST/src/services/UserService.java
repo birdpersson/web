@@ -2,6 +2,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -12,6 +13,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -112,55 +114,165 @@ public class UserService {
 	public Response getUsersByApartment(@Context HttpServletRequest request) {
 		String username = AuthService.getUsername(request);
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-		ReservationDAO reservationDao = (ReservationDAO) ctx.getAttribute("reservationDAO");
-		ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
 		Collection<User> retVal = new ArrayList<User>();
 
 		if (userDao.findOne(username).getRole().toString().equals("HOST")) {
-			// Prvo pronalazimo sve stanove vezane za tog hosta...
-			Collection<Apartment> hostsApart = apartmentDao.findAllApartByHostId(username);
-			for (Apartment apar : hostsApart) {
-
-				// Zatim pronalazimo sve korisnike koji imaju trenutnu rezervaciju za neki stan
-				// tog hosta...
-				Collection<Reservation> reservations = reservationDao.findAllByApartmentId(apar.getId());
-				for (Reservation r : reservations) {
-					User user = userDao.findOne(r.getGuestId());
-					if (!retVal.contains(user))
-						retVal.add(user);
-				}
-//				User guestByApar = userDao.findOne(reservationDao.findGuestByApartmentId(apar.getId()));
-//				retVal.add(guestByApar);
-			}
+			retVal = getUsersByApartmentId(username);
 			return Response.status(Response.Status.OK).entity(retVal).build();
 		}
 		return Response.status(Response.Status.FORBIDDEN).build();
 	}
+	
+	//Pomocna metoda za vracanje onih usera koji kod hosta imaju rezervacije
+	//Kod izvucen iz metode getUsersByApartment kako bi se mogao pozivati i u metodi searchUsers za hosta.
+	public Collection<User> getUsersByApartmentId(String username){
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+		ReservationDAO reservationDao = (ReservationDAO) ctx.getAttribute("reservationDAO");
+		ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+		Collection<User> retVal = new ArrayList<User>();
+		
+		// Prvo pronalazimo sve stanove vezane za tog hosta...
+		Collection<Apartment> hostsApart = apartmentDao.findAllApartByHostId(username);
+		for (Apartment apar : hostsApart) {
 
-//	//Vracanje komentara spram id hosta. (za hosta)
+			// Zatim pronalazimo sve korisnike koji imaju trenutnu rezervaciju za neki stan
+			// tog hosta...
+			Collection<Reservation> reservations = reservationDao.findAllByApartmentId(apar.getId());
+			for (Reservation r : reservations) {
+				User user = userDao.findOne(r.getGuestId());
+				if (!retVal.contains(user))
+					retVal.add(user);
+			}
+		}
+		return retVal;
+	}
+
+	//Vracanje usera spram search upita
+	@GET
+	@Path("user/search")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response searchUsers(@Context HttpServletRequest request, 
+			@QueryParam("username") String username,
+			@QueryParam("gender") String gender,
+			@QueryParam("role") String role) {
+		
+		String requstUsername = AuthService.getUsername(request);
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+		
+		System.out.println("username: " + username);
+		System.out.println("gender: " + gender);
+		System.out.println("role: " + role);
+		
+		if(userDao.findOne(requstUsername).getRole().toString().equals("ADMIN")) {
+			Collection<User> allUsers = userDao.findAll();
+			
+			allUsers = filterUsers(allUsers, username, gender, role);
+			
+			return Response.status(Response.Status.OK).entity(allUsers).build();
+		}	
+		else if(userDao.findOne(requstUsername).getRole().toString().equals("HOST")) {
+			Collection<User> allUsers = getUsersByApartmentId(requstUsername);
+			
+			allUsers = filterUsers(allUsers, username, gender, role);
+			
+			return Response.status(Response.Status.OK).entity(allUsers).build();
+		
+		}
+		
+		return Response.status(Response.Status.FORBIDDEN).build();
+	}
+	
+	
+	//Pomocna metoda koja sluzi za filtraciju korisnika po parametrima, 
+	//izvdojena je iz searchUser kako bi se mogla 2 put pozivati i za admina i za hosta.
+	public Collection<User> filterUsers(Collection<User> allUsers,String username, String gender, String role) {
+		if(username != null) {
+			Collection<User> helpUsers = new ArrayList<User>();
+			for(User u : allUsers) {
+				if(u.getUsername().toLowerCase().equals((username).toLowerCase())) {
+					helpUsers.add(u);
+				}
+			}
+			allUsers = helpUsers;
+		}
+		
+		if(gender != null) {
+			Collection<User> helpUsers = new ArrayList<User>();
+			for(User u : allUsers) {
+				if(u.getGender().toLowerCase().equals((gender).toLowerCase())) {
+					helpUsers.add(u);
+				}
+			}
+			allUsers = helpUsers;
+		}
+		
+		if(role != null) {
+			Collection<User> helpUsers = new ArrayList<User>();
+			for(User u : allUsers) {
+				if(u.getRole().toString().toLowerCase().equals((role).toLowerCase())) {
+					helpUsers.add(u);
+				}
+			}
+			allUsers = helpUsers;
+		}
+		
+		return allUsers;
+	}
+	
+	
+	
+//	//Vracanje usera spram search upita
 //	@GET
-//	@Path("/apartmentHost")
+//	@Path("user/search")
 //	@Produces(MediaType.APPLICATION_JSON)
-//	public Response getReviewsByHostId(@Context HttpServletRequest request, @QueryParam("id") String hostId) {
-//		String username = AuthService.getUsername(request);
-//		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-//		ReviewDAO reviewDao = (ReviewDAO) ctx.getAttribute("reviewDAO");
-//		ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
-//		Collection<Review> retVal = new ArrayList<Review>();
+//	public Response getReviewsByHostId(@Context HttpServletRequest request, 
+//			@QueryParam("username") String username,
+//			@QueryParam("gender") String gender,
+//			@QueryParam("role") String role) {
 //		
-//		if(userDao.findOne(username).getRole().toString().equals("HOST")) {
-//			//Prvo pronalazimo sve stanove vezane za tog hosta...
-//			Collection<Apartment> hostsApart = apartmentDao.findAllApartByHostId(hostId);
-//			for(Apartment apar : hostsApart) {
-//				
-//				//Prvo zatim pronalazimo sve komentare vezane za svaki stan tog hosta...
-//				Collection<Review> reviewsByApar = reviewDao.findAllByApartmentId(apar.getId());
-//				for(Review rev : reviewsByApar) {
-//					retVal.add(rev);
+//		String requstUsername = AuthService.getUsername(request);
+//		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+//		Collection<User> allUsers = userDao.findAll();
+//		System.out.println("username: " + username);
+//		System.out.println("gender: " + gender);
+//		System.out.println("role: " + role);
+//		if(userDao.findOne(requstUsername).getRole().toString().equals("ADMIN")) {
+//			if(username != null) {
+//				Collection<User> helpUsers = new ArrayList<User>();
+//				for(User u : allUsers) {
+//					if(u.getUsername().toLowerCase().equals((username).toLowerCase())) {
+//						helpUsers.add(u);
+//					}
 //				}
+//				allUsers = helpUsers;
 //			}
-//			return Response.status(Response.Status.OK).entity(retVal).build(); 
+//			
+//			if(gender != null) {
+//				Collection<User> helpUsers = new ArrayList<User>();
+//				for(User u : allUsers) {
+//					if(u.getGender().toLowerCase().equals((gender).toLowerCase())) {
+//						helpUsers.add(u);
+//					}
+//				}
+//				allUsers = helpUsers;
+//			}
+//			
+//			if(role != null) {
+//				Collection<User> helpUsers = new ArrayList<User>();
+//				for(User u : allUsers) {
+//					if(u.getRole().toString().toLowerCase().equals((role).toLowerCase())) {
+//						helpUsers.add(u);
+//					}
+//				}
+//				allUsers = helpUsers;
+//			}
+//			
+//			return Response.status(Response.Status.OK).entity(allUsers).build();
 //		}
+//		else if(userDao.findOne(requstUsername).getRole().toString().equals("HOST")) {
+//			
+//		}
+//		
 //		return Response.status(Response.Status.FORBIDDEN).build();
 //	}
 
