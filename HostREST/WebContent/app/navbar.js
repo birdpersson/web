@@ -68,6 +68,7 @@ Vue.component('navbar', {
             localStorage.removeItem('role');
             localStorage.removeItem('user');
             window.location.reload();
+            this.$router.push('/login');
         }
     },
     created() {
