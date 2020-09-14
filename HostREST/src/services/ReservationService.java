@@ -241,7 +241,7 @@ public class ReservationService {
 
 		if (userDao.findOne(username).getRole().toString().equals("GUEST")
 				|| userDao.findOne(username).getRole().toString().equals("HOST")) {
-			return Response.status(Response.Status.OK).entity(dao.update(ctx.getRealPath(""), reservation)).build();
+			return Response.status(Response.Status.CREATED).entity(dao.update(ctx.getRealPath(""), reservation)).build();
 		}
 		return Response.status(Response.Status.FORBIDDEN).build();
 	}
