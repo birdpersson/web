@@ -116,7 +116,14 @@ Vue.component('users', {
 
             axios
             .get('rest/user/search'+ this.searchedQuery)
-            .then(response => this.users=response.data);
+            .then(response => {
+                 this.users=response.data;
+                //  this.searchedUser.username= '';
+                //  this.searchedUser.gender= null;
+                //  this.searchedUser.role= null;
+                 this.searchedQuery='?';
+            });
+
 
         },
 
@@ -135,6 +142,12 @@ Vue.component('users', {
         resetFilter(){
             if (this.user.role == "ADMIN") {
                 this.getUsersForAdmin();
+
+                // this.searchedUser.username= '';
+                // this.searchedUser.gender= null;
+                // this.searchedUser.role= null;
+                this.searchedQuery='?';
+
             }
             if (this.user.role == "HOST") {
                 this.getUsersForHost();

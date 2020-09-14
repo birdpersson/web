@@ -186,7 +186,7 @@ public class UserService {
 	//Pomocna metoda koja sluzi za filtraciju korisnika po parametrima, 
 	//izvdojena je iz searchUser kako bi se mogla 2 put pozivati i za admina i za hosta.
 	public Collection<User> filterUsers(Collection<User> allUsers,String username, String gender, String role) {
-		if(username != null) {
+		if(username != null && username != "") {
 			Collection<User> helpUsers = new ArrayList<User>();
 			for(User u : allUsers) {
 				if(u.getUsername().toLowerCase().equals((username).toLowerCase())) {

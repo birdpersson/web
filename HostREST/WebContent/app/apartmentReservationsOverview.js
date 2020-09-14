@@ -191,11 +191,7 @@ Vue.component('reservations', {
                     this.reservations = response.data;
                 })
         },
-        resetFilter(){
-            this.filterQuery = '';
-            this.searchedQuery =  '';
-            this.getReservations();
-        },
+
         cancelReservation: function (chosenReservation) {
             if (confirm('Do you whant to cancel this reservation?')) {
                 //Mora da se iz reservationDTO prebaci u reservation model pre slanja;
