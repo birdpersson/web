@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -142,51 +143,70 @@ public class ApartmentService {
     	
     	
     	String username = AuthService.getUsername(request);
+    	System.out.println("username: " + username);
+    	
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-    	ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
-		ReservationDAO reservationDAO = (ReservationDAO) ctx.getAttribute("reservationDAO");
-		ReviewDAO reviewDAO = (ReviewDAO) ctx.getAttribute("reviewDAO");
-		
+    	ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");		
 		Collection<Apartment> apartments = apartmentDAO.findAll();
 		
+		//za neulogovanog/neregistrovanog korisnika vraca sve aktivne stanove  
+		if(username == null) {
+			apartments = apartments.stream()
+					.filter(a ->  a.getStatus().equals("aktivan"))
+					.collect(Collectors.toList());
+		}
+		//za guesta vraca sve aktivne stanove  
+		else if (userDao.findOne(username).getRole().toString().equals("GUEST")) {
+			apartments = apartments.stream()
+					.filter(a ->  a.getStatus().equals("aktivan"))
+					.collect(Collectors.toList());
+		}
+		//za hosta vraca sve njegove aktivne stanove (za nekativne nema pretrage niti filtracije)
+		else if (userDao.findOne(username).getRole().toString().equals("HOST")) {
+			
+			apartments = apartmentDAO.findAllApartByHostId(username); //zaboravio sam koji je naziv
+			apartments = apartments.stream()
+					.filter(a ->  a.getStatus().equals("aktivan"))
+					.collect(Collectors.toList());
+		}
+		else{
+			//za admina vraca sve aktivne i neaktivne stanove (mogu ih filtrirati po statusu) 
+			//Ovo je besmislena linija koda, ali cisto radi ilustracije slucaja za admina
+			apartments = apartments;
+		}
+ 
+		if(location != null) {
+			apartments = apartments.stream()
+				.filter(l -> l.getLocation().getAddress().getCity().toLowerCase().contains(location.toLowerCase()))
+				.collect(Collectors.toList());
+		}
+ 
+		if(priceMin != null) {
+			apartments = apartments.stream()
+				.filter(a -> a.getPrice() >= priceMin)
+				.collect(Collectors.toList());
+		}
+		if(priceMax != null) {
+			apartments = apartments.stream()
+				.filter(a -> a.getPrice() <= priceMax)
+				.collect(Collectors.toList());
+		}
+		if(guests != null) {
+			apartments = apartments.stream()
+				.filter(a -> a.getGuests() >= guests)
+				.collect(Collectors.toList());
+		}
+		if(roomsMin != null) {
+			apartments = apartments.stream()
+				.filter(a -> a.getRooms() >= roomsMin)
+				.collect(Collectors.toList());
+		}
 		
-//		if (!userDao.findOne(username).getRole().toString().equals("GUEST")) {
-//					apartments = apartments.stream()
-//					.filter(a -> a.getActive()) //to za aktivne stanove iz dao treba da prosledi za user
-//					.collect(Collectors.toList());
-//		} else if (!userDao.findOne(username).getRole().toString().equals("HOST")) {
-//			apartments = dao.findByHostId(Authorization.getUsername(request)); //zaboravio sam koji je naziv
-//			apartments = apartments.stream()
-//					.filter(a -> a.getActive())
-//					.collect(Collectors.toList());
-//		}
-// 
-//		if(location != null) {
-//			apartments = apartments.stream()
-//				.filter(l -> l.getLocation().getAddress().getCity().toLowerCase().contains(location.toLowerCase()))
-//				.collect(Collectors.toList());
-//		}
-// 
-//		if(priceMin != null) {
-//			apartments = apartments.stream()
-//				.filter(a -> a.getPrice() >= priceMin)
-//				.collect(Collectors.toList());
-//		}
-//		if(priceMax != null) {
-//			apartments = apartments.stream()
-//				.filter(a -> a.getPrice() <= priceMax)
-//				.collect(Collectors.toList());
-//		}
-//		if(guests != null) {
-//			apartments = apartments.stream()
-//				.filter(a -> a.getCapacity() >= guests)
-//				.collect(Collectors.toList());
-//		}
-//		if(rooms != null) {
-//			apartments = apartments.stream()
-//				.filter(a -> a.getNumberOfRooms() >= rooms)
-//				.collect(Collectors.toList());
-//		}
+		if(roomsMax != null) {
+			apartments = apartments.stream()
+				.filter(a -> a.getRooms() <= roomsMax)
+				.collect(Collectors.toList());
+		}
 		
 		return Response.status(Response.Status.OK).entity(apartments).build();
     }
