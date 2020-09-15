@@ -10,6 +10,7 @@ Vue.component('apartments', {
         <nav class="navbar navbar-light bg-light justify-content-between">
             <a class="navbar-brand">Filter</a>
             <form class="form-inline">
+                    <button style='margin-right:5px;' class='btn btn-outline-primary my-2 my-sm-0' v-on:click="resetFilter()">Reset</button>
                 <div>
                    <link style='display:inline;'><img v-on:click='isFilter = !isFilter' src='img/filterIcon1.1.png' style="display:inline;"></link>
                     <div style='display:inline;' v-show='isFilter'>
@@ -209,6 +210,13 @@ Vue.component('apartments', {
         }
     },
     methods: {
+        getApartments(){
+            axios
+            .get('rest/apartment')
+            .then(response => {
+                this.apartments = response.data;
+            })  
+        },
         searchApartment() {
             if (this.searchedApartment.location !== null) {
                 this.searchedQuery += 'location=' + this.searchedApartment.location;
@@ -243,6 +251,7 @@ Vue.component('apartments', {
                 }
             }
 
+            //Ovo obrisati
             console.log(`Trazite apartman:
             location: ${this.searchedApartment.location}
             checkIn: ${this.searchedApartment.checkIn}
@@ -288,7 +297,13 @@ Vue.component('apartments', {
             }
             this.currentSort = s;
         },
-
+        resetFilter() {
+                this.getApartments();
+                this.filterQueryType = '',
+                this.filterQueryStatus = '',
+                this.filterQueryAmanity = '',
+                this.searchedQuery = '?';
+        },
 
         arrangeAmenities(allAmenities){
                 for(let i = 0; i< this.allAmenities.length; i++){
@@ -433,12 +448,8 @@ Vue.component('apartments', {
         } else {
             this.isGuest = true;
         }
-        axios
-        .get('rest/apartment')
-        .then(response => {
-            this.apartments = response.data;
-        })  
         
+        this.getApartments();
         axios
         .get('rest/amenity/all')
         .then(response => {
