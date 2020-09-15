@@ -153,16 +153,16 @@ public class AmenityDAO {
 					continue;
 				st = new StringTokenizer(line, ";");
 				String apartmentId = st.nextToken().trim();
-				if (apartmentId.equals(apartment.getId())) {
-					for (Amenity amenity : amenities) {
-						text += apartment.getId() + ";" + amenity.getId() + "\r\n";
-					}
-				} else {
+				if (!apartmentId.equals(apartment.getId())) {
 					text += line + "\r\n";
 				}
 			}
 			in.close();
-			BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+			// Avoids doubling of amenities
+			for (Amenity amenity : amenities) {
+				text += apartment.getId() + ";" + amenity.getId() + "\r\n";
+			}
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 			PrintWriter out = new PrintWriter(writer);
 			out.println(text);
 			out.close();
