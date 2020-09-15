@@ -26,6 +26,8 @@ public class Apartment {
 	private Collection<Reservation> reservations;
 	private Collection<Review> reviews;
 
+	private boolean deleted;
+
 	public Apartment() {
 		super();
 	}
@@ -178,6 +180,14 @@ public class Apartment {
 
 	public void setReservations(Collection<Reservation> reservations) {
 		this.reservations = reservations;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 }

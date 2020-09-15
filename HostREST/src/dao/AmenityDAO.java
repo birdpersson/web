@@ -44,7 +44,7 @@ public class AmenityDAO {
 		}
 		maxId++;
 		amenity.setId(maxId.toString());
-		String line = amenity.getId() + ";" + amenity.getName() + ";" + amenity.getType();
+		String line = amenity.getId() + ";" + amenity.getName() + ";" + amenity.getType() + ";false";
 		System.out.println(line);
 		BufferedWriter writer = null;
 		try {
@@ -69,7 +69,6 @@ public class AmenityDAO {
 		return amenity;
 	}
 
-	@SuppressWarnings("unused")
 	public Amenity update(String contextPath, Amenity amenity) {
 		try {
 			File file = new File(contextPath + "/amenities.txt");
@@ -81,15 +80,12 @@ public class AmenityDAO {
 				if (line.equals("") || line.indexOf('#') == 0)
 					continue;
 				st = new StringTokenizer(line, ";");
-				while (st.hasMoreTokens()) {
-					String id = st.nextToken().trim();
-					String name = st.nextToken().trim();
-					String type = st.nextToken().trim();
-					if (amenity.getId().equals(id)) {
-						text += id + ";" + amenity.getName() + ";" + amenity.getType() + "\r\n";
-					} else {
-						text += line + "\r\n";
-					}
+				String id = st.nextToken().trim();
+				if (amenity.getId().equals(id)) {
+					text += id + ";" + amenity.getName() + ";" + amenity.getType() + ";"
+							+ amenity.isDeleted() + "\r\n";
+				} else {
+					text += line + "\r\n";
 				}
 			}
 			in.close();
@@ -126,7 +122,9 @@ public class AmenityDAO {
 					String id = st.nextToken().trim();
 					String name = st.nextToken().trim();
 					String type = st.nextToken().trim();
-					amenities.put(id, new Amenity(id, name, Amenity.Type.valueOf(type)));
+					boolean deleted = Boolean.parseBoolean(st.nextToken().trim());
+					if (!deleted)
+						amenities.put(id, new Amenity(id, name, Amenity.Type.valueOf(type)));
 				}
 			}
 		} catch (Exception e) {
@@ -187,7 +185,7 @@ public class AmenityDAO {
 				while (st.hasMoreTokens()) {
 					String apartmentId = st.nextToken().trim();
 					String amenityId = st.nextToken().trim();
-					if (apartmentId.equals(id)) {
+					if (apartmentId.equals(id) && amenities.containsKey(amenityId)) {
 						returnAmenities.add(amenities.get(amenityId));
 					}
 				}

@@ -10,6 +10,8 @@ public class Amenity {
 	private String name;
 	private Type type;
 
+	private boolean deleted;
+
 	public Amenity() {
 		super();
 	}
@@ -43,6 +45,14 @@ public class Amenity {
 
 	public void setType(Type type) {
 		this.type = type;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 }

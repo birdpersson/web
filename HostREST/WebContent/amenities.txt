@@ -1,26 +1,26 @@
-1;Wifi;Base;
-2;Laptop friendly workspace;Base;
-3;Cable TV;Base;
-4;Washer;Base;
-5;Air conditioning;Base;
-6;TV;Base;
-7;Heating;Base;
-8;Ethernet connection;Base;
-9;Essentials;Base;
-10;Hot water;Base;
-11;Iron;Base;
-12;Crib;Family;
-13;High chair;Family;
-14;Pack'n Play/travel crib;Family;
-15;Room-darkening shades;Family;
-16;Window guards;Family;
-17;Elevator;Facilities;
-18;Paid parking off premises;Facilities;
-19;Single level home;Facilities;
-20;Free street parking;Facilities;
-21;Kitchen;Dining;
-22;Coffee maker;Dining;
-23;Cooking basics;Dining;
-24;Dishes and silverware;Dining;
-25;Microwave;Dining;
-26;Refrigerator;Dining;
+1;Wifi;Base;false
+2;Laptop friendly workspace;Base;true
+3;Cable TV;Base;false
+4;Washer;Base;false
+5;Air conditioning;Base;false
+6;TV;Base;false
+7;Heating;Base;false
+8;Ethernet connection;Base;false
+9;Essentials;Base;false
+10;Hot water;Base;false
+11;Iron;Base;false
+12;Crib;Family;false
+13;High chair;Family;false
+14;Pack'n Play/travel crib;Family;false
+15;Room-darkening shades;Family;false
+16;Window guards;Family;false
+17;Elevator;Facilities;false
+18;Paid parking off premises;Facilities;false
+19;Single level home;Facilities;false
+20;Free street parking;Facilities;false
+21;Kitchen;Dining;false
+22;Coffee maker;Dining;false
+23;Cooking basics;Dining;false
+24;Dishes and silverware;Dining;false
+25;Microwave;Dining;false
+26;Refrigerator;Dining;false
