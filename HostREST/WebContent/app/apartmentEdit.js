@@ -295,18 +295,20 @@ Vue.component('apartment-edit', {
 					.put('rest/apartment/' + this.apartment.id, this.apartment)
 					.then(Response => {
 						console.log(Response);
-						// let contentType = {
-						// 	headers: {
-						// 		"Content-Type": "multipart/form-data"
-						// 	}
-						// }
-						// axios
-						// 	.post('rest/apartment/' + Response.data.id + '/upload', this.images, contentType)
-						// 	.then(response => {
-						// 		console.log(response);
-						// 		this.messages.successResponse = `<h4>Apartment was added successfully!</h4>`;
-						// 		setTimeout(() => this.messages.successResponse = '', 5000);
-						// 	});
+						if (this.images != null) {
+							let contentType = {
+								headers: {
+									"Content-Type": "multipart/form-data"
+								}
+							}
+							axios
+								.post('rest/apartment/' + Response.data.id + '/upload', this.images, contentType)
+								.then(response => {
+									console.log(response);
+									this.messages.successResponse = `<h4>Apartment was added successfully!</h4>`;
+									setTimeout(() => this.messages.successResponse = '', 5000);
+								});
+						}
 					})
 					.catch(error => {
 						if (error.response.status === 500 || error.response.status === 404) {
