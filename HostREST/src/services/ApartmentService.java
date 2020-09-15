@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -18,6 +19,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -76,15 +78,71 @@ public class ApartmentService {
 		}
 	}
 
+//	@GET
+//	@Path("/")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public Collection<ApartmentDTO> getAllApartments() {
+//		ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+//		AmenityDAO amenityDAO = (AmenityDAO) ctx.getAttribute("amenityDAO");
+//
+//		Collection<Apartment> apartments = apartmentDAO.findAll();
+//		Collection<ApartmentDTO> retApartment = new ArrayList<>();
+//
+//		for (Apartment a : apartments) {
+//			ArrayList<Amenity> amenitiesOriginal = amenityDAO.findAllByApartmentId(ctx.getRealPath(""), a.getId());
+//			ArrayList<String> amenities = new ArrayList<>();
+//			for (Amenity amenity : amenitiesOriginal) {
+//				amenities.add(amenity.getName());
+//			}
+//			ApartmentDTO dto = new ApartmentDTO(a.getId(), a.getType(), a.getRooms(), a.getGuests(), a.getLocation(),
+//					a.getTo(), a.getFrom(), a.getHost(), a.getPrice(), a.getStatus(), amenities);
+//			retApartment.add(dto);
+////			a.setAmenities((ArrayList<Amenity>) daoAmen.findAllByApartmentId(a.getId()));
+////			a.setReviews((ArrayList<Review>) daoReview.findAllByApartmentId(a.getId()));
+////			a.setReservations((ArrayList<Reservation>) daoReser.findAllByApartmentId(a.getId()));
+//		}
+//
+//		return retApartment;
+//	}
+	
 	@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<ApartmentDTO> getAllApartments() {
-		ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
-		AmenityDAO amenityDAO = (AmenityDAO) ctx.getAttribute("amenityDAO");
-
+	public Collection<ApartmentDTO> getAllApartments(@Context HttpServletRequest request) {
+    	
+		String username = AuthService.getUsername(request);
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+    	ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+    	AmenityDAO amenityDAO = (AmenityDAO) ctx.getAttribute("amenityDAO");
 		Collection<Apartment> apartments = apartmentDAO.findAll();
+  
 		Collection<ApartmentDTO> retApartment = new ArrayList<>();
+		
+		//za neulogovanog/neregistrovanog korisnika vraca sve aktivne stanove  
+		if(username == null) {
+			apartments = apartments.stream()
+					.filter(a ->  a.getStatus().equals("aktivan"))
+					.collect(Collectors.toList());
+		}
+		//za guesta vraca sve aktivne stanove  
+		else if (userDao.findOne(username).getRole().toString().equals("GUEST")) {
+			apartments = apartments.stream()
+					.filter(a ->  a.getStatus().equals("aktivan"))
+					.collect(Collectors.toList());
+		}
+		//za hosta vraca sve njegove aktivne i nekativne stanove
+		else if (userDao.findOne(username).getRole().toString().equals("HOST")) {
+			
+			apartments = apartmentDAO.findAllApartByHostId(username);
+//			apartments = apartments.stream()
+//					.filter(a ->  a.getStatus().equals("aktivan"))
+//					.collect(Collectors.toList());
+		}
+		else{
+			//za admina vraca sve aktivne i neaktivne stanove (mogu ih filtrirati po statusu) 
+			//Ovo je besmislena linija koda, ali cisto radi ilustracije slucaja za admina
+			apartments = apartments;
+		}
 
 		for (Apartment a : apartments) {
 			ArrayList<Amenity> amenitiesOriginal = amenityDAO.findAllByApartmentId(ctx.getRealPath(""), a.getId());
@@ -95,9 +153,6 @@ public class ApartmentService {
 			ApartmentDTO dto = new ApartmentDTO(a.getId(), a.getType(), a.getRooms(), a.getGuests(), a.getLocation(),
 					a.getTo(), a.getFrom(), a.getHost(), a.getPrice(), a.getStatus(), amenities);
 			retApartment.add(dto);
-//			a.setAmenities((ArrayList<Amenity>) daoAmen.findAllByApartmentId(a.getId()));
-//			a.setReviews((ArrayList<Review>) daoReview.findAllByApartmentId(a.getId()));
-//			a.setReservations((ArrayList<Reservation>) daoReser.findAllByApartmentId(a.getId()));
 		}
 
 		return retApartment;
@@ -109,10 +164,105 @@ public class ApartmentService {
 	public Apartment getApartment(@PathParam("id") String id) {
 		ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
 		ReservationDAO reservationDAO = (ReservationDAO) ctx.getAttribute("reservationDAO");
+		ReviewDAO reviewDAO = (ReviewDAO) ctx.getAttribute("reviewDAO");
 		Apartment apartment = apartmentDAO.findOne(id);
 		apartment.setReservations(reservationDAO.findAllByApartmentId(id));
+		apartment.setReviews(reviewDAO.findAllByApartmentId(id));
 		return apartment;
 	}
+	
+	
+    @GET
+	@Path("/search")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response searchApartments(@Context HttpServletRequest request, 
+			@QueryParam("location") String location,
+			@QueryParam("checkIn") Long checkIn,
+			@QueryParam("checkOut") Long checkOut,
+			@QueryParam("roomsMin") Long roomsMin,
+			@QueryParam("roomsMax") Long roomsMax,
+			@QueryParam("guests") Long guests,
+			@QueryParam("priceMin") Long priceMin,
+			@QueryParam("priceMax") Long priceMax) {
+    
+    	//Obrisati na kraju
+    	System.out.println("location: " + location);
+    	System.out.println("checkIn: " + checkIn);
+    	System.out.println("checkOut: " + checkOut);
+    	System.out.println("roomsMin: " + roomsMin);
+    	System.out.println("roomsMax: " + roomsMax);
+    	System.out.println("guests: " + guests);
+    	System.out.println("priceMin: " + priceMin);
+    	System.out.println("priceMax: " + priceMax);
+    	
+    	
+    	String username = AuthService.getUsername(request);
+    
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+    	ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");		
+		Collection<Apartment> apartments = apartmentDAO.findAll();
+		
+		//za neulogovanog/neregistrovanog korisnika vraca sve aktivne stanove  
+		if(username == null) {
+			apartments = apartments.stream()
+					.filter(a ->  a.getStatus().equals("aktivan"))
+					.collect(Collectors.toList());
+		}
+		//za guesta vraca sve aktivne stanove  
+		else if (userDao.findOne(username).getRole().toString().equals("GUEST")) {
+			apartments = apartments.stream()
+					.filter(a ->  a.getStatus().equals("aktivan"))
+					.collect(Collectors.toList());
+		}
+		//za hosta vraca sve njegove aktivne stanove (za nekativne nema pretrage niti filtracije)
+		else if (userDao.findOne(username).getRole().toString().equals("HOST")) {
+			
+			apartments = apartmentDAO.findAllApartByHostId(username);
+			apartments = apartments.stream()
+					.filter(a ->  a.getStatus().equals("aktivan"))
+					.collect(Collectors.toList());
+		}
+		else{
+			//za admina vraca sve aktivne i neaktivne stanove (mogu ih filtrirati po statusu) 
+			//Ovo je besmislena linija koda, ali cisto radi ilustracije slucaja za admina
+			apartments = apartments;
+		}
+ 
+		if(location != null) {
+			apartments = apartments.stream()
+				.filter(l -> l.getLocation().getAddress().getCity().toLowerCase().contains(location.toLowerCase()))
+				.collect(Collectors.toList());
+		}
+ 
+		if(priceMin != null) {
+			apartments = apartments.stream()
+				.filter(a -> a.getPrice() >= priceMin)
+				.collect(Collectors.toList());
+		}
+		if(priceMax != null) {
+			apartments = apartments.stream()
+				.filter(a -> a.getPrice() <= priceMax)
+				.collect(Collectors.toList());
+		}
+		if(guests != null) {
+			apartments = apartments.stream()
+				.filter(a -> a.getGuests() >= guests)
+				.collect(Collectors.toList());
+		}
+		if(roomsMin != null) {
+			apartments = apartments.stream()
+				.filter(a -> a.getRooms() >= roomsMin)
+				.collect(Collectors.toList());
+		}
+		
+		if(roomsMax != null) {
+			apartments = apartments.stream()
+				.filter(a -> a.getRooms() <= roomsMax)
+				.collect(Collectors.toList());
+		}
+		
+		return Response.status(Response.Status.OK).entity(apartments).build();
+    }
 
 	@POST
 	@Path("/")

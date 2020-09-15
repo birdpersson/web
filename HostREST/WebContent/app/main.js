@@ -29,8 +29,8 @@ const routes = [
 	{ path: '/profile/update', component: ProfileUpdate },
 	{ path: '/users', component: Users },
 	{ path: '/users/addHost', component: AddHost },
-	// { path: '/reservations', component: Reservations },
-	{ path: '/reservations', component: Test },
+	{ path: '/reservations', component: Reservations },
+	// { path: '/reservations', component: Test },
 	{ path: '/apartments', component: Apartments },
 	{ path: '/apartment/:id/comments', component: ApartmentsComments },
 	{ path: '/apartmentComments', component: ApartmentsComments },//za admina i hosta

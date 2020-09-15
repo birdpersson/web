@@ -67,6 +67,7 @@ public class ApartmentDAO {
 		maxId++;
 		apartment.setId(maxId.toString());
 		apartment.setStatus("neaktivno");
+		apartment.setDeleted(false);
 		String line = apartment.getId() + ";"
 				+ apartment.getType() + ";"
 				+ apartment.getRooms() + ";"
@@ -78,7 +79,8 @@ public class ApartmentDAO {
 				+ apartment.getPrice() + ";"
 				+ apartment.getCheckin() + ";"
 				+ apartment.getCheckout() + ";"
-				+ apartment.getStatus();
+				+ apartment.getStatus() + ";"
+				+ apartment.isDeleted();
 		System.out.println(line);
 		BufferedWriter writer = null;
 		try {
@@ -138,7 +140,8 @@ public class ApartmentDAO {
 							+ apartment.getPrice() + ";"
 							+ apartment.getCheckin() + ";"
 							+ apartment.getCheckout() + ";"
-							+ apartment.getStatus() + "\r\n";
+							+ apartment.getStatus() + ";"
+							+ apartment.isDeleted() + "\r\n";
 				} else {
 					text += line + "\r\n";
 				}
@@ -183,15 +186,17 @@ public class ApartmentDAO {
 					String checkin = st.nextToken().trim();
 					String checkout = st.nextToken().trim();
 					String status = st.nextToken().trim();
-					
+					boolean deleted = Boolean.parseBoolean(st.nextToken().trim());
+
 					// TODO: Migrate to ApartmentService (shouldn't call other dao's here)
 					ArrayList<String> images = loadImages(contextPath, id);
 					ArrayList<Amenity> amenities = amenityDAO.findAllByApartmentId(contextPath, id);
 					Collection<Reservation> reservations = reservationDAO.findAllByApartmentId(id);
 					Collection<Review> reviews = reviewDAO.findAllByApartmentId(id);
-					
-					apartments.put(id, new Apartment(id, type, rooms, guests, location, to, from, reservations,
-							host, reviews, images, price, checkin, checkout, status, amenities));
+
+					if (!deleted)
+						apartments.put(id, new Apartment(id, type, rooms, guests, location, to, from, reservations,
+								host, reviews, images, price, checkin, checkout, status, amenities));
 				}
 			}
 		} catch (Exception e) {

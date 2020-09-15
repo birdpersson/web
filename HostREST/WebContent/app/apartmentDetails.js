@@ -61,6 +61,10 @@ Vue.component("apartment-details", {
           <h3 class="card-title">Rooms:
             <span style="font-size: 25px;">{{apartment.rooms}}</span >
           </h3>
+
+          <h3 class="card-title">Number of guests:
+            <span style="font-size: 25px;">{{apartment.guests}}</span >
+          </h3>
           
         </div>
       </div><!-- /.card -->
@@ -206,10 +210,37 @@ Vue.component("apartment-details", {
           }
         }
       },
-      noComment:function(){        
+      noComment:function(){     
+        console.log('this.apartment.reviews.length: ' + this.apartment.reviews.length);   
         if(this.apartment.reviews === undefined || this.apartment.reviews.length === 0){
+          // console.log('this.apartment.reviews.length = 0 ');
           this.noReview = true;
-        }else{
+        }
+        else if(this.apartment.reviews !== undefined || this.apartment.reviews.length !== 0){
+          // console.log('this.apartment.reviews.length != 0 ');
+          let visible = false;
+          //ako ima komentara za dati stan, prolazimo kroz sve komentare 
+          //i proveravamo da li su odobreni ako ni jedan nije odobren opet prikazujemo poruku
+          for(let i = 0; i < this.apartment.reviews.length; i++){
+            if(this.apartment.reviews[i].visible === false){
+              // console.log('review.visible: ' + this.apartment.reviews[i].visible);
+              continue;
+            }
+            else{
+              visible = true;
+              // console.log('review.visible: ' + this.apartment.reviews[i].visible);
+              break;
+              
+            }
+          }
+          //ako je visibilitu svakog komentara false onda 
+          //prikazuje poruku kako nema komentara
+          if(visible === false){
+            this.noReview = true;
+          }
+        }
+        else{
+
           this.noReview = false;
         }
 
