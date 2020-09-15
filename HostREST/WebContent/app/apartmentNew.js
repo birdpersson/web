@@ -181,10 +181,6 @@ Vue.component('new-apartment', {
 				to: null
 			},
 
-			highlighted: {
-				to: null,
-				from: null
-			},
 			messages: {
 				errorType: '',
 				errorRooms: '',
@@ -335,10 +331,6 @@ Vue.component('new-apartment', {
 					});
 			}
 		},
-
-		update: function (apartment) {
-
-		},
 		uploadImage(e) {
 			this.images = e.target.files;
 			let formData = new FormData();
@@ -346,9 +338,6 @@ Vue.component('new-apartment', {
 				formData.append('image', this.images[i], this.images[i].name);
 			}
 			this.images = formData;
-		},
-		submitFiles: function () {
-
 		},
 		checkApartment: function () {
 			if (this.apartment.type == "ROOM") {

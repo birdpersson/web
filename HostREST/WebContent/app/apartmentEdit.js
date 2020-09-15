@@ -1,129 +1,145 @@
 Vue.component('apartment-edit', {
 	template: `
-	<div id="new-apartment">
-	  <div class="container" id='page-title'>
+<div id="new-apartment">
+	<div class="container" id='page-title'>
 		<h1 style="margin-top:10px;color:#35424a;">Edit <span id='titleEffect'>Apartment</span></h1>
 		<hr style='background:#e8491d;height:1px;'>
-	  </div>
-	  
-	  <div class="container" id='main'>
-	  <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
-	  <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
+	</div>
+
+	<div class="container" id='main'>
+		<div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
+		<div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
 		<div>
-		  <div style="margin-top:20px" v-if='messages.errorType' class="alert alert-danger" v-html="messages.errorType"></div>          
-		  <label>Type of apartment</label>
-		  <select v-model="apartment.type">
-			<option v-for="type in types" v-on:click="checkApartment">{{type}}</option>
-		  </select>
-	
-		  <div style="margin-top:20px" v-if='messages.errorRooms' class="alert alert-danger" v-html="messages.errorRooms"></div>          
-		  <label>Number of rooms</label>
-		  <select v-show="isApartment()" v-model="apartment.rooms">
-			<option disabled value="">No. of rooms</option>
-			<option v-for="room in rooms">{{room}}</option>
-		  </select>
-		  <div v-show="!isApartment()">
-			<img src="./img/negativ1.1.png" alt=""> <span>This option is anavailable</span>
-		  </div>
-	
-		  <div style="margin-top:20px" v-if='messages.errorGuests' class="alert alert-danger" v-html="messages.errorGuests"></div>          
-		  <label>Number of guests</label>
-		  <select v-model="apartment.guests">
-			<option disabled value="">No. of guests</option>
-			<option v-for="guest in guests">{{guest}}</option>
-		  </select>
-	
-		  <div style="margin-top:20px" v-if='messages.errorLocation' class="alert alert-danger" v-html="messages.errorLocation"></div>          
-		  <label>Location</label>
-		  <input class='half-size' type="text" placeholder="Enter location latitude..."
-			v-model='apartment.location.latitude'> -
-		  <input class='half-size' type="text" placeholder="Enter location longitude..."
-			v-model='apartment.location.longitude'>
-	
-		  <div style="margin-top:20px" v-if='messages.errorAddress' class="alert alert-danger" v-html="messages.errorAddress"></div>          
+			<div style="margin-top:20px" v-if='messages.errorType' class="alert alert-danger"
+				v-html="messages.errorType"></div>
+			<label>Type of apartment</label>
+			<select v-model="apartment.type">
+				<option v-for="type in types" v-on:click="checkApartment">{{type}}</option>
+			</select>
+
+			<div style="margin-top:20px" v-if='messages.errorRooms' class="alert alert-danger"
+				v-html="messages.errorRooms"></div>
+			<label>Number of rooms</label>
+			<select v-show="isApartment()" v-model="apartment.rooms">
+				<option disabled value="">No. of rooms</option>
+				<option v-for="room in rooms">{{room}}</option>
+			</select>
+			<div v-show="!isApartment()">
+				<img src="./img/negativ1.1.png" alt=""> <span>This option is anavailable</span>
+			</div>
+
+			<div style="margin-top:20px" v-if='messages.errorGuests' class="alert alert-danger"
+				v-html="messages.errorGuests"></div>
+			<label>Number of guests</label>
+			<select v-model="apartment.guests">
+				<option disabled value="">No. of guests</option>
+				<option v-for="guest in guests">{{guest}}</option>
+			</select>
+
+			<div style="margin-top:20px" v-if='messages.errorLocation' class="alert alert-danger"
+				v-html="messages.errorLocation"></div>
+			<label>Location</label>
+			<input class='half-size' type="text" placeholder="Enter location latitude..."
+				v-model='apartment.location.latitude'> -
+			<input class='half-size' type="text" placeholder="Enter location longitude..."
+				v-model='apartment.location.longitude'>
+
+			<div style="margin-top:20px" v-if='messages.errorAddress' class="alert alert-danger"
+				v-html="messages.errorAddress"></div>
 			<label>Address</label>
-			<div> 
-			  <input class="one-third" placeholder="Enter street" v-model='apartment.location.address.street'>
-			  <input class="one-third" placeholder="Enter city" v-model='apartment.location.address.city'>
-			  <input class="one-third" placeholder="Enter postal code" v-model='apartment.location.address.postalCode'>
+			<div>
+				<input class="one-third" placeholder="Enter street" v-model='apartment.location.address.street'>
+				<input class="one-third" placeholder="Enter city" v-model='apartment.location.address.city'>
+				<input class="one-third" placeholder="Enter postal code"
+					v-model='apartment.location.address.postalCode'>
 			</div>
-		
-		  <div style="margin-top:20px" v-if='messages.errorPrice' class="alert alert-danger" v-html="messages.errorPrice"></div>          
-		  <label>Price</label>
-		  <input id='price' type="text" placeholder="Enter price..." v-model='apartment.price'>
-	
-		  <div style="margin-top:20px" v-if='messages.errorCheckInOut' class="alert alert-danger" v-html="messages.errorCheckInOut"></div>          
-		  <label>Time to checkin & checkout</label>
-		  <input class='half-size' type="text" placeholder="Checkin..." v-model='apartment.checkin'> -
-		  <input class='half-size' type="text" placeholder="Checkout..." v-model='apartment.checkout'>
-	
-		  <div style="margin-top:20px" v-if='messages.errorDates' class="alert alert-danger" v-html="messages.errorDates"></div>          
-		  <label>Dates available</label>
-		  <div class="row">
-			<div class="col">
-			  <vuejsDatepicker placeholder="Select Checkin Date" v-model="dates.from" :highlighted="dates" :disabled-dates="disabledDates">
-			  </vuejsDatepicker>
-			</div>
-			<div class="col">
-			  <vuejsDatepicker placeholder="Select Checkout Date" v-model="dates.to" :highlighted="dates" :disabled-dates="disabledDates">
-			  </vuejsDatepicker>
-			</div>
-		  </div>
-	
-		  <div style="margin-top:20px" v-if='messages.errorAmenities' class="alert alert-danger" v-html="messages.errorAmenities"></div>          
-		  <label>Amenities</label>
-		  <div id='amenities' style="margin-top:20px">
-			  <div class="row">
-				<div class="col-md-3 col-sm-6 mb-4">
-					<h4>Base</h4>
-					<ul style="list-style: none; padding-left:0px" v-for="base in amenities.base">
-					  <li><input :value="base" v-model="apartment.amenities" type="checkbox"> {{base.name}}</li>
-					</ul>
+
+			<div style="margin-top:20px" v-if='messages.errorPrice' class="alert alert-danger"
+				v-html="messages.errorPrice"></div>
+			<label>Price</label>
+			<input id='price' type="text" placeholder="Enter price..." v-model='apartment.price'>
+
+			<div style="margin-top:20px" v-if='messages.errorCheckInOut' class="alert alert-danger"
+				v-html="messages.errorCheckInOut"></div>
+			<label>Time to checkin & checkout</label>
+			<input class='half-size' type="text" placeholder="Checkin..." v-model='apartment.checkin'> -
+			<input class='half-size' type="text" placeholder="Checkout..." v-model='apartment.checkout'>
+
+			<div style="margin-top:20px" v-if='messages.errorDates' class="alert alert-danger"
+				v-html="messages.errorDates"></div>
+			<label>Dates available</label>
+			<div class="row">
+				<div class="col">
+					<vuejsDatepicker placeholder="Select Checkin Date" v-model="dates.from" :highlighted="dates"
+						:disabled-dates="disabledDates">
+					</vuejsDatepicker>
 				</div>
-	
-			  <div class="col-md-3 col-sm-6 mb-4">
-				  <h4>Family</h4>
-				  <ul style="list-style: none; padding-left:0px" v-for="family in amenities.family">
-					  <li><input :value="family" v-model="apartment.amenities" type="checkbox"> {{family.name}}</li>
-				  </ul>
-			  </div>
-	
-			  <div class="col-md-3 col-sm-6 mb-4">
-				  <h4>Dining</h4>
-				  <ul style="list-style: none; padding-left:0px" v-for="dining in amenities.dining">
-					  <li><input :value="dining" v-model="apartment.amenities" type="checkbox"> {{dining.name}}</li>
-				  </ul>
-			  </div>
-	
-			  <div class="col-md-3 col-sm-6 mb-4">
-				  <h4>Facilities</h4>
-				  <ul style="list-style: none; padding-left:0px" v-for="fac in amenities.fac">
-					  <li><input :value="fac" v-model="apartment.amenities" type="checkbox"> {{fac.name}}</li>
-				  </ul>
-			  </div>
-			  
-			</div> <!--.row-->
-		  </div><!--#amenities-->
-  
-		  <div>
-			<label>Images</label>
-			<input type="file" class="filestyle" multiple v-on:change="handleFileUploads()">	
-		  </div>
-  
-		  <!--   
+				<div class="col">
+					<vuejsDatepicker placeholder="Select Checkout Date" v-model="dates.to" :highlighted="dates"
+						:disabled-dates="disabledDates">
+					</vuejsDatepicker>
+				</div>
+			</div>
+
+			<div style="margin-top:20px" v-if='messages.errorAmenities' class="alert alert-danger"
+				v-html="messages.errorAmenities"></div>
+			<label>Amenities</label>
+			<div id='amenities' style="margin-top:20px">
+				<div class="row">
+					<div class="col-md-3 col-sm-6 mb-4">
+						<h4>Base</h4>
+						<ul style="list-style: none; padding-left:0px" v-for="base in amenities.base">
+							<li><input :value="base" v-model="apartment.amenities" type="checkbox"> {{base.name}}</li>
+						</ul>
+					</div>
+
+					<div class="col-md-3 col-sm-6 mb-4">
+						<h4>Family</h4>
+						<ul style="list-style: none; padding-left:0px" v-for="family in amenities.family">
+							<li><input :value="family" v-model="apartment.amenities" type="checkbox"> {{family.name}}
+							</li>
+						</ul>
+					</div>
+
+					<div class="col-md-3 col-sm-6 mb-4">
+						<h4>Dining</h4>
+						<ul style="list-style: none; padding-left:0px" v-for="dining in amenities.dining">
+							<li><input :value="dining" v-model="apartment.amenities" type="checkbox"> {{dining.name}}
+							</li>
+						</ul>
+					</div>
+
+					<div class="col-md-3 col-sm-6 mb-4">
+						<h4>Facilities</h4>
+						<ul style="list-style: none; padding-left:0px" v-for="fac in amenities.fac">
+							<li><input :value="fac" v-model="apartment.amenities" type="checkbox"> {{fac.name}}</li>
+						</ul>
+					</div>
+
+				</div>
+				<!--.row-->
+			</div>
+			<!--#amenities-->
+
+			<div>
+				<label>Images</label>
+				<input type="file" name="file" class="filestyle" multiple @change="uploadImage">
+			</div>
+
+			<!--   
 			<div>
 			<h2>Images overview</h2>
 			<div class="carousel-item" v-for="img in images" :style="{'background-image': 'url(' + img + ')'}">
 			</div> 
 		  </div> -->
-  
-		  <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
-	  <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
-		  <button class="btn btn-lg btn-success" v-on:click="create(apartment)">Save</button>
+
+			<div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
+			<div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
+			<button class="btn btn-lg btn-success" v-on:click="update(apartment)">Update</button>
 		</div>
-	  </div>
 	</div>
-	`
+</div>
+`
 	,
 	data: function () {
 		return {
@@ -146,6 +162,7 @@ Vue.component('apartment-edit', {
 				price: null,
 				checkin: '2 PM',
 				checkout: '10 AM',
+				status: '',
 				amenities: []
 			},
 
@@ -164,10 +181,6 @@ Vue.component('apartment-edit', {
 				to: null
 			},
 
-			highlighted: {
-				to: null,
-				from: null
-			},
 			apartmentId: '',
 
 			messages: {
@@ -194,7 +207,7 @@ Vue.component('apartment-edit', {
 	},
 
 	methods: {
-		create: function (apartment) {
+		update: function (apartment) {
 			if (this.apartment.type == null) {
 				this.messages.errorType = `<h4>Field type of apartment can't be empty!</h4>`;
 				setTimeout(() => this.messages.errorType = '', 10000);
@@ -274,11 +287,34 @@ Vue.component('apartment-edit', {
 				setTimeout(() => this.messages.errorAmenities = '', 5000);
 			}
 			else {
-
 				// unselected dates will be disabled
 				this.apartment.to = this.dates.from.getTime();
 				this.apartment.from = this.dates.to.getTime() + 1000 * 60 * 60 * 24;
 				console.log(this.apartment);
+				axios
+					.put('rest/apartment/' + this.apartment.id, this.apartment)
+					.then(Response => {
+						console.log(Response);
+						// let contentType = {
+						// 	headers: {
+						// 		"Content-Type": "multipart/form-data"
+						// 	}
+						// }
+						// axios
+						// 	.post('rest/apartment/' + Response.data.id + '/upload', this.images, contentType)
+						// 	.then(response => {
+						// 		console.log(response);
+						// 		this.messages.successResponse = `<h4>Apartment was added successfully!</h4>`;
+						// 		setTimeout(() => this.messages.successResponse = '', 5000);
+						// 	});
+					})
+					.catch(error => {
+						if (error.response.status === 500 || error.response.status === 404) {
+							this.messages.errorResponse = `<h4>We had some server errors, please try again later!</h4>`;
+							setTimeout(() => this.messages.errorResponse = '', 5000);
+						}
+					});
+
 				// axios
 				//     .post('rest/apartment', this.apartment)
 				//     .then(Response => {
@@ -294,15 +330,13 @@ Vue.component('apartment-edit', {
 				// });
 			}
 		},
-
-		update: function (apartment) {
-
-		},
-		handleFileUploads() {
-
-		},
-		submitFiles: function () {
-
+		uploadImage(e) {
+			this.images = e.target.files;
+			let formData = new FormData();
+			for (let i = 0; i < this.images.length; i++) {
+				formData.append('image', this.images[i], this.images[i].name);
+			}
+			this.images = formData;
 		},
 		checkApartment: function () {
 			if (this.apartment.type == "ROOM") {
@@ -365,6 +399,9 @@ Vue.component('apartment-edit', {
 			.get(`rest/apartment/${this.apartmentId}`)
 			.then(response => {
 				this.apartment = response.data;
+				// Well.. this was a stupid decision
+				this.dates.from = new Date(response.data.to);
+				this.dates.to = new Date(response.data.from);
 			})
 
 		axios
