@@ -18,6 +18,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -115,6 +116,80 @@ public class ApartmentService {
 		apartment.setReviews(reviewDAO.findAllByApartmentId(id));
 		return apartment;
 	}
+	
+	
+    @GET
+	@Path("/search")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response searchApartments(@Context HttpServletRequest request, 
+			@QueryParam("location") String location,
+			@QueryParam("checkIn") Long checkIn,
+			@QueryParam("checkOut") Long checkOut,
+			@QueryParam("roomsMin") Long roomsMin,
+			@QueryParam("roomsMax") Long roomsMax,
+			@QueryParam("guests") Long guests,
+			@QueryParam("priceMin") Long priceMin,
+			@QueryParam("priceMax") Long priceMax) {
+    
+    	System.out.println("location: " + location);
+    	System.out.println("checkIn: " + checkIn);
+    	System.out.println("checkOut: " + checkOut);
+    	System.out.println("roomsMin: " + roomsMin);
+    	System.out.println("roomsMax: " + roomsMax);
+    	System.out.println("guests: " + guests);
+    	System.out.println("priceMin: " + priceMin);
+    	System.out.println("priceMax: " + priceMax);
+    	
+    	
+    	String username = AuthService.getUsername(request);
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+    	ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+		ReservationDAO reservationDAO = (ReservationDAO) ctx.getAttribute("reservationDAO");
+		ReviewDAO reviewDAO = (ReviewDAO) ctx.getAttribute("reviewDAO");
+		
+		Collection<Apartment> apartments = apartmentDAO.findAll();
+		
+		
+//		if (!userDao.findOne(username).getRole().toString().equals("GUEST")) {
+//					apartments = apartments.stream()
+//					.filter(a -> a.getActive()) //to za aktivne stanove iz dao treba da prosledi za user
+//					.collect(Collectors.toList());
+//		} else if (!userDao.findOne(username).getRole().toString().equals("HOST")) {
+//			apartments = dao.findByHostId(Authorization.getUsername(request)); //zaboravio sam koji je naziv
+//			apartments = apartments.stream()
+//					.filter(a -> a.getActive())
+//					.collect(Collectors.toList());
+//		}
+// 
+//		if(location != null) {
+//			apartments = apartments.stream()
+//				.filter(l -> l.getLocation().getAddress().getCity().toLowerCase().contains(location.toLowerCase()))
+//				.collect(Collectors.toList());
+//		}
+// 
+//		if(priceMin != null) {
+//			apartments = apartments.stream()
+//				.filter(a -> a.getPrice() >= priceMin)
+//				.collect(Collectors.toList());
+//		}
+//		if(priceMax != null) {
+//			apartments = apartments.stream()
+//				.filter(a -> a.getPrice() <= priceMax)
+//				.collect(Collectors.toList());
+//		}
+//		if(guests != null) {
+//			apartments = apartments.stream()
+//				.filter(a -> a.getCapacity() >= guests)
+//				.collect(Collectors.toList());
+//		}
+//		if(rooms != null) {
+//			apartments = apartments.stream()
+//				.filter(a -> a.getNumberOfRooms() >= rooms)
+//				.collect(Collectors.toList());
+//		}
+		
+		return Response.status(Response.Status.OK).entity(apartments).build();
+    }
 
 	@POST
 	@Path("/")

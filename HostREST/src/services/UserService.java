@@ -148,6 +148,7 @@ public class UserService {
 	}
 
 	//Vracanje usera spram search upita
+	// PROVERITI!!!!!!!
 	@GET
 	@Path("user/search")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -159,24 +160,17 @@ public class UserService {
 		String requstUsername = AuthService.getUsername(request);
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
 		
-		System.out.println("username: " + username);
-		System.out.println("gender: " + gender);
-		System.out.println("role: " + role);
-		
 		if(userDao.findOne(requstUsername).getRole().toString().equals("ADMIN")) {
 			Collection<User> allUsers = userDao.findAll();
-			
 			allUsers = filterUsers(allUsers, username, gender, role);
 			
 			return Response.status(Response.Status.OK).entity(allUsers).build();
 		}	
 		else if(userDao.findOne(requstUsername).getRole().toString().equals("HOST")) {
 			Collection<User> allUsers = getUsersByApartmentId(requstUsername);
-			
 			allUsers = filterUsers(allUsers, username, gender, role);
 			
 			return Response.status(Response.Status.OK).entity(allUsers).build();
-		
 		}
 		
 		return Response.status(Response.Status.FORBIDDEN).build();
