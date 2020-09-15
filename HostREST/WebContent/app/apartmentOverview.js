@@ -96,6 +96,7 @@ Vue.component('apartments', {
                         <th>Details</th>
                         <th v-if='isGuest'>Reserv</th>
                         <th v-if='!isGuest'>Edit</th>
+                        <th v-if='isHost'>Status</th>
                         <th v-if='!isGuest'>Delete</th>
                     </tr>
                 </thead>
@@ -109,6 +110,7 @@ Vue.component('apartments', {
                         <td> <button class="btn-primary" v-on:click='showDetails(apartment.id)'> Details </button> </td>
                         <td v-if='isGuest'> <button class="btn-primary" v-on:click='makeReseravation(apartment.id)'> Reserv </button> </td>
                         <td v-if='!isGuest'><button class="btn-primary" v-on:click='editApartment(apartment.id)'> Edit </button></td>
+                        <td v-if='isHost'><button class="btn-primary" v-on:click='changeStatus(apartment.id)'> Status </button></td>
                         <td v-if='!isGuest'> <button class="btn-danger" v-on:click='showMessage'> Delete </button> </td>
                     </tr>
                 </tbody>
@@ -266,7 +268,9 @@ Vue.component('apartments', {
         showMessage: function () {
             alert('Klikom na ovo dugme se brise odabrani stan!');
         },
-
+        changeStatus: function (id) {
+            alert(`Klikom na ovo dugme se menja status odabranom stanu id: ${id}!`);
+        },
         showComments: function(id){
             this.$router.push(`/apartment/${id}/comments`);
         },
