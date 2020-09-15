@@ -61,6 +61,10 @@ Vue.component("apartment-details", {
           <h3 class="card-title">Rooms:
             <span style="font-size: 25px;">{{apartment.rooms}}</span >
           </h3>
+
+          <h3 class="card-title">Number of guests:
+            <span style="font-size: 25px;">{{apartment.guests}}</span >
+          </h3>
           
         </div>
       </div><!-- /.card -->

@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -18,6 +19,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -115,6 +117,99 @@ public class ApartmentService {
 		apartment.setReviews(reviewDAO.findAllByApartmentId(id));
 		return apartment;
 	}
+	
+	
+    @GET
+	@Path("/search")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response searchApartments(@Context HttpServletRequest request, 
+			@QueryParam("location") String location,
+			@QueryParam("checkIn") Long checkIn,
+			@QueryParam("checkOut") Long checkOut,
+			@QueryParam("roomsMin") Long roomsMin,
+			@QueryParam("roomsMax") Long roomsMax,
+			@QueryParam("guests") Long guests,
+			@QueryParam("priceMin") Long priceMin,
+			@QueryParam("priceMax") Long priceMax) {
+    
+    	System.out.println("location: " + location);
+    	System.out.println("checkIn: " + checkIn);
+    	System.out.println("checkOut: " + checkOut);
+    	System.out.println("roomsMin: " + roomsMin);
+    	System.out.println("roomsMax: " + roomsMax);
+    	System.out.println("guests: " + guests);
+    	System.out.println("priceMin: " + priceMin);
+    	System.out.println("priceMax: " + priceMax);
+    	
+    	
+    	String username = AuthService.getUsername(request);
+    	System.out.println("username: " + username);
+    	
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+    	ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");		
+		Collection<Apartment> apartments = apartmentDAO.findAll();
+		
+		//za neulogovanog/neregistrovanog korisnika vraca sve aktivne stanove  
+		if(username == null) {
+			apartments = apartments.stream()
+					.filter(a ->  a.getStatus().equals("aktivan"))
+					.collect(Collectors.toList());
+		}
+		//za guesta vraca sve aktivne stanove  
+		else if (userDao.findOne(username).getRole().toString().equals("GUEST")) {
+			apartments = apartments.stream()
+					.filter(a ->  a.getStatus().equals("aktivan"))
+					.collect(Collectors.toList());
+		}
+		//za hosta vraca sve njegove aktivne stanove (za nekativne nema pretrage niti filtracije)
+		else if (userDao.findOne(username).getRole().toString().equals("HOST")) {
+			
+			apartments = apartmentDAO.findAllApartByHostId(username); //zaboravio sam koji je naziv
+			apartments = apartments.stream()
+					.filter(a ->  a.getStatus().equals("aktivan"))
+					.collect(Collectors.toList());
+		}
+		else{
+			//za admina vraca sve aktivne i neaktivne stanove (mogu ih filtrirati po statusu) 
+			//Ovo je besmislena linija koda, ali cisto radi ilustracije slucaja za admina
+			apartments = apartments;
+		}
+ 
+		if(location != null) {
+			apartments = apartments.stream()
+				.filter(l -> l.getLocation().getAddress().getCity().toLowerCase().contains(location.toLowerCase()))
+				.collect(Collectors.toList());
+		}
+ 
+		if(priceMin != null) {
+			apartments = apartments.stream()
+				.filter(a -> a.getPrice() >= priceMin)
+				.collect(Collectors.toList());
+		}
+		if(priceMax != null) {
+			apartments = apartments.stream()
+				.filter(a -> a.getPrice() <= priceMax)
+				.collect(Collectors.toList());
+		}
+		if(guests != null) {
+			apartments = apartments.stream()
+				.filter(a -> a.getGuests() >= guests)
+				.collect(Collectors.toList());
+		}
+		if(roomsMin != null) {
+			apartments = apartments.stream()
+				.filter(a -> a.getRooms() >= roomsMin)
+				.collect(Collectors.toList());
+		}
+		
+		if(roomsMax != null) {
+			apartments = apartments.stream()
+				.filter(a -> a.getRooms() <= roomsMax)
+				.collect(Collectors.toList());
+		}
+		
+		return Response.status(Response.Status.OK).entity(apartments).build();
+    }
 
 	@POST
 	@Path("/")
