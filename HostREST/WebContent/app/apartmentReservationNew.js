@@ -98,9 +98,9 @@ Vue.component('new-reservation', {
 			night: null,
 			nights: null,
 			dates: {
-				from: null,
+				from: new Date,
 				to: null,
-				includeDisabled: true
+				// includeDisabled: true
 			},
 			messages: {
 				errorDates: '',
@@ -115,8 +115,12 @@ Vue.component('new-reservation', {
 	methods: {
 		setApartment: function (data) {
 			this.apartment = data;
-			this.disabledDates.to = new Date(this.apartment.to);
+			this.disabledDates.to = new Date(this.apartment.to - 1000 * 60 * 60 * 24);
 			this.disabledDates.from = new Date(this.apartment.from);
+
+			if (this.dates.from < this.disabledDates.to) {
+				this.dates.from = this.apartment.to;
+			}
 
 			this.insertReservData();
 
@@ -124,7 +128,7 @@ Vue.component('new-reservation', {
 				for (let i = 0; i < this.apartment.reservations.length; i++) {
 					let available = {
 						from: new Date(this.apartment.reservations[i].from),
-						to: new Date(this.apartment.reservations[i].to)
+						to: new Date(this.apartment.reservations[i].to + 1000 * 60 * 60 * 24)
 					}
 					this.disabledDates.ranges.push(available);
 				}
@@ -147,14 +151,14 @@ Vue.component('new-reservation', {
 				setTimeout(() => this.messages.errorDates = '', 10000);
 			}
 			//Provera da li je unet tekst poruke
-			// else if (this.reservation.message == '') {
-			// 	this.messages.errorMessage = `<h4>Message can't be empty!</h4>`;
-			// 	setTimeout(() => this.messages.errorMessage = '', 10000);
-			// }
+			else if (this.reservation.message == '') {
+				this.messages.errorMessage = `<h4>Message can't be empty!</h4>`;
+				setTimeout(() => this.messages.errorMessage = '', 10000);
+			}
 			else {
 				// datepicker disables day after reservatoin.from
 				this.reservation.from = this.dates.from.getTime();
-				this.reservation.to = this.dates.to.getTime() + 1000 * 60 * 60 * 24;
+				this.reservation.to = this.dates.to.getTime();
 
 				axios
 					.post('rest/reservation', this.reservation)

@@ -276,9 +276,9 @@ public class ApartmentService {
 			apartments = apartments.stream()
 					.filter(apartment -> {
 						Collection<Reservation> reservations = apartment.getReservations().stream()
-								.filter(r -> (r.getFrom() < from && r.getTo() > from
-											|| r.getFrom() > from && r.getTo() < to
-											|| r.getFrom() < to && r.getTo() > to
+								.filter(r -> (r.getFrom() <= from && r.getTo() >= from
+											|| r.getFrom() >= from && r.getTo() <= to
+											|| r.getFrom() <= to && r.getTo() >= to
 										))
 								.collect(Collectors.toList());
 						return reservations.isEmpty();
