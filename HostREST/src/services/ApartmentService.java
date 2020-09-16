@@ -32,6 +32,7 @@ import org.glassfish.jersey.message.internal.ReaderWriter;
 import beans.Amenity;
 import beans.Apartment;
 import beans.ApartmentDTO;
+import beans.Reservation;
 import dao.AmenityDAO;
 import dao.ApartmentDAO;
 import dao.LocationDAO;
@@ -177,8 +178,8 @@ public class ApartmentService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response searchApartments(@Context HttpServletRequest request, 
 			@QueryParam("location") String location,
-			@QueryParam("checkIn") Long checkIn,
-			@QueryParam("checkOut") Long checkOut,
+			@QueryParam("from") Long from,
+			@QueryParam("to") Long to,
 			@QueryParam("roomsMin") Long roomsMin,
 			@QueryParam("roomsMax") Long roomsMax,
 			@QueryParam("guests") Long guests,
@@ -187,8 +188,8 @@ public class ApartmentService {
     
     	//Obrisati na kraju
     	System.out.println("location: " + location);
-    	System.out.println("checkIn: " + checkIn);
-    	System.out.println("checkOut: " + checkOut);
+    	System.out.println("from: " + from);
+    	System.out.println("to: " + to);
     	System.out.println("roomsMin: " + roomsMin);
     	System.out.println("roomsMax: " + roomsMax);
     	System.out.println("guests: " + guests);
@@ -233,7 +234,6 @@ public class ApartmentService {
 				.filter(l -> l.getLocation().getAddress().getCity().toLowerCase().contains(location.toLowerCase()))
 				.collect(Collectors.toList());
 		}
- 
 		if(priceMin != null) {
 			apartments = apartments.stream()
 				.filter(a -> a.getPrice() >= priceMin)
@@ -254,13 +254,36 @@ public class ApartmentService {
 				.filter(a -> a.getRooms() >= roomsMin)
 				.collect(Collectors.toList());
 		}
-		
 		if(roomsMax != null) {
 			apartments = apartments.stream()
 				.filter(a -> a.getRooms() <= roomsMax)
 				.collect(Collectors.toList());
 		}
-		
+
+		if (from != null) {
+			apartments = apartments.stream()
+					.filter(a -> a.getTo() < from)
+					.collect(Collectors.toList());
+		}
+		if (to != null) {
+			apartments = apartments.stream()
+					.filter(a -> a.getFrom() > to)
+					.collect(Collectors.toList());
+		}
+		if (from != null && to != null) {
+			apartments = apartments.stream()
+					.filter(apartment -> {
+						Collection<Reservation> reservations = apartment.getReservations().stream()
+								.filter(r -> (r.getFrom() < from && r.getTo() > from
+											|| r.getFrom() > from && r.getTo() < to
+											|| r.getFrom() < to && r.getTo() > to
+										))
+								.collect(Collectors.toList());
+						return reservations.isEmpty();
+					})
+					.collect(Collectors.toList());
+		}
+
 		return Response.status(Response.Status.OK).entity(apartments).build();
     }
 
