@@ -173,9 +173,6 @@ public class ApartmentService {
 		else if (userDao.findOne(username).getRole().toString().equals("HOST")) {
 			
 			apartments = apartmentDAO.findAllApartByHostId(username);
-			apartments = apartments.stream()
-					.filter(a ->  a.getStatus().equals("aktivan"))
-					.collect(Collectors.toList());
 			for(Apartment apartment : apartments) {
 				apartment.setReservations(reservationDAO.findAllByApartmentId(apartment.getId()));
 				apartment.setReviews(reviewDAO.findAllByApartmentId(apartment.getId()));

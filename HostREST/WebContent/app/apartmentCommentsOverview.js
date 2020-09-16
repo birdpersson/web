@@ -16,7 +16,7 @@ Vue.component('apartment-comments', {
             <br>-->
             <div class="comments" v-for='apartment in apartments'>
                 <div id='apartmentInfo'>
-                    <div class="card-header" style='border-t'>
+                    <div class="card-header">
                         <h4><b>Apartment type:</b> {{apartment.type}}</h4>
                         <h4><b>Apartment address:</b> {{apartment.location.address.street}} {{apartment.location.address.postalCode}} - {{apartment.location.address.city}}</h4>
                         <h4><b>Apartments host:</b> {{apartment.host}}</h4>
@@ -54,10 +54,9 @@ Vue.component('apartment-comments', {
             <br> -->
             <div class="comments" v-for='apartment in apartments'>
                     <div id='apartmentInfo'>
-                        <div class="card-header" style='border-t'>
+                        <div class="card-header" >
                             <h4><b>Apartment type:</b> {{apartment.type}}</h4>
                             <h4><b>Apartment address:</b> {{apartment.location.address.street}} {{apartment.location.address.postalCode}} - {{apartment.location.address.city}}</h4>
-                            <h4><b>Apartments host:</b> {{apartment.host}}</h4>
                         </div>
                     </div>
                     <div v-show='isThereReviews(apartment)' class="card-body">
@@ -80,8 +79,8 @@ Vue.component('apartment-comments', {
                                 {{comment.text}}  
                             </div>
 
-                            <div id='comment-visibility'>
-                                <label style="display">Show comment</label>
+                            <div id='comment-visibility' style="margin-bottom: 5px;">
+                                <label style="display:block;">Show comment</label>
                                 <input type="checkbox" v-on:mouseup='checkComment(comment)' v-model='comment.visible'>
                                 <div id='visibility-message' v-if='comment.visible'>
                                     <p>This comment will be shown to guest user!</p> 
@@ -92,37 +91,6 @@ Vue.component('apartment-comments', {
                 </div> <!--comments-->
             </div>
             
-            <!-- <div id='apartmentInfo'>
-                <h3>Apartmetn id: {{apartmentId}}</h3>
-            </div>
-            <div class="comments" v-for='comment in comments'>
-                <div class="single-comment">
-                    <div id='username'>{{comment.guestId}} </div>
-                    
-                    <div id='star-rating'>
-                        <star-rating
-                            inactive-color="#35424a"
-                            active-color="#e8491d"
-                            v-bind:read-only= "true"
-                            v-bind:star-size="25"
-                            v-bind:show-rating="false"
-                            v-bind:rating="comment.star">
-                        </star-rating>
-                    </div>
-                    <div id='comment'>
-                        {{comment.text}}  
-                    </div>
-
-                    <div id='comment-visibility'>
-                        <label style="display:block">Show comment</label>
-                        <input type="checkbox" v-on:mouseup='checkComment(comment)' v-model='comment.visible'>
-                        <div id='visibility-message' v-if='comment.visible'>
-                            <p>This comment will be shown to guest user!</p> 
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-             <!--comments-->
         </div>
     </div>
 </div>`,
