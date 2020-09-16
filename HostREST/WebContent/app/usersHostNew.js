@@ -164,6 +164,7 @@ Vue.component("new-host", {
 		},
 		signupSuccessful: function (response) {
 			if (response.status === 201) {
+				alert('New host created');
 				this.$router.push('/users');
 			}
 			this.signupFailed()

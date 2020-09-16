@@ -289,7 +289,7 @@ Vue.component('new-apartment', {
 				// alert('STAN SE SALJE!')
 				// unselected dates will be disabled
 				this.apartment.to = this.dates.from.getTime();
-				this.apartment.from = this.dates.to.getTime() + 1000 * 60 * 60 * 24;
+				this.apartment.from = this.dates.to.getTime();
 				console.log(this.apartment);
 				axios
 					.post('rest/apartment', this.apartment)
@@ -321,6 +321,10 @@ Vue.component('new-apartment', {
 								this.apartment.amenities = [];
 
 								setTimeout(() => this.messages.successResponse = '', 5000);
+								if (response.status === 201) {
+									alert('Apartment created');
+									this.$router.push('/apartments');
+								}
 							});
 					})
 					.catch(error => {
@@ -394,7 +398,7 @@ Vue.component('new-apartment', {
 		this.guests = this.range(1, 15);
 
 		let to = new Date();
-		to.setDate(to.getDate() - 1)
+		to.setDate(to.getDate() - 1);
 
 		this.disabledDates.to = to;
 	},

@@ -289,7 +289,7 @@ Vue.component('apartment-edit', {
 			else {
 				// unselected dates will be disabled
 				this.apartment.to = this.dates.from.getTime();
-				this.apartment.from = this.dates.to.getTime() + 1000 * 60 * 60 * 24;
+				this.apartment.from = this.dates.to.getTime();
 				console.log(this.apartment);
 				axios
 					.put('rest/apartment/' + this.apartment.id, this.apartment)
@@ -303,10 +303,14 @@ Vue.component('apartment-edit', {
 							}
 							axios
 								.post('rest/apartment/' + Response.data.id + '/upload', this.images, contentType)
-								.then(response => {
+								.then(response => {						
 									console.log(response);
 									this.messages.successResponse = `<h4>Apartment was added successfully!</h4>`;
 									setTimeout(() => this.messages.successResponse = '', 5000);
+									if (response.status === 201) {
+										alert('Apartment updated');
+										this.$router.push('/apartments');
+									}
 								});
 						}
 					})

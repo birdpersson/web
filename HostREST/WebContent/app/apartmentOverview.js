@@ -11,7 +11,7 @@ Vue.component('apartments', {
             <a class="navbar-brand">Filter</a>
             <form class="form-inline">
                 <button style='margin-right:5px;' class='btn btn-outline-primary my-2 my-sm-0'
-                    v-on:click="resetFilter()">Reset</button>
+                    v-on:click="resetFilter()">Reset all</button>
                 <div>
                     <link style='display:inline;'><img v-on:click='isFilter = !isFilter' src='img/filterIcon1.1.png'
                         style="display:inline;"></link>
@@ -45,12 +45,13 @@ Vue.component('apartments', {
         <nav class="navbar navbar-light bg-light justify-content-between">
             <a class="navbar-brand">Search</a>
             <form class="form-inline">
-                <div>
-                    <link style='display:inline;'><img v-on:click='isSearch = !isSearch' src='img/searchIcon1.1.png'
-                        style="display:inline;"></link>
+                <div style="margin-right: 20px;">
+                    <link style='display:inline; margin: 15px;'>
+                        <img v-on:click='isSearch = !isSearch' src='img/searchIcon1.1.png' style="display:inline;">
+                    </link>
+                </div>
                     <div style='display:inline;' v-show='isSearch'>
-
-						<div class="row">
+						<div id='first-row' class="row">
 							<span style="padding:5px;">From</span>
 							<vuejsDatepicker placeholder="Select Start Date"
 								v-model="searchedApartment.from" :highlighted="searchedApartment" :disabled-dates="disabledDates">
@@ -60,15 +61,15 @@ Vue.component('apartments', {
 							<vuejsDatepicker placeholder="Select End Date"
 								v-model="searchedApartment.to" :highlighted="searchedApartment" :disabled-dates="disabledDates">
 							</vuejsDatepicker>
-						</div>
-
-                        <span>Price</span>
-                        <input class="form-control mr-sm-2" type="text" placeholder="min price" aria-label="Search"
-                            v-model="searchedApartment.priceMin">
-                        <span style="padding-right:3px;"> - </span>
-                        <input class="form-control mr-sm-2" type="text" placeholder="max price" aria-label="Search"
-                            v-model="searchedApartment.priceMax">
-                        <div>
+					
+                            <span>Price</span>
+                            <input class="form-control mr-sm-2" type="text" placeholder="min price" aria-label="Search"
+                                v-model="searchedApartment.priceMin">
+                            <span style="padding-right:3px;"> - </span>
+                            <input class="form-control mr-sm-2" type="text" placeholder="max price" aria-label="Search"
+                                v-model="searchedApartment.priceMax">
+                        </div>
+                        <div id='second-row' class="row" style="margin-top:5px;">
                             <span>Location</span>
                             <input class="form-control mr-sm-2" type="text" placeholder="location" aria-label="Search"
                                 v-model="searchedApartment.location">
@@ -85,7 +86,7 @@ Vue.component('apartments', {
                                 <option disabled value="">Max No. of rooms</option>
                                 <option v-for="room in roomsMax">{{room}}</option>
                             </select>
-
+                            
                             <span>Guests</span>
                             <select style="padding:5px;" v-model="searchedApartment.guests">
                                 <option disabled value="">No. of guests</option>
@@ -93,11 +94,11 @@ Vue.component('apartments', {
                             </select>
 
                             <!-- <input class="form-control mr-sm-2" type="text" placeholder="No. of people" aria-label="Search"> -->
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="button"
+                            <button style="margin-left: 5px;"class="btn btn-outline-success my-2 my-sm-0" type="button"
                                 v-on:click.prevent='searchApartment()'>Search</button>
                         </div>
                     </div>
-                </div>
+                <!-- </div> -->
             </form>
         </nav>
     </div>
@@ -269,10 +270,20 @@ Vue.component('apartments', {
             }
 
             //Ovo obrisati
+            // console.log(`Trazite apartman:
+            // location: ${this.searchedApartment.location}
+            // checkIn: ${this.searchedApartment.from.getTime()}
+            // checkOut: ${this.searchedApartment.to.getTime()}
+            // roomsMin: ${this.searchedApartment.roomsMin}
+            // roomsMax: ${this.searchedApartment.roomsMax}
+            // guests: ${this.searchedApartment.guests}
+            // priceMin: ${this.searchedApartment.priceMin}
+            // priceMax: ${this.searchedApartment.priceMax}
+            // `);
+
+            //Ovo obrisati
             console.log(`Trazite apartman:
             location: ${this.searchedApartment.location}
-            checkIn: ${this.searchedApartment.from.getTime()}
-            checkOut: ${this.searchedApartment.to.getTime()}
             roomsMin: ${this.searchedApartment.roomsMin}
             roomsMax: ${this.searchedApartment.roomsMax}
             guests: ${this.searchedApartment.guests}
@@ -344,11 +355,20 @@ Vue.component('apartments', {
             this.currentSort = s;
         },
         resetFilter() {
+            console.log('Usao u reset filter')
             this.getApartments();
             this.filterQueryType = '',
-                this.filterQueryStatus = '',
-                this.filterQueryAmanity = '',
-                this.searchedQuery = '?';
+            this.filterQueryStatus = '',
+            this.filterQueryAmanity = '',
+            this.searchedApartment.location = null;
+            this.searchedApartment.from = null;
+            this.searchedApartment.to = null;
+            this.searchedApartment.roomsMin = null;
+            this.searchedApartment.roomsMax = null;
+            this.searchedApartment.guests = null;
+            this.searchedApartment.priceMin = null;
+            this.searchedApartment.priceMax = null;
+            this.searchedQuery = '?';
         },
 
         arrangeAmenities(allAmenities) {

@@ -133,14 +133,75 @@ public class ApartmentService {
 		return retApartment;
 	}
 
+	
+
+	@GET
+	@Path("/all")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Apartment> getApartmentsForReviews(@Context HttpServletRequest request) {
+	  	String username = AuthService.getUsername(request);
+
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+    	ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+		ReservationDAO reservationDAO = (ReservationDAO) ctx.getAttribute("reservationDAO");
+		ReviewDAO reviewDAO = (ReviewDAO) ctx.getAttribute("reviewDAO");
+
+		Collection<Apartment> apartments = apartmentDAO.findAll();
+		
+		//za neulogovanog/neregistrovanog korisnika vraca sve aktivne stanove  
+		if(username == null) {
+			apartments = apartments.stream()
+					.filter(a ->  a.getStatus().equals("aktivan"))
+					.collect(Collectors.toList());
+			for(Apartment apartment : apartments) {
+				apartment.setReservations(reservationDAO.findAllByApartmentId(apartment.getId()));
+				apartment.setReviews(reviewDAO.findAllByApartmentId(apartment.getId()));
+			}
+
+		}
+		//za guesta vraca sve aktivne stanove  
+		else if (userDao.findOne(username).getRole().toString().equals("GUEST")) {
+			apartments = apartments.stream()
+					.filter(a ->  a.getStatus().equals("aktivan"))
+					.collect(Collectors.toList());
+			for(Apartment apartment : apartments) {
+				apartment.setReservations(reservationDAO.findAllByApartmentId(apartment.getId()));
+				apartment.setReviews(reviewDAO.findAllByApartmentId(apartment.getId()));
+			}
+		}
+		//za hosta vraca sve njegove aktivne stanove (za nekativne nema pretrage niti filtracije)
+		else if (userDao.findOne(username).getRole().toString().equals("HOST")) {
+			
+			apartments = apartmentDAO.findAllApartByHostId(username);
+			for(Apartment apartment : apartments) {
+				apartment.setReservations(reservationDAO.findAllByApartmentId(apartment.getId()));
+				apartment.setReviews(reviewDAO.findAllByApartmentId(apartment.getId()));
+			}
+		}
+		else{
+			//za admina vraca sve aktivne i neaktivne stanove (mogu ih filtrirati po statusu) 
+			//Ovo je besmislena linija koda, ali cisto radi ilustracije slucaja za admina
+			apartments = apartments;
+			for(Apartment apartment : apartments) {
+				apartment.setReservations(reservationDAO.findAllByApartmentId(apartment.getId()));
+				apartment.setReviews(reviewDAO.findAllByApartmentId(apartment.getId()));
+			}
+		}
+		
+		return apartments;
+	}
+	
+	
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Apartment getApartment(@PathParam("id") String id) {
+    	AmenityDAO amenityDAO = (AmenityDAO) ctx.getAttribute("amenityDAO");
 		ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
 		ReservationDAO reservationDAO = (ReservationDAO) ctx.getAttribute("reservationDAO");
 		ReviewDAO reviewDAO = (ReviewDAO) ctx.getAttribute("reviewDAO");
 		Apartment apartment = apartmentDAO.findOne(id);
+		apartment.setAmenities(amenityDAO.findAllByApartmentId(ctx.getRealPath(""), id));
 		apartment.setReservations(reservationDAO.findAllByApartmentId(id));
 		apartment.setReviews(reviewDAO.findAllByApartmentId(id));
 		return apartment;
@@ -276,9 +337,9 @@ public class ApartmentService {
 			apartments = apartments.stream()
 					.filter(apartment -> {
 						Collection<Reservation> reservations = apartment.getReservations().stream()
-								.filter(r -> (r.getFrom() < from && r.getTo() > from
-											|| r.getFrom() > from && r.getTo() < to
-											|| r.getFrom() < to && r.getTo() > to
+								.filter(r -> (r.getFrom() <= from && r.getTo() >= from
+											|| r.getFrom() >= from && r.getTo() <= to
+											|| r.getFrom() <= to && r.getTo() >= to
 										))
 								.collect(Collectors.toList());
 						return reservations.isEmpty();
