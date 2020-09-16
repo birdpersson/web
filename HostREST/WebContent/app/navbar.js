@@ -67,8 +67,8 @@ Vue.component('navbar', {
             localStorage.removeItem('jwt');
             localStorage.removeItem('role');
             localStorage.removeItem('user');
-            window.location.reload();
             this.$router.push('/login');
+            window.location.reload();
         }
     },
     created() {

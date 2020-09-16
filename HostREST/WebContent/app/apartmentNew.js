@@ -289,7 +289,7 @@ Vue.component('new-apartment', {
 				// alert('STAN SE SALJE!')
 				// unselected dates will be disabled
 				this.apartment.to = this.dates.from.getTime();
-				this.apartment.from = this.dates.to.getTime() + 1000 * 60 * 60 * 24;
+				this.apartment.from = this.dates.to.getTime();
 				console.log(this.apartment);
 				axios
 					.post('rest/apartment', this.apartment)
