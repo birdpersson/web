@@ -196,10 +196,12 @@ public class ApartmentService {
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Apartment getApartment(@PathParam("id") String id) {
+    	AmenityDAO amenityDAO = (AmenityDAO) ctx.getAttribute("amenityDAO");
 		ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
 		ReservationDAO reservationDAO = (ReservationDAO) ctx.getAttribute("reservationDAO");
 		ReviewDAO reviewDAO = (ReviewDAO) ctx.getAttribute("reviewDAO");
 		Apartment apartment = apartmentDAO.findOne(id);
+		apartment.setAmenities(amenityDAO.findAllByApartmentId(ctx.getRealPath(""), id));
 		apartment.setReservations(reservationDAO.findAllByApartmentId(id));
 		apartment.setReviews(reviewDAO.findAllByApartmentId(id));
 		return apartment;
