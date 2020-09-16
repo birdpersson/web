@@ -200,9 +200,16 @@ public class ApartmentService {
 		ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
 		ReservationDAO reservationDAO = (ReservationDAO) ctx.getAttribute("reservationDAO");
 		ReviewDAO reviewDAO = (ReviewDAO) ctx.getAttribute("reviewDAO");
+		Collection<Reservation> reservations = reservationDAO.findAllByApartmentId(id);
+		Collection<Reservation> active = new ArrayList<>();
+		for (Reservation r : reservations) {
+			if (!r.getStatus().toString().equals("Canceled")
+					&& !r.getStatus().toString().equals("Rejected"))
+				active.add(r);
+		}
 		Apartment apartment = apartmentDAO.findOne(id);
 		apartment.setAmenities(amenityDAO.findAllByApartmentId(ctx.getRealPath(""), id));
-		apartment.setReservations(reservationDAO.findAllByApartmentId(id));
+		apartment.setReservations(active);
 		apartment.setReviews(reviewDAO.findAllByApartmentId(id));
 		return apartment;
 	}
