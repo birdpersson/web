@@ -133,6 +133,68 @@ public class ApartmentService {
 		return retApartment;
 	}
 
+	
+
+	@GET
+	@Path("/all")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Apartment> getApartmentsForReviews(@Context HttpServletRequest request) {
+	  	String username = AuthService.getUsername(request);
+
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+    	ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+		ReservationDAO reservationDAO = (ReservationDAO) ctx.getAttribute("reservationDAO");
+		ReviewDAO reviewDAO = (ReviewDAO) ctx.getAttribute("reviewDAO");
+
+		Collection<Apartment> apartments = apartmentDAO.findAll();
+		
+		//za neulogovanog/neregistrovanog korisnika vraca sve aktivne stanove  
+		if(username == null) {
+			apartments = apartments.stream()
+					.filter(a ->  a.getStatus().equals("aktivan"))
+					.collect(Collectors.toList());
+			for(Apartment apartment : apartments) {
+				apartment.setReservations(reservationDAO.findAllByApartmentId(apartment.getId()));
+				apartment.setReviews(reviewDAO.findAllByApartmentId(apartment.getId()));
+			}
+
+		}
+		//za guesta vraca sve aktivne stanove  
+		else if (userDao.findOne(username).getRole().toString().equals("GUEST")) {
+			apartments = apartments.stream()
+					.filter(a ->  a.getStatus().equals("aktivan"))
+					.collect(Collectors.toList());
+			for(Apartment apartment : apartments) {
+				apartment.setReservations(reservationDAO.findAllByApartmentId(apartment.getId()));
+				apartment.setReviews(reviewDAO.findAllByApartmentId(apartment.getId()));
+			}
+		}
+		//za hosta vraca sve njegove aktivne stanove (za nekativne nema pretrage niti filtracije)
+		else if (userDao.findOne(username).getRole().toString().equals("HOST")) {
+			
+			apartments = apartmentDAO.findAllApartByHostId(username);
+			apartments = apartments.stream()
+					.filter(a ->  a.getStatus().equals("aktivan"))
+					.collect(Collectors.toList());
+			for(Apartment apartment : apartments) {
+				apartment.setReservations(reservationDAO.findAllByApartmentId(apartment.getId()));
+				apartment.setReviews(reviewDAO.findAllByApartmentId(apartment.getId()));
+			}
+		}
+		else{
+			//za admina vraca sve aktivne i neaktivne stanove (mogu ih filtrirati po statusu) 
+			//Ovo je besmislena linija koda, ali cisto radi ilustracije slucaja za admina
+			apartments = apartments;
+			for(Apartment apartment : apartments) {
+				apartment.setReservations(reservationDAO.findAllByApartmentId(apartment.getId()));
+				apartment.setReviews(reviewDAO.findAllByApartmentId(apartment.getId()));
+			}
+		}
+		
+		return apartments;
+	}
+	
+	
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
