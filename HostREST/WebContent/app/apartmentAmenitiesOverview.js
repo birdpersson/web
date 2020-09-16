@@ -7,20 +7,6 @@ Vue.component('amenities-overview', {
     </div>
     <div class="container" id='main'>
         <div v-if='isAdmin'>
-            Održavanje sadržaja apartmana<br>
-            <!-- ● Kao administrator zadužen sam i za održavanje liste koja predstavlja sadržaj apartmana:<br>
-            ○ Mogu da dodajem novi entitet u spisak sadržaja apartmana:<br>
-
-            ■ Neophodno je uneti naziv novog sadržaja<br>
-            ■ Pritiskom na dugme za slanje se šalje zahtev za dodavanje sadržaja<br>
-            apartmana na server<br>
-            ■ U slučaju uspešnog dodavanja korisnik se obaveštava o tome<br>
-            ■ U slučaju neuspešne izmene korisniku se ispisuje greška<br>
-            ○ Mogu da menjam nazive postojećih sadržaja apartmana<br> -->
-            ○ Mogu da obrišem neki postojeći sadržaj apartmana (potrebno je obrisati taj<br>
-            sadržaj i kod svih apartmana koji ga poseduju)<br>
-            <br>
-            <br>
             <table class="table">
                 <thead>
                     <tr>
@@ -31,49 +17,55 @@ Vue.component('amenities-overview', {
                     </tr>
                 </thead>
                 <tbody>
-                <tr v-for='amenity in amenities'>
-                    <td>{{amenity.name}}</td>
-                    <td>{{amenity.type}}</td>
-                    <td><a href="#edit-amenity"><button v-on:click='showEdit(amenity)'> edit </button></a></td>
-                    <td><a href="#delete-amenity"><button v-on:click='deleteAmenity(amenity)'> delete </button></a></td>
-                </tr>
+                    <tr v-for='amenity in amenities'>
+                        <td>{{amenity.name}}</td>
+                        <td>{{amenity.type}}</td>
+                        <td><a href="#edit-amenity"><button v-on:click='showEdit(amenity)'> edit </button></a></td>
+                        <td><button v-on:click='deleteAmenity(amenity)'> delete </button>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
-               <!-- <button class="btn btn-lg btn-success" v-if='!isGuest' style='padding-left: 5px;'>Add amenity</button> -->
-               <a href="#new-amenity"><button v-on:click='showNew()' class="btn btn-lg btn-dark" style='margin-top: 80px;'>Add amenity</button></a>
+            <!-- <button class="btn btn-lg btn-success" v-if='!isGuest' style='padding-left: 5px;'>Add amenity</button> -->
+            <a href="#new-amenity"><button v-on:click='showNew()' class="btn btn-lg btn-dark"
+                    style='margin-top: 80px;'>Add amenity</button></a>
             <hr>
 
             <div v-if='isAddNew' id="new-amenity">
                 <div class="container" id='page-title'>
-                    <h1 v-if='isAddNew' style="margin-top:10px;color:#35424a;">New <span id='titleEffect'>Amenity</span></h1>
+                    <h1 v-if='isAddNew' style="margin-top:10px;color:#35424a;">New <span id='titleEffect'>Amenity</span>
+                    </h1>
                     <hr style='background:#e8491d;height:1px;'>
                 </div>
                 <div class="container">
                     <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
-                    <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
+                    <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse">
+                    </div>
                     <div>
-                        <div v-if='messages.errorName' class="alert alert-danger" v-html="messages.errorName"></div>       
+                        <div v-if='messages.errorName' class="alert alert-danger" v-html="messages.errorName"></div>
                         <label>Name of new amenity :</label>
-                        <input style="width:100%; padding:10px; margin-bottom:25px" type="text" placeholder="Enter name..." v-model="newAmenity.name">
+                        <input style="width:100%; padding:10px; margin-bottom:25px" type="text"
+                            placeholder="Enter name..." v-model="newAmenity.name">
                         <div v-if='messages.errorType' class="alert alert-danger" v-html="messages.errorType"></div>
                         <label>Type :</label>
                         <div id="amenity-type">
                             <label for="one">Base</label>
                             <input type="radio" id="one" value="Base" v-model="newAmenity.type">
-                         
+
                             <label for="two">Dining</label>
                             <input type="radio" id="two" value="Dining" v-model="newAmenity.type">
-                            
+
                             <label for="two">Facilities</label>
                             <input type="radio" id="two" value="Facilities" v-model="newAmenity.type">
-                           
+
                             <label for="two">Family</label>
                             <input type="radio" id="two" value="Family" v-model="newAmenity.type">
                         </div>
                         <button class="btn btn-success" v-on:click='addAmenity()'>Save</button>
                     </div>
                 </div>
-            </div><!--New Amenity-->
+            </div>
+            <!--New Amenity-->
             <div v-if='isEdit' id="edit-amenity">
                 <div class="container" id='page-title'>
                     <h1 style="margin-top:10px;color:#35424a;">Edit <span id='titleEffect'>Amenity</span></h1>
@@ -81,22 +73,25 @@ Vue.component('amenities-overview', {
                 </div>
                 <div class="container">
                     <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
-                    <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
-                    <div>    
-                        <div v-if='messages.errorName' class="alert alert-danger" v-html="messages.errorName"></div>          
-                        <label>Name of new amenity :</label>
-                        <input style="width:100%; padding:10px; margin-bottom:25px" type="text" v-model="updatedAmenity.name" placeholder="Enter name...">
-                                            
-                        </div>
-                        <button class="btn btn-success" v-on:click='editAmenity()'>Save</button>
-                        <button class="btn btn-danger" v-on:click='closeEdit()'>Close</button>
+                    <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse">
                     </div>
+                    <div>
+                        <div v-if='messages.errorName' class="alert alert-danger" v-html="messages.errorName"></div>
+                        <label>Name of new amenity :</label>
+                        <input style="width:100%; padding:10px; margin-bottom:25px" type="text"
+                            v-model="updatedAmenity.name" placeholder="Enter name...">
+
+                    </div>
+                    <button class="btn btn-success" v-on:click='editAmenity()'>Save</button>
+                    <button class="btn btn-danger" v-on:click='closeEdit()'>Close</button>
                 </div>
-            </div><!--Edit Amenity-->
-            <hr>
+            </div>
         </div>
+        <!--Edit Amenity-->
+        <hr>
     </div>
-</div>`,
+</div>
+`,
     data: function () {
         return {
             user: {
@@ -242,11 +237,20 @@ Vue.component('amenities-overview', {
                     });
             }
         },
-
         deleteAmenity: function (amenity) {
-            if (confirm('Are you sure that you whant to delete this amenity?')) {
-                alert('Ovaj amenity je obrisan!!!')
-            }
+            axios
+            .delete('rest/amenity/' + amenity.id)
+            .then(response => {
+                if (response.status == 201) {
+                    alert('Amenity deleted');
+                    console.log(response.data);
+                    window.location.reload();
+                }
+                else {
+                    alert('Failed to delete amenity');
+                    console.log(response.data);
+                }
+            })
         }
     },
     created() {
