@@ -20,6 +20,7 @@ import javax.ws.rs.core.Response;
 
 import beans.Apartment;
 import beans.Reservation;
+import beans.Reservation.Status;
 import beans.ReservationDTO;
 import dao.AmenityDAO;
 import dao.ApartmentDAO;
@@ -245,12 +246,29 @@ public class ReservationService {
 		return Response.status(Response.Status.FORBIDDEN).build();
 	}
 
-//	@PUT
-//	@Path("/{id}/changeStatus/{status}")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Reservation updateReservation(@PathParam("id") String id, @PathParam("status") String status) {
-//		ReservationDAO dao = (ReservationDAO) ctx.getAttribute("reservationDAO");
-//		return dao.changeStatus(id, status);
-//	}
+	@PUT
+	@Path("/{id}/changeStatus/{status}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateReservationStatus(@Context HttpServletRequest request, 
+			@PathParam("id") String id, @PathParam("status") Status status) {
+		
+		System.out.println("Usao u updateReservationStatus!");
+		System.out.println("Prosledjeni status: " + status);
+		
+		String username = AuthService.getUsername(request);
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+		ReservationDAO reservationDao = (ReservationDAO) ctx.getAttribute("reservationDAO");
+			
+		if (!userDao.findOne(username).getRole().toString().equals("ADMIN")) {
+			
+			Reservation reservation = reservationDao.findOne(id);
+			reservation.setStatus(status);
+			return Response.status(Response.Status.CREATED).entity(reservationDao.update(ctx.getRealPath(""), reservation)).build();
+		}
+		return Response.status(Response.Status.FORBIDDEN).build();
+			
+			
+//			return dao.changeStatus(id, status);
+	}
 }
 
