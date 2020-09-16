@@ -40,7 +40,7 @@ Vue.component('new-reservation', {
                 <!-- <h2>Selected: {{reservation.night}}</h2> -->
                 <label for="">Price:</label>
                 <h4>{{reservation.price}}$ </h4>
-                <!-- <div style="margin-top:20px" v-if='messages.errorMessage' class="alert alert-danger" v-html="messages.errorMessage"></div> -->
+                <div style="margin-top:20px" v-if='messages.errorMessage' class="alert alert-danger" v-html="messages.errorMessage"></div>
                 <label>Message:</label>
                 <textarea v-model='reservation.message' placeholder="Enter message..."></textarea>
                 <button class="btn btn-lg btn-success" v-on:click='sendReservation'> Send </button>
