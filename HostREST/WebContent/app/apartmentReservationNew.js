@@ -100,7 +100,7 @@ Vue.component('new-reservation', {
 			dates: {
 				from: new Date,
 				to: null,
-				// includeDisabled: true
+				includeDisabled: true
 			},
 			messages: {
 				errorDates: '',
@@ -117,6 +117,13 @@ Vue.component('new-reservation', {
 			this.apartment = data;
 			this.disabledDates.to = new Date(this.apartment.to - 1000 * 60 * 60 * 24);
 			this.disabledDates.from = new Date(this.apartment.from);
+
+			let today = new Date();
+			if (this.disabledDates.to < today) {
+				today.setDate(today.getDate() - 1);
+
+				this.disabledDates.to = today;
+			}
 
 			if (this.dates.from < this.disabledDates.to) {
 				this.dates.from = this.apartment.to;
@@ -168,6 +175,10 @@ Vue.component('new-reservation', {
 						this.reservation.night = 1;
 						this.reservation.price = this.apartment.price;
 						setTimeout(() => this.messages.successResponse = '', 5000);
+						if (response.status === 201) {
+							alert('Reservation created');
+							this.$router.push('/reservations');
+						}
 
 					})
 					.catch(error => {

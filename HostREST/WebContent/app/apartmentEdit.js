@@ -303,10 +303,14 @@ Vue.component('apartment-edit', {
 							}
 							axios
 								.post('rest/apartment/' + Response.data.id + '/upload', this.images, contentType)
-								.then(response => {
+								.then(response => {						
 									console.log(response);
 									this.messages.successResponse = `<h4>Apartment was added successfully!</h4>`;
 									setTimeout(() => this.messages.successResponse = '', 5000);
+									if (response.status === 201) {
+										alert('Apartment updated');
+										this.$router.push('/apartments');
+									}
 								});
 						}
 					})
