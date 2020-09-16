@@ -25,7 +25,9 @@ public class AmenityService {
 	@Context
 	ServletContext ctx;
 
-	public AmenityService() {}
+	public AmenityService() {
+		super();
+	}
 
 	@PostConstruct
 	public void init() {
@@ -47,7 +49,6 @@ public class AmenityService {
 		return Response.status(Response.Status.OK).entity(daoAmenity.findAll()).build();
 	}
 
-	
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -56,7 +57,6 @@ public class AmenityService {
 		return daoAmenity.findOne(id);
 	}
 
-	// serverska metoda za dodavanje novog sadrzaja
 	@POST
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -73,7 +73,6 @@ public class AmenityService {
 
 	}
 
-	// serverska metoda za editovanje naziva novog sadrzaja
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -92,9 +91,16 @@ public class AmenityService {
 	@DELETE
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Amenity deleteAmenity(@PathParam("id") String id) {
-		AmenityDAO dao = (AmenityDAO) ctx.getAttribute("amenityDAO");
-		return dao.delete(id);
+	public Response deleteAmenity(@Context HttpServletRequest request, @PathParam("id") String id) {
+		String username = AuthService.getUsername(request);
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+		if (!userDao.findOne(username).getRole().toString().equals("ADMIN"))
+			return Response.status(Response.Status.FORBIDDEN).build();
+		AmenityDAO amenityDao = (AmenityDAO) ctx.getAttribute("amenityDAO");
+		Amenity amenity = amenityDao.findOne(id);
+		amenity.setDeleted(true);
+		return Response.status(Response.Status.CREATED)
+				.entity(amenityDao.update(ctx.getRealPath(""), amenity)).build();
 	}
 
 	@PUT
