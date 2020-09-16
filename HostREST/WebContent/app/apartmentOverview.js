@@ -130,13 +130,14 @@ Vue.component('apartments', {
                     <td>{{apartment.price}}</td>
                     <td>{{apartment.status}}</td>
                     <td> <button class="btn-primary" v-on:click='showDetails(apartment.id)'> Details </button> </td>
-                    <td v-if='isGuest'> <button class="btn-primary" v-on:click='makeReseravation(apartment.id)'> Reserv
+                    <td v-if='isGuest'> <button class="btn-primary" v-on:click='makeReseravation(apartment.id)'> Reserve
                         </button> </td>
                     <td v-if='!isGuest'><button class="btn-primary" v-on:click='editApartment(apartment.id)'> Edit
                         </button></td>
-                    <td v-if='isHost'><button class="btn-primary" v-on:click='changeStatus(apartment.id)'> Status
+                    <td v-if='isHost'><button class="btn-primary" v-on:click='changeStatus(apartment.id)'> Activate
                         </button></td>
-                    <td v-if='!isGuest'> <button class="btn-danger" v-on:click='showMessage'> Delete </button> </td>
+                    <td v-if='!isGuest'> <button class="btn-danger" v-on:click='deleteApartment(apartment.id)'> Delete
+                        </button> </td>
                 </tr>
             </tbody>
         </table>
@@ -156,33 +157,6 @@ Vue.component('apartments', {
             <router-link to="/amenitiesOverview"> <button class='classButton' v-if='isAdmin'>Amenities</button>
             </router-link>
         </div>
-    </div>
-
-    <div v-if='isGuest'>
-        Kao Gost:<br>
-        ○ Želim da sortiram apartmane i svoje rezervacije po ceni:<br>
-        ■ Rastuće<br>
-        ■ Opadajuće<br>
-        ○ Želim da filtriram apartmane po tipu i po sadržaju apartmana<br>
-    </div>
-    <div v-if='!isGuest'>
-        Kao Domaćin:<br>
-        ○ Pregleda, sortiranja i filtriranja po svim kriterijumima, ali isključivo svojih<br>
-        apartmana sa statusom AKTIVAN<br>
-        ○ Imam pregled svojih apartmana sa statusom NEAKTIVAN<br>
-        ○ Mogu da menjam podatke o svom apartmanu:<br>
-        ■ Sve izmene moraju biti validne - ako neko obavezno polje nije popunjeno,<br>
-        pored odgovarajućeg polja se ispisuje poruka o grešci<br>
-        ■ Pritiskom na dugme za slanje se šalje zahtev za izmenu na server<br>
-        ■ U slučaju uspešne izmene podataka korisnik se obaveštava o tome<br>
-        ■ U slučaju neuspešne izmene podataka korisniku se ispisuje greška<br>
-        ○ Mogu da obrišem svoj apartman<br>
-        <br>
-        <br>
-        Kao Administratoru:<br>
-        ○ Vidim sve apartmane bez obzira na njihov status<br>
-        ○ Modifikujem podatke o apartmanu (isti postupak izmene kao kod Domaćina)<br>
-        ○ Brišem sve postojeće apartmane<br>
     </div>
 </div>
 `
@@ -317,11 +291,40 @@ Vue.component('apartments', {
         showAmenity: function () {
             this.shownAmenities = this.amenities[this.choosenType];
         },
-        showMessage: function () {
-            alert('Klikom na ovo dugme se brise odabrani stan!');
+        deleteApartment: function (id) {
+            axios
+                .delete('rest/apartment/' + id)
+                .then(response => {
+                    if (response.status == 201) {
+						alert('Apartment deleted');
+						console.log(response.data);
+						window.location.reload();
+					}
+                    else {
+						alert('Failed to delete apartment');
+						console.log(response.data);
+					}
+                })
         },
         changeStatus: function (id) {
-            alert(`Klikom na ovo dugme se menja status odabranom stanu id: ${id}!`);
+			axios
+				.get('rest/apartment/' + id)
+				.then(response => {
+					if (response.status == 200) {
+						let apartment = response.data;
+						apartment.status = 'aktivan';
+						axios
+							.put('rest/apartment/' + id, apartment)
+							.then(Response => {
+								alert('Apartment activated');
+								console.log(Response.data);	
+								window.location.reload();	
+							})
+					}
+					else {
+						alert(`Failed to activate apartment: ${id}!`);
+					}
+				})
         },
         showComments: function (id) {
             this.$router.push(`/apartment/${id}/comments`);

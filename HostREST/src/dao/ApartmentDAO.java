@@ -157,6 +157,8 @@ public class ApartmentDAO {
 		}
 		amenityDAO.updateApartmentAmenities(contextPath, apartment);
 		loadApartments(contextPath);
+		if (apartment.isDeleted())
+			apartments.remove(apartment.getId());
 		return apartment;
 	}
 

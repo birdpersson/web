@@ -167,8 +167,7 @@ public class ApartmentService {
 	public Response deleteApartment(@Context HttpServletRequest request, @PathParam("id") String id) {
 		String username = AuthService.getUsername(request);
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-		if (!userDao.findOne(username).getRole().toString().equals("HOST")
-				|| !userDao.findOne(username).getRole().toString().equals("ADMIN")) {
+		if (userDao.findOne(username).getRole().toString().equals("GUEST")) {
 			return Response.status(Response.Status.FORBIDDEN).build();
 		}
 		ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");

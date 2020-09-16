@@ -98,6 +98,8 @@ public class AmenityDAO {
 			return null;
 		}
 		loadAmenities(contextPath);
+		if (amenity.isDeleted())
+			amenities.remove(amenity.getId());
 		return amenity;
 	}
 
