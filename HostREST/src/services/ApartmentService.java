@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -47,6 +48,7 @@ public class ApartmentService {
 	ServletContext ctx;
 
 	public ApartmentService() {
+		super();
 	}
 
 	@PostConstruct
@@ -79,44 +81,16 @@ public class ApartmentService {
 		}
 	}
 
-//	@GET
-//	@Path("/")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Collection<ApartmentDTO> getAllApartments() {
-//		ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
-//		AmenityDAO amenityDAO = (AmenityDAO) ctx.getAttribute("amenityDAO");
-//
-//		Collection<Apartment> apartments = apartmentDAO.findAll();
-//		Collection<ApartmentDTO> retApartment = new ArrayList<>();
-//
-//		for (Apartment a : apartments) {
-//			ArrayList<Amenity> amenitiesOriginal = amenityDAO.findAllByApartmentId(ctx.getRealPath(""), a.getId());
-//			ArrayList<String> amenities = new ArrayList<>();
-//			for (Amenity amenity : amenitiesOriginal) {
-//				amenities.add(amenity.getName());
-//			}
-//			ApartmentDTO dto = new ApartmentDTO(a.getId(), a.getType(), a.getRooms(), a.getGuests(), a.getLocation(),
-//					a.getTo(), a.getFrom(), a.getHost(), a.getPrice(), a.getStatus(), amenities);
-//			retApartment.add(dto);
-////			a.setAmenities((ArrayList<Amenity>) daoAmen.findAllByApartmentId(a.getId()));
-////			a.setReviews((ArrayList<Review>) daoReview.findAllByApartmentId(a.getId()));
-////			a.setReservations((ArrayList<Reservation>) daoReser.findAllByApartmentId(a.getId()));
-//		}
-//
-//		return retApartment;
-//	}
-	
 	@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<ApartmentDTO> getAllApartments(@Context HttpServletRequest request) {
-    	
 		String username = AuthService.getUsername(request);
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-    	ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
     	AmenityDAO amenityDAO = (AmenityDAO) ctx.getAttribute("amenityDAO");
-		Collection<Apartment> apartments = apartmentDAO.findAll();
-  
+    	ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+
+    	Collection<Apartment> apartments = apartmentDAO.findAll();
 		Collection<ApartmentDTO> retApartment = new ArrayList<>();
 		
 		//za neulogovanog/neregistrovanog korisnika vraca sve aktivne stanove  
@@ -171,8 +145,39 @@ public class ApartmentService {
 		apartment.setReviews(reviewDAO.findAllByApartmentId(id));
 		return apartment;
 	}
-	
-	
+
+	@PUT
+	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateApartment(@Context HttpServletRequest request, Apartment apartment) {
+		String username = AuthService.getUsername(request);
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+		if (!userDao.findOne(username).getRole().toString().equals("HOST")) {
+			return Response.status(Response.Status.FORBIDDEN).build();
+		}
+		ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+		return Response.status(Response.Status.CREATED).entity(apartmentDao.update(ctx.getRealPath(""), apartment)).build();
+	}
+
+	@DELETE
+	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteApartment(@Context HttpServletRequest request, @PathParam("id") String id) {
+		String username = AuthService.getUsername(request);
+		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
+		if (!userDao.findOne(username).getRole().toString().equals("HOST")
+				|| !userDao.findOne(username).getRole().toString().equals("ADMIN")) {
+			return Response.status(Response.Status.FORBIDDEN).build();
+		}
+		ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
+		Apartment apartment = apartmentDao.findOne(id);
+		apartment.setDeleted(true);
+		return Response.status(Response.Status.CREATED)
+				.entity(apartmentDao.update(ctx.getRealPath(""), apartment)).build();
+	}
+
     @GET
 	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -185,7 +190,7 @@ public class ApartmentService {
 			@QueryParam("guests") Long guests,
 			@QueryParam("priceMin") Long priceMin,
 			@QueryParam("priceMax") Long priceMax) {
-    
+
     	//Obrisati na kraju
     	System.out.println("location: " + location);
     	System.out.println("from: " + from);
@@ -195,14 +200,13 @@ public class ApartmentService {
     	System.out.println("guests: " + guests);
     	System.out.println("priceMin: " + priceMin);
     	System.out.println("priceMax: " + priceMax);
-    	
-    	
+
     	String username = AuthService.getUsername(request);
-    
+
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
     	ApartmentDAO apartmentDAO = (ApartmentDAO) ctx.getAttribute("apartmentDAO");		
 		Collection<Apartment> apartments = apartmentDAO.findAll();
-		
+
 		//za neulogovanog/neregistrovanog korisnika vraca sve aktivne stanove  
 		if(username == null) {
 			apartments = apartments.stream()
@@ -259,7 +263,6 @@ public class ApartmentService {
 				.filter(a -> a.getRooms() <= roomsMax)
 				.collect(Collectors.toList());
 		}
-
 		if (from != null) {
 			apartments = apartments.stream()
 					.filter(a -> a.getTo() < from)
@@ -329,20 +332,6 @@ public class ApartmentService {
 			}
 		}
 		return Response.status(Response.Status.CREATED).build();
-	}
-
-	@PUT
-	@Path("/{id}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateApartment(@Context HttpServletRequest request, Apartment apartment) {
-		String username = AuthService.getUsername(request);
-		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-		if (!userDao.findOne(username).getRole().toString().equals("HOST")) {
-			return Response.status(Response.Status.FORBIDDEN).build();
-		}
-		ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
-		return Response.status(Response.Status.CREATED).entity(apartmentDao.update(ctx.getRealPath(""), apartment)).build();
 	}
 
 }
