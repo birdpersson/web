@@ -295,19 +295,17 @@ Vue.component('reservations', {
 			return false;
 		},
 		statusComplete: function (reservation) {
-			//fali i length>current.date uslov, jer rezervacija mora biti prihvacena
-			//i da je istekao odmor 
-			if (reservation.status === 'Accepted') {
-				return true;
-			}
-
-			// Nakon završnog datuma noćenja, mogu da postavim rezervaciju na
-			// status ZAVRŠENA
-			// const length = reservation.date + reservation.night;
-			// if(length>current.date){
-			//     return true;
-			// }
-			// return false; 
+            // Nakon završnog datuma noćenja, mogu da postavim rezervaciju na
+            // status ZAVRŠENA
+            //Rezervacija mora biti prihvacena i da je istekao odmor 
+			let to = new Date(reservation.to);
+			let now = new Date();
+            if(reservation.status==='Accepted' && now > to){
+                return true;
+            }
+            else {
+                return false;
+            }
 		},
 		search: function () {
 			axios
