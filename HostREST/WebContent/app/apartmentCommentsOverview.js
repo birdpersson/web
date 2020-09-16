@@ -16,7 +16,7 @@ Vue.component('apartment-comments', {
             <br>-->
             <div class="comments" v-for='apartment in apartments'>
                 <div id='apartmentInfo'>
-                    <div class="card-header">
+                    <div class="card-header" style='border-t'>
                         <h4><b>Apartment type:</b> {{apartment.type}}</h4>
                         <h4><b>Apartment address:</b> {{apartment.location.address.street}} {{apartment.location.address.postalCode}} - {{apartment.location.address.city}}</h4>
                         <h4><b>Apartments host:</b> {{apartment.host}}</h4>
@@ -52,6 +52,45 @@ Vue.component('apartment-comments', {
             ■ Mogu da odaberem koji komentar će biti prikazan Gostima, a koji neće<br>
             (dakle Gosti vide samo komentare koje je Domaćin odabrao)<br>
             <br> -->
+            <div class="comments" v-for='apartment in apartments'>
+                    <div id='apartmentInfo'>
+                        <div class="card-header" style='border-t'>
+                            <h4><b>Apartment type:</b> {{apartment.type}}</h4>
+                            <h4><b>Apartment address:</b> {{apartment.location.address.street}} {{apartment.location.address.postalCode}} - {{apartment.location.address.city}}</h4>
+                            <h4><b>Apartments host:</b> {{apartment.host}}</h4>
+                        </div>
+                    </div>
+                    <div v-show='isThereReviews(apartment)' class="card-body">
+                            <h3>There are no reviews for this apartment...</h3>
+                    </div>
+                    <div id='all-comments' v-for='comment in apartment.reviews'>
+                        <div class="single-comment">
+                            <div id='username'>{{comment.guestId}} </div>
+                            <div id='star-rating'>
+                                <star-rating
+                                    inactive-color="#35424a"
+                                    active-color="#e8491d"
+                                    v-bind:read-only= "true"
+                                    v-bind:star-size="25"
+                                    v-bind:show-rating="false"
+                                    v-bind:rating="comment.star">
+                                </star-rating>
+                            </div>
+                            <div id='comment'>
+                                {{comment.text}}  
+                            </div>
+
+                            <div id='comment-visibility'>
+                                <label style="display">Show comment</label>
+                                <input type="checkbox" v-on:mouseup='checkComment(comment)' v-model='comment.visible'>
+                                <div id='visibility-message' v-if='comment.visible'>
+                                    <p>This comment will be shown to guest user!</p> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!--comments-->
+            </div>
             
             <!-- <div id='apartmentInfo'>
                 <h3>Apartmetn id: {{apartmentId}}</h3>
@@ -97,7 +136,6 @@ Vue.component('apartment-comments', {
             isHost: false,
             isGuest: false,
 
-            isTest: false,
             //overview u modelu
             comments: [],
             apartments:[],
