@@ -7,9 +7,6 @@ Vue.component('profile-update', {
             <hr style='background:#e8491d;height:1px;'>
         </div>
         <div class="container">
-            <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
-            <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
-            <hr>
             <h4>Data change</h4>
             <hr>
             <fieldset class="form-group">
@@ -63,6 +60,10 @@ Vue.component('profile-update', {
             </fieldset>
 
             <button type="button" class="btn btn-lg btn-success" v-on:click='updateProfile'> Save </button>
+            <hr>
+            <div v-if='messages.errorResponse' class="alert alert-danger" v-html="messages.errorResponse"></div>
+            <div v-if='messages.successResponse' class="alert alert-success" v-html="messages.successResponse"></div>
+
         </div>
     </div>
 </div>`,

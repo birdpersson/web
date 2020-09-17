@@ -1,3 +1,7 @@
 admin;admin;Admin;Admin;Male;ADMIN
-guest;guest;Guest;Guest;Male;GUEST
-host;host;Host;Host;Male;HOST
+blageX;blage;Mark;Blage;Male;ADMIN
+birdpersson;wubbalubbadubdub;Bird;Persson;Male;HOST
+host;host;Host;Host;Other;HOST
+user;user;User;User;Other;GUEST
+guest;guest;Guest;Guest;Other;GUEST
+squanchy;squanch;Squanchy;Squanch;Male;GUEST
