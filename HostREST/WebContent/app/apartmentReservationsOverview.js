@@ -109,9 +109,9 @@ Vue.component('reservations', {
                         <td>{{reservation.confirmation}}</td>
                         <td>{{reservation.status}}</td>
                         <td><button :disabled='statusCancel(reservation.status)'
-                                v-on:click='cancelReservation(reservation)'> Cancel </button></td>
+                                v-on:click='cancelReservation(reservation)'>Cancel</button></td>
                         <td><button :disabled='statusComment(reservation.status)'
-                                v-on:click='addComment(reservation.apartmentId)'> + Comment </button></td>
+                                v-on:click='addComment(reservation.apartmentId)'>Comment</button></td>
                     </tr>
                 </tbody>
             </table>
