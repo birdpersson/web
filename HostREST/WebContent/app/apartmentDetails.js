@@ -2,7 +2,7 @@ Vue.component("apartment-details", {
 	template: `
 <div id="apartment-details">
 	<div class="container" id='page-title'>
-		<h1 style="margin-top:10px;color:#35424a;">Apartment #second <span id='titleEffect'>Details</span></h1>
+		<h1 style="margin-top:10px;color:#35424a;">Apartment<span id='titleEffect'>Details</span></h1>
 		<hr style='background:#e8491d;height:1px;'>
 	</div>
 

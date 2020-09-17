@@ -1,3 +1,9 @@
-1;45.02512;27.1235;Neznanog i znanog heroja bb;Novi Sad;21000
-2;45.02512;18.1235;30 Februara 25;Novi Sad;21000
-3;49.02512;34.1235;9. Marta 28;Novi Sad;21000
+1;45.025121;27.124350;Neznanog i znanog heroja 7;Novi Sad;21000
+2;45.021324;18.124329;30 Februara 25;Novi Sad;21000
+3;49.025123;34.134359;9. Marta 28;Novi Sad;21000
+4;45.282102;19.993203;Ulica Železnička;Kac;21242
+5;43.826478;18.359529;Random Street 3;Sarajevo;71000
+6;43.737260;18.567490;Miloša Crnjanskog 43;Jahorina;71420 
+7;44.060730;12.587600;Viale Vittorio Alfieri 12;Rimini;47921
+8;39.430790;19.987890;Argyrades;Corfu;49080
+9;40.411190;-3.682620;Paseo de Cuba 4;Madrid;28009
