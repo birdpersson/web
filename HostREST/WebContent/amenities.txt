@@ -1,6 +1,6 @@
 1;Wifi;Base;false
 2;Laptop friendly workspace;Base;true
-3;Cable TV;Base;false
+3;Cable;Base;false
 4;Washer;Base;false
 5;Air conditioning;Base;false
 6;TV;Base;false
