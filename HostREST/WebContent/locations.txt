@@ -3,7 +3,7 @@
 3;49.025123;34.134359;9. Marta 28;Novi Sad;21000
 4;45.282102;19.993203;Ulica Železnička;Kac;21242
 5;43.826478;18.359529;Random Street 3;Sarajevo;71000
-6;43.737260;18.567490;Miloša Crnjanskog 43;Jahorina;71420 
+6;43.737260;18.567490;Milosa Crnjanskog 43;Jahorina;71420 
 7;44.060730;12.587600;Viale Vittorio Alfieri 12;Rimini;47921
 8;39.430790;19.987890;Argyrades;Corfu;49080
 9;40.411190;-3.682620;Paseo de Cuba 4;Madrid;28009
