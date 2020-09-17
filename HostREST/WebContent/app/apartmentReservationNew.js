@@ -124,11 +124,6 @@ Vue.component('new-reservation', {
 
 				this.disabledDates.to = today;
 			}
-
-			if (this.dates.from < this.disabledDates.to) {
-				this.dates.from = this.apartment.to;
-			}
-
 			this.insertReservData();
 
 			if (this.apartment.reservations != null) {

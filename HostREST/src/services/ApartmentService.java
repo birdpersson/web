@@ -221,7 +221,7 @@ public class ApartmentService {
 	public Response updateApartment(@Context HttpServletRequest request, Apartment apartment) {
 		String username = AuthService.getUsername(request);
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-		if (!userDao.findOne(username).getRole().toString().equals("HOST")) {
+		if (userDao.findOne(username).getRole().toString().equals("GUEST")) {
 			return Response.status(Response.Status.FORBIDDEN).build();
 		}
 		ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");
@@ -344,9 +344,9 @@ public class ApartmentService {
 			apartments = apartments.stream()
 					.filter(apartment -> {
 						Collection<Reservation> reservations = apartment.getReservations().stream()
-								.filter(r -> (r.getFrom() <= from && r.getTo() >= from
-											|| r.getFrom() >= from && r.getTo() <= to
-											|| r.getFrom() <= to && r.getTo() >= to
+								.filter(r -> (r.getFrom() < from && r.getTo() > from
+											|| r.getFrom() > from && r.getTo() < to
+											|| r.getFrom() < to && r.getTo() > to
 										))
 								.collect(Collectors.toList());
 						return reservations.isEmpty();
@@ -364,7 +364,7 @@ public class ApartmentService {
 	public Response addApartment(@Context HttpServletRequest request, Apartment apartment) {
 		String username = AuthService.getUsername(request);
 		UserDAO userDao = (UserDAO) ctx.getAttribute("userDAO");
-		if (!userDao.findOne(username).getRole().toString().equals("HOST")) {
+		if (userDao.findOne(username).getRole().toString().equals("GUEST")) {
 			return Response.status(Response.Status.FORBIDDEN).build();
 		}
 		ApartmentDAO apartmentDao = (ApartmentDAO) ctx.getAttribute("apartmentDAO");

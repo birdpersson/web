@@ -307,11 +307,11 @@ Vue.component('apartment-edit', {
 									console.log(response);
 									this.messages.successResponse = `<h4>Apartment was added successfully!</h4>`;
 									setTimeout(() => this.messages.successResponse = '', 5000);
-									if (response.status === 201) {
-										alert('Apartment updated');
-										this.$router.push('/apartments');
-									}
 								});
+						}
+						if (Response.status === 201) {
+							alert('Apartment updated');
+							this.$router.push('/apartments');
 						}
 					})
 					.catch(error => {
@@ -320,20 +320,6 @@ Vue.component('apartment-edit', {
 							setTimeout(() => this.messages.errorResponse = '', 5000);
 						}
 					});
-
-				// axios
-				//     .post('rest/apartment', this.apartment)
-				//     .then(Response => {
-				//     console.log(Response);
-				//     this.messages.successResponse = `<h4>Apartment was edited successfully!</h4>`;                
-				//     setTimeout(() => this.messages.successResponse='', 5000);
-				// })
-				// .catch(error => {
-				//     if(error.response.status === 500 || error.response.status === 404){
-				//         this.messages.errorResponse= `<h4>We had some server errors, please try again later!</h4>`;
-				//         setTimeout(() => this.messages.errorResponse='', 5000);
-				//     }
-				// });
 			}
 		},
 		uploadImage(e) {

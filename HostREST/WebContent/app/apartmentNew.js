@@ -294,38 +294,25 @@ Vue.component('new-apartment', {
 				axios
 					.post('rest/apartment', this.apartment)
 					.then(Response => {
-						let contentType = {
-							headers: {
-								"Content-Type": "multipart/form-data"
+						console.log(Response);
+						if (this.images != null) {
+							let contentType = {
+								headers: {
+									"Content-Type": "multipart/form-data"
+								}
 							}
-						}
-						axios
+							axios
 							.post('rest/apartment/' + Response.data.id + '/upload', this.images, contentType)
 							.then(response => {
 								console.log(response);
 								this.messages.successResponse = `<h4>Apartment was added successfully!</h4>`;
-								//Sva uneta polja se isprazne...
-								this.apartment.type = null;
-								this.apartment.rooms = null;
-								this.apartment.guest = null;
-								this.apartment.location.latitude = '';
-								this.apartment.location.longitude = '';
-								this.apartment.location.address.street = '';
-								this.apartment.location.address.city = '';
-								this.apartment.location.address.postalCode = '';
-								this.apartment.to = null;
-								this.apartment.from = null;
-								this.apartment.price = null;
-								this.apartment.checkin = '2 PM';
-								this.apartment.checkout = '10 AM';
-								this.apartment.amenities = [];
-
 								setTimeout(() => this.messages.successResponse = '', 5000);
-								if (response.status === 201) {
-									alert('Apartment created');
-									this.$router.push('/apartments');
-								}
 							});
+						}
+						if (Response.status === 201) {
+							alert('Apartment created');
+							this.$router.push('/apartments');
+						}
 					})
 					.catch(error => {
 						if (error.response.status === 500 || error.response.status === 404) {
